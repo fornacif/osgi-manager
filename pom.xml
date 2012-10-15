@@ -15,6 +15,7 @@
 		<compiler.version>2.4</compiler.version>
 		<source.version>1.7</source.version>
 		<target.version>1.7</target.version>
+		<javafx.path>C:/Program Files/Java/jre7/lib/jfxrt.jar</javafx.path>
 	</properties>
 
 	<dependencies>
@@ -30,6 +31,13 @@
 			<version>${osgi.compendium.version}</version>
 			<scope>provided</scope>
 		</dependency>
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>javafx</artifactId>
+            <version>2.1.0</version>
+            <systemPath>${javafx.path}</systemPath>
+            <scope>system</scope>
+        </dependency>
 		<dependency>
 			<groupId>org.apache.felix</groupId>
 			<artifactId>maven-bundle-plugin</artifactId>
@@ -59,7 +67,7 @@
 					<unpackBundle>true</unpackBundle>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<Require-Bundle>javafx;bundle-version=2.1.0</Require-Bundle>
+						<DynamicImport-Package>javafx.*;version=2.1.0</DynamicImport-Package>
 						<Service-Component>com.fornacif.osgi.manager.internal.*</Service-Component>
 					</instructions>
 				</configuration>
