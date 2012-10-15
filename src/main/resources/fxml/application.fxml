@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.collections.*?> 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<Scene xmlns:fx="http://javafx.com/fxml" width="1024" height="768">
+	<TabPane tabClosingPolicy="UNAVAILABLE" tabMinWidth="100">
+		<Tab text="Bundles">
+			<content>
+				<fx:include source="bundles.fxml"/>
+			</content>
+		</Tab>
+		<Tab text="Services">
+    		
+		</Tab>
+		<Tab text="Properties">
+    		
+		</Tab>
+	</TabPane>
+</Scene>

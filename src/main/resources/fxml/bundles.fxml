@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.collections.*?> 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+	spacing="10" fillWidth="false" 
+	fx:controller="com.fornacif.osgi.manager.internal.BundleController">
+	<padding>
+         <Insets top="10" right="10" bottom="10" left="10"/>
+     </padding>
+	<Label fx:id="bundleLabel" />
+	<TableView fx:id="bundleTableView">
+		<columns>
+			<TableColumn fx:id="id" text="ID" prefWidth="50">
+				<cellValueFactory>
+					<PropertyValueFactory property="id" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="STATE" prefWidth="75">
+				<cellValueFactory>
+					<PropertyValueFactory property="state" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="LEVEL" prefWidth="75">
+				<cellValueFactory>
+					<PropertyValueFactory property="startLevel" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="NAME" prefWidth="400">
+				<cellValueFactory>
+					<PropertyValueFactory property="name" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="VERSION" prefWidth="150">
+				<cellValueFactory>
+					<PropertyValueFactory property="version" />
+				</cellValueFactory>
+			</TableColumn>
+		</columns>
+		<items>
+			<FXCollections fx:factory="observableArrayList" />
+		</items>
+		<sortOrder>
+			<fx:reference source="id"/>
+		</sortOrder>   
+	</TableView>
+</VBox>
