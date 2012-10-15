@@ -19,7 +19,7 @@ public class BundleRow {
 	public BundleRow(Bundle bundle) {
 		this.id = new SimpleLongProperty(bundle.getBundleId());
 		this.state = getState(bundle);
-		this.name = new SimpleStringProperty(bundle.getHeaders().get(Constants.BUNDLE_NAME));
+		this.name = new SimpleStringProperty(bundle.getHeaders().get(Constants.BUNDLE_NAME).toString());
 		this.version = new SimpleStringProperty(bundle.getVersion().toString());
 		this.startLevel = getStartLevel(bundle);
 	}
@@ -44,7 +44,7 @@ public class BundleRow {
 	}
 	
 	private SimpleIntegerProperty getStartLevel(Bundle bundle) {
-		BundleStartLevel bundleStartLevel = bundle.adapt(BundleStartLevel.class);
+		BundleStartLevel bundleStartLevel = (BundleStartLevel) bundle.adapt(BundleStartLevel.class);
 		return new SimpleIntegerProperty(bundleStartLevel.getStartLevel());
 	}
 
