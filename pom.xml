@@ -34,7 +34,7 @@
         <dependency>
             <groupId>com.oracle</groupId>
             <artifactId>javafx</artifactId>
-            <version>2.1.0</version>
+            <version>2.2.0</version>
             <systemPath>${javafx.path}</systemPath>
             <scope>system</scope>
         </dependency>
@@ -67,7 +67,7 @@
 					<unpackBundle>true</unpackBundle>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<DynamicImport-Package>javafx.*;version=2.1.0</DynamicImport-Package>
+						<DynamicImport-Package>javafx.*;version=2.2.0</DynamicImport-Package>
 						<Service-Component>com.fornacif.osgi.manager.internal.*</Service-Component>
 					</instructions>
 				</configuration>
