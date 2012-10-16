@@ -1,6 +1,7 @@
 package com.fornacif.osgi.manager.internal.application;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
@@ -17,6 +18,8 @@ import aQute.bnd.annotation.component.Reference;
 @Component(name = "TabPaneManager", provide = {})
 public class TabPaneManager {
 	
+	private final static String TAB_POSITION_SERVICE_PROPERTY = "tab.position";
+	private final static String TAB_SELECT_SERVICE_PROPERTY = "tab.select";
 	private final static String TAB_TEXT_SERVICE_PROPERTY = "tab.text";
 	
 	private TabPane tabPane;
@@ -33,7 +36,10 @@ public class TabPaneManager {
 			@Override
 			public Tab addingService(ServiceReference<Pane> reference) {
 				Pane paneController = bundleContext.getService(reference);
-				Tab tab = addTab(paneController, (String) reference.getProperty(TAB_TEXT_SERVICE_PROPERTY));
+				String position = (String) reference.getProperty(TAB_POSITION_SERVICE_PROPERTY);
+				String text = (String) reference.getProperty(TAB_TEXT_SERVICE_PROPERTY);
+				String select = (String) reference.getProperty(TAB_SELECT_SERVICE_PROPERTY);
+				Tab tab = addTab(paneController, position, select, text);
 				return tab;
 			}
 			
@@ -56,7 +62,7 @@ public class TabPaneManager {
 		controllerTracker.close();
 	}
 	
-	private Tab addTab(Pane controller, String text) {
+	private Tab addTab(final Pane controller, final String position, final String select, final String text) {
 		final Tab tab = new Tab();
 		tab.setText(text);
 		tab.setContent(controller);
@@ -64,7 +70,18 @@ public class TabPaneManager {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				tabPane.getTabs().add(tab);
+				ObservableList<Tab> tabs = tabPane.getTabs();
+				
+				Integer positionValue = Integer.valueOf(0);
+				if (position != null && tabs.size() >= Integer.valueOf(position)) {
+					positionValue = Integer.valueOf(position);
+				}
+				tabs.add(Integer.valueOf(positionValue), tab);
+
+				if (select != null && Boolean.valueOf(select)) {
+					tabPane.getSelectionModel().select(tab);
+				}
+				
 			}
 		});
 		
@@ -76,8 +93,9 @@ public class TabPaneManager {
 			@Override
 			public void run() {
 				tabPane.getTabs().remove(tab);
+				tab.setContent(null);
 			}
-		});	
+		});
 	}
 
 }

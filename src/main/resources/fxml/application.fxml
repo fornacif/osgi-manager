@@ -6,6 +6,6 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
 <Scene xmlns:fx="http://javafx.com/fxml" width="800" height="600">
-	<TabPane tabClosingPolicy="UNAVAILABLE" tabMinWidth="100">
+	<TabPane tabClosingPolicy="UNAVAILABLE" tabMinWidth="100" side="TOP">
 	</TabPane>
 </Scene>
