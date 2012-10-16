@@ -1,46 +1,50 @@
-package com.fornacif.osgi.manager.internal;
+package com.fornacif.osgi.manager.internal.application;
 
 import java.util.Map;
+
+import org.osgi.framework.BundleContext;
+import org.osgi.util.tracker.ServiceTracker;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
-import aQute.bnd.annotation.component.Reference;
 
-@Component(name = "ApplicationLauncher", provide = {}, configurationPolicy = ConfigurationPolicy.require)
-public class ApplicationLauncher extends Application implements Runnable {
-
-	private static ControllerFactory componentControllerFactory;
+@Component(name = "Launcher", provide = {}, configurationPolicy = ConfigurationPolicy.require)
+public class Launcher extends Application implements Runnable {
 	
 	private final static String APPLICATION_FXML = "/fxml/application.fxml";
 	private final static String TITLE_PROPERTIES = "title";
 
 	private static String title;
+	private static BundleContext bundleContext;
 
 	@Activate
-	public void activate(Map<String, ?> properties) throws Exception {
+	public void activate(BundleContext bundleContext, Map<String, ?> properties) throws Exception {
+		Launcher.bundleContext = bundleContext;
 		title = (String) properties.get(TITLE_PROPERTIES);
 		new Thread(this).start();
 	}
-	
-	@Reference
-	public void bindComponentControllerFactory(ControllerFactory componentControllerFactory) {
-		ApplicationLauncher.componentControllerFactory = componentControllerFactory;
-	}
-	
+
 	@Override
 	public void start(Stage stage) throws Exception {      
 		FXMLLoader applicationLoader = new FXMLLoader(getClass().getResource(APPLICATION_FXML));
 		applicationLoader.setClassLoader(getClass().getClassLoader());
-		applicationLoader.setControllerFactory(ApplicationLauncher.componentControllerFactory);
 		Scene scene = (Scene) applicationLoader.load();
+		TabPane tabPane = (TabPane) scene.getRoot();
+		registerTabPane(tabPane);
         stage.setScene(scene);
         stage.setTitle(title);
 		stage.show();
+	}
+	
+	private void registerTabPane(TabPane tabPane) {
+		Launcher.bundleContext.registerService(TabPane.class, tabPane, null);
 	}
 	
 	@Override
@@ -50,7 +54,7 @@ public class ApplicationLauncher extends Application implements Runnable {
 
 	@Override
 	public void run() {
-		launch(ApplicationLauncher.class);
+		launch(Launcher.class);
 	}
 
 }

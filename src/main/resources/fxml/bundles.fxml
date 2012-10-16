@@ -5,14 +5,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns:fx="http://javafx.com/fxml"
-	spacing="10" fillWidth="false" 
-	fx:controller="com.fornacif.osgi.manager.internal.BundleController">
+<fx:root type="javafx.scene.layout.VBox"
+	xmlns:fx="http://javafx.com/fxml"
+	spacing="10" fillWidth="false">
 	<padding>
          <Insets top="10" right="10" bottom="10" left="10"/>
      </padding>
-	<Label fx:id="bundleLabel" />
-	<TableView fx:id="bundleTableView">
+	<Label fx:id="bundlesLabel" />
+	<TableView fx:id="bundlesTableView">
 		<columns>
 			<TableColumn fx:id="id" text="ID" prefWidth="50">
 				<cellValueFactory>
@@ -47,4 +47,4 @@
 			<fx:reference source="id"/>
 		</sortOrder>   
 	</TableView>
-</VBox>
+</fx:root>

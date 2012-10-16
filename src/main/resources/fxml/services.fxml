@@ -5,7 +5,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<Scene xmlns:fx="http://javafx.com/fxml" width="800" height="600">
-	<TabPane tabClosingPolicy="UNAVAILABLE" tabMinWidth="100">
-	</TabPane>
-</Scene>
+<fx:root type="javafx.scene.layout.VBox"
+	xmlns:fx="http://javafx.com/fxml"
+	spacing="10" fillWidth="false">
+	<padding>
+         <Insets top="10" right="10" bottom="10" left="10"/>
+     </padding>
+</fx:root>

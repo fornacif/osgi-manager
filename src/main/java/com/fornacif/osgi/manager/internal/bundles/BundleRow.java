@@ -1,4 +1,4 @@
-package com.fornacif.osgi.manager.internal;
+package com.fornacif.osgi.manager.internal.bundles;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
