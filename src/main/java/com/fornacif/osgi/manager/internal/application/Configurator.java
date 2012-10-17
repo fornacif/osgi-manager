@@ -17,6 +17,7 @@ import aQute.bnd.annotation.component.Reference;
 
 @Component(name = "Configurator")
 public class Configurator {
+	private final static String CONFIGURATIONS_DIR = "/configurations";
 	private final static String CONFIGURATION_EXTENSION = ".properties";
 	private ConfigurationAdmin configurationAdmin;
 
@@ -28,7 +29,7 @@ public class Configurator {
 	@Activate
 	public void activate(BundleContext bundleContext) throws IOException {
 		BundleWiring bundleWiring = bundleContext.getBundle().adapt(BundleWiring.class);
-		Collection<String> configurations = bundleWiring.listResources("/configurations", "*" + CONFIGURATION_EXTENSION, BundleWiring.LISTRESOURCES_LOCAL);
+		Collection<String> configurations = bundleWiring.listResources(CONFIGURATIONS_DIR, "*" + CONFIGURATION_EXTENSION, BundleWiring.LISTRESOURCES_LOCAL);
 		for (String configuration : configurations) {
 			configure(configuration);
 		}
