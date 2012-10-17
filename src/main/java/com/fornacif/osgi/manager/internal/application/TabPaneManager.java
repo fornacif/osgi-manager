@@ -21,20 +21,20 @@ import aQute.bnd.annotation.component.Reference;
 
 @Component(name = "TabPaneManager", provide = {})
 public class TabPaneManager {
-	
+
 	private final static String TAB_FXML_SERVICE_PROPERTY = "tab.fxml";
 	private final static String TAB_POSITION_SERVICE_PROPERTY = "tab.position";
 	private final static String TAB_SELECT_SERVICE_PROPERTY = "tab.select";
 	private final static String TAB_TEXT_SERVICE_PROPERTY = "tab.text";
-	
+
 	private TabPane tabPane;
 	private ServiceTracker<Pane, Tab> controllerTracker;
-	
+
 	@Reference
 	public void bindTabPane(TabPane tabPane) {
 		this.tabPane = tabPane;
 	}
-	
+
 	@Activate
 	public void activate(final BundleContext bundleContext) {
 		controllerTracker = new ServiceTracker<Pane, Tab>(bundleContext, Pane.class, null) {
@@ -49,13 +49,13 @@ public class TabPaneManager {
 				Tab tab = addTab(paneController, bundle, fxml, position, select, text);
 				return tab;
 			}
-			
+
 			@Override
 			public void modifiedService(ServiceReference<Pane> reference, Tab tab) {
 				removedService(reference, tab);
 				addingService(reference);
 			}
-			
+
 			@Override
 			public void removedService(ServiceReference<Pane> reference, Tab tab) {
 				removeTab(tab);
@@ -63,28 +63,28 @@ public class TabPaneManager {
 		};
 		controllerTracker.open();
 	}
-	
+
 	@Deactivate
 	public void deactivate() {
 		controllerTracker.close();
 	}
-	
+
 	private Tab addTab(final Pane controller, final Bundle bundle, final String fxml, final String position, final String select, final String text) {
 		try {
 			loadFXML(controller, bundle, fxml);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		final Tab tab = new Tab();
 		tab.setText(text);
 		tab.setContent(controller);
-		
+
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				ObservableList<Tab> tabs = tabPane.getTabs();
-				
+
 				Integer positionValue = Integer.valueOf(0);
 				if (position != null && tabs.size() >= Integer.valueOf(position)) {
 					positionValue = Integer.valueOf(position);
@@ -94,13 +94,13 @@ public class TabPaneManager {
 				if (select != null && Boolean.valueOf(select)) {
 					tabPane.getSelectionModel().select(tab);
 				}
-				
+
 			}
 		});
-		
+
 		return tab;
 	}
-	
+
 	private void removeTab(final Tab tab) {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -110,7 +110,7 @@ public class TabPaneManager {
 			}
 		});
 	}
-	
+
 	private void loadFXML(final Pane controller, Bundle bundle, String fxml) throws IOException {
 		FXMLLoader fxmlLoader = new FXMLLoader(bundle.getResource(fxml));
 		fxmlLoader.setRoot(controller);

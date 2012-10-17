@@ -2,15 +2,14 @@ package com.fornacif.osgi.manager.internal.application;
 
 import java.util.Map;
 
-import org.osgi.framework.BundleContext;
-import org.osgi.util.tracker.ServiceTracker;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import org.osgi.framework.BundleContext;
+
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
@@ -38,8 +37,8 @@ public class Launcher extends Application implements Runnable {
 		Scene scene = (Scene) applicationLoader.load();
 		TabPane tabPane = (TabPane) scene.getRoot();
 		registerTabPane(tabPane);
-        stage.setScene(scene);
-        stage.setTitle(title);
+		stage.setScene(scene);
+		stage.setTitle(title);
 		stage.show();
 	}
 	

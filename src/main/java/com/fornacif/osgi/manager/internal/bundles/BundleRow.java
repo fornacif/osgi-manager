@@ -42,7 +42,7 @@ public class BundleRow {
 			return new SimpleStringProperty("UNKNOWN");
 		}
 	}
-	
+
 	private SimpleIntegerProperty getStartLevel(Bundle bundle) {
 		BundleStartLevel bundleStartLevel = (BundleStartLevel) bundle.adapt(BundleStartLevel.class);
 		return new SimpleIntegerProperty(bundleStartLevel.getStartLevel());
@@ -79,7 +79,7 @@ public class BundleRow {
 	public void setVersion(String version) {
 		this.version.set(version);
 	}
-	
+
 	public Integer getStartLevel() {
 		return startLevel.get();
 	}

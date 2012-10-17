@@ -22,27 +22,27 @@ import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 
-@Component(name = "BundlesController", provide = { Pane.class } , configurationPolicy = ConfigurationPolicy.require)
-public class BundlesController extends VBox implements Initializable {	
+@Component(name = "BundlesController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
+public class BundlesController extends VBox implements Initializable {
 	private BundleContext bundleContext;
-	
+
 	@FXML
 	private TableView<BundleRow> bundlesTableView;
-	
+
 	@FXML
 	private Label bundlesLabel;
-	
+
 	@Activate
 	public void activate(BundleContext bundleContext, Map<String, ?> properties) {
 		this.bundleContext = bundleContext;
 	}
-	
+
 	private void loadBundles() {
 		Bundle[] bundles = bundleContext.getBundles();
 		Collection<BundleRow> bundleRows = new ArrayList<>();
 		for (Bundle bundle : bundles) {
 			bundleRows.add(new BundleRow(bundle));
-		}	
+		}
 		bundlesTableView.getItems().setAll(bundleRows);
 		ObservableList<TableColumn<BundleRow, ?>> sortOrder = bundlesTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
@@ -50,7 +50,7 @@ public class BundlesController extends VBox implements Initializable {
 			sortOrder.clear();
 			sortOrder.add(sortedTableColumn);
 		}
-		
+
 		bundlesLabel.setText("Informations: " + bundles.length + " bundles");
 	}
 
