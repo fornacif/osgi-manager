@@ -12,6 +12,7 @@
 		<osgi.core.version>4.3.0</osgi.core.version>
 		<osgi.compendium.version>4.3.0</osgi.compendium.version>
 		<maven-bundle-plugin.version>2.3.7</maven-bundle-plugin.version>
+		<slf4j.version>1.7.2</slf4j.version>
 		<compiler.version>2.4</compiler.version>
 		<source.version>1.7</source.version>
 		<target.version>1.7</target.version>
@@ -43,6 +44,12 @@
 			<groupId>org.apache.felix</groupId>
 			<artifactId>maven-bundle-plugin</artifactId>
 			<version>${maven-bundle-plugin.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>

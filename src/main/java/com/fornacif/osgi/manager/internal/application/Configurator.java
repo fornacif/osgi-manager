@@ -10,6 +10,8 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.wiring.BundleWiring;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
@@ -17,6 +19,8 @@ import aQute.bnd.annotation.component.Reference;
 
 @Component(name = "Configurator")
 public class Configurator {
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+	
 	private final static String CONFIGURATIONS_DIR = "/configurations";
 	private final static String CONFIGURATION_EXTENSION = ".properties";
 	private ConfigurationAdmin configurationAdmin;
@@ -27,7 +31,21 @@ public class Configurator {
 	}
 
 	@Activate
-	public void activate(BundleContext bundleContext) throws IOException {
+	public void activate(final BundleContext bundleContext) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					configure(bundleContext);
+				} catch (IOException e) {
+					LOGGER.error("Error loading configuration", e);
+				}		
+			}
+		}, "OSGi Manager Configurator").start();
+		
+	}
+	
+	private void configure(BundleContext bundleContext) throws IOException {
 		BundleWiring bundleWiring = bundleContext.getBundle().adapt(BundleWiring.class);
 		Collection<String> configurations = bundleWiring.listResources(CONFIGURATIONS_DIR, "*" + CONFIGURATION_EXTENSION, BundleWiring.LISTRESOURCES_LOCAL);
 		for (String configuration : configurations) {
@@ -42,5 +60,6 @@ public class Configurator {
 		Properties properties = new Properties();
 		properties.load(getClass().getResourceAsStream("/" + configurationPath));
 		configuration.update(new Hashtable(properties));
+		LOGGER.debug("Configuration " + configurationName + " created");
 	}
 }

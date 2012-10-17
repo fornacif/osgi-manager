@@ -1,7 +1,5 @@
 package com.fornacif.osgi.manager.internal.application;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +11,8 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
@@ -21,6 +21,8 @@ import aQute.bnd.annotation.component.Reference;
 
 @Component(name = "TabPaneManager", provide = {})
 public class TabPaneManager {
+	
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	private final static String TAB_FXML_SERVICE_PROPERTY = "tab.fxml";
 	private final static String TAB_POSITION_SERVICE_PROPERTY = "tab.position";
@@ -72,8 +74,8 @@ public class TabPaneManager {
 	private Tab addTab(final Pane controller, final Bundle bundle, final String fxml, final String position, final String select, final String text) {
 		try {
 			loadFXML(controller, bundle, fxml);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			LOGGER.error("Error when loading FXML", e);
 		}
 
 		final Tab tab = new Tab();
@@ -111,7 +113,7 @@ public class TabPaneManager {
 		});
 	}
 
-	private void loadFXML(final Pane controller, Bundle bundle, String fxml) throws IOException {
+	private void loadFXML(final Pane controller, Bundle bundle, String fxml) throws Exception {
 		FXMLLoader fxmlLoader = new FXMLLoader(bundle.getResource(fxml));
 		fxmlLoader.setRoot(controller);
 		fxmlLoader.setController(controller);
