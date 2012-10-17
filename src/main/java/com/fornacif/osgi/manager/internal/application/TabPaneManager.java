@@ -1,11 +1,15 @@
 package com.fornacif.osgi.manager.internal.application;
 
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Pane;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -18,6 +22,7 @@ import aQute.bnd.annotation.component.Reference;
 @Component(name = "TabPaneManager", provide = {})
 public class TabPaneManager {
 	
+	private final static String TAB_FXML_SERVICE_PROPERTY = "tab.fxml";
 	private final static String TAB_POSITION_SERVICE_PROPERTY = "tab.position";
 	private final static String TAB_SELECT_SERVICE_PROPERTY = "tab.select";
 	private final static String TAB_TEXT_SERVICE_PROPERTY = "tab.text";
@@ -36,10 +41,12 @@ public class TabPaneManager {
 			@Override
 			public Tab addingService(ServiceReference<Pane> reference) {
 				Pane paneController = bundleContext.getService(reference);
+				String fxml = (String) reference.getProperty(TAB_FXML_SERVICE_PROPERTY);
 				String position = (String) reference.getProperty(TAB_POSITION_SERVICE_PROPERTY);
 				String text = (String) reference.getProperty(TAB_TEXT_SERVICE_PROPERTY);
 				String select = (String) reference.getProperty(TAB_SELECT_SERVICE_PROPERTY);
-				Tab tab = addTab(paneController, position, select, text);
+				Bundle bundle = reference.getBundle();
+				Tab tab = addTab(paneController, bundle, fxml, position, select, text);
 				return tab;
 			}
 			
@@ -62,7 +69,13 @@ public class TabPaneManager {
 		controllerTracker.close();
 	}
 	
-	private Tab addTab(final Pane controller, final String position, final String select, final String text) {
+	private Tab addTab(final Pane controller, final Bundle bundle, final String fxml, final String position, final String select, final String text) {
+		try {
+			loadFXML(controller, bundle, fxml);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		final Tab tab = new Tab();
 		tab.setText(text);
 		tab.setContent(controller);
@@ -96,6 +109,13 @@ public class TabPaneManager {
 				tab.setContent(null);
 			}
 		});
+	}
+	
+	private void loadFXML(final Pane controller, Bundle bundle, String fxml) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(bundle.getResource(fxml));
+		fxmlLoader.setRoot(controller);
+		fxmlLoader.setController(controller);
+		fxmlLoader.load();
 	}
 
 }

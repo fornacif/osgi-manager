@@ -1,6 +1,5 @@
 package com.fornacif.osgi.manager.internal.bundles;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,18 +18,13 @@ import javafx.scene.layout.VBox;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
-import com.fornacif.osgi.manager.service.ControllerFXMLLoader;
-
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
-import aQute.bnd.annotation.component.Reference;
 
 @Component(name = "BundlesController", provide = { Pane.class } , configurationPolicy = ConfigurationPolicy.require)
 public class BundlesController extends VBox implements Initializable {	
 	private BundleContext bundleContext;
-	
-	private ControllerFXMLLoader controllerFXMLLoader;
 	
 	@FXML
 	private TableView<BundleRow> bundlesTableView;
@@ -41,16 +35,6 @@ public class BundlesController extends VBox implements Initializable {
 	@Activate
 	public void activate(BundleContext bundleContext, Map<String, ?> properties) {
 		this.bundleContext = bundleContext;
-		try {
-			this.controllerFXMLLoader.loadFXML(this, properties);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	@Reference
-	public void setControllerFXMLLoader(ControllerFXMLLoader controllerFXMLLoader) {
-		this.controllerFXMLLoader = controllerFXMLLoader;
 	}
 	
 	private void loadBundles() {
