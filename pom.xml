@@ -16,6 +16,7 @@
 		<source.version>1.7</source.version>
 		<target.version>1.7</target.version>
 		<javafx.path>C:/Program Files/Java/jre7/lib/jfxrt.jar</javafx.path>
+		<javafx.version>2.2.1</javafx.version>
 	</properties>
 
 	<dependencies>
@@ -34,7 +35,7 @@
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
-			<version>2.2.0</version>
+			<version>${javafx.version}</version>
 			<systemPath>${javafx.path}</systemPath>
 			<scope>system</scope>
 		</dependency>
@@ -67,7 +68,7 @@
 					<unpackBundle>true</unpackBundle>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
-						<DynamicImport-Package>javafx.*;version=2.2.0</DynamicImport-Package>
+						<DynamicImport-Package>javafx.*;version=${javafx.version}</DynamicImport-Package>
 						<Service-Component>com.fornacif.osgi.manager.internal.*</Service-Component>
 					</instructions>
 				</configuration>
