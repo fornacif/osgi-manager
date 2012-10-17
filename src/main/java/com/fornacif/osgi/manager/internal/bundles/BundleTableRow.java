@@ -2,26 +2,31 @@ package com.fornacif.osgi.manager.internal.bundles;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.framework.startlevel.BundleStartLevel;
 
-public class BundleRow {
+public class BundleTableRow {
 
 	private final SimpleLongProperty id;
 	private final SimpleStringProperty state;
 	private final SimpleStringProperty name;
+	private final SimpleStringProperty symbolicName;
 	private final SimpleStringProperty version;
 	private final SimpleIntegerProperty startLevel;
+	private final SimpleObjectProperty<Bundle> bundle;
 
-	public BundleRow(Bundle bundle) {
+	public BundleTableRow(Bundle bundle) {
 		this.id = new SimpleLongProperty(bundle.getBundleId());
 		this.state = getState(bundle);
 		this.name = new SimpleStringProperty(bundle.getHeaders().get(Constants.BUNDLE_NAME).toString());
+		this.symbolicName = new SimpleStringProperty(bundle.getSymbolicName());
 		this.version = new SimpleStringProperty(bundle.getVersion().toString());
 		this.startLevel = getStartLevel(bundle);
+		this.bundle = new SimpleObjectProperty<Bundle>(bundle);
 	}
 
 	private SimpleStringProperty getState(Bundle bundle) {
@@ -71,6 +76,14 @@ public class BundleRow {
 	public void setName(String name) {
 		this.name.set(name);
 	}
+	
+	public String getSymbolicName() {
+		return symbolicName.get();
+	}
+
+	public void setSymbolicName(String symbolicName) {
+		this.symbolicName.set(symbolicName);
+	}
 
 	public String getVersion() {
 		return version.get();
@@ -86,6 +99,14 @@ public class BundleRow {
 
 	public void setStartLevel(Integer startLevel) {
 		this.startLevel.set(startLevel);
+	}
+	
+	public Bundle getBundle() {
+		return bundle.get();
+	}
+	
+	public void setBundle(Bundle bundle) {
+		this.bundle.set(bundle);
 	}
 
 }

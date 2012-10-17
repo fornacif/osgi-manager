@@ -44,6 +44,7 @@ public class Launcher extends Application {
 	public void start(Stage stage) throws Exception {
 		FXMLLoader applicationLoader = new FXMLLoader(getClass().getResource(APPLICATION_FXML));
 		Scene scene = (Scene) applicationLoader.load();
+		scene.getStylesheets().addAll(getClass().getResource("/css/application.css").toExternalForm());
 		TabPane tabPane = (TabPane) scene.getRoot();
 		registerTabPane(tabPane);
 		stage.setScene(scene);

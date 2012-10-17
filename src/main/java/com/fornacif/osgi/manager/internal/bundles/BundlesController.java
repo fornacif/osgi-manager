@@ -7,13 +7,16 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.ResizeFeatures;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -27,7 +30,7 @@ public class BundlesController extends VBox implements Initializable {
 	private BundleContext bundleContext;
 
 	@FXML
-	private TableView<BundleRow> bundlesTableView;
+	private TableView<BundleTableRow> bundlesTableView;
 
 	@FXML
 	private Label bundlesLabel;
@@ -37,16 +40,18 @@ public class BundlesController extends VBox implements Initializable {
 		this.bundleContext = bundleContext;
 	}
 
-	private void loadBundles() {
+	@FXML
+	protected void loadBundles() {
 		Bundle[] bundles = bundleContext.getBundles();
-		Collection<BundleRow> bundleRows = new ArrayList<>();
+		Collection<BundleTableRow> bundleRows = new ArrayList<>();
 		for (Bundle bundle : bundles) {
-			bundleRows.add(new BundleRow(bundle));
+			bundleRows.add(new BundleTableRow(bundle));
 		}
 		bundlesTableView.getItems().setAll(bundleRows);
-		ObservableList<TableColumn<BundleRow, ?>> sortOrder = bundlesTableView.getSortOrder();
+		
+		ObservableList<TableColumn<BundleTableRow, ?>> sortOrder = bundlesTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
-			TableColumn<BundleRow, ?> sortedTableColumn = sortOrder.get(0);
+			TableColumn<BundleTableRow, ?> sortedTableColumn = sortOrder.get(0);
 			sortOrder.clear();
 			sortOrder.add(sortedTableColumn);
 		}
@@ -55,7 +60,7 @@ public class BundlesController extends VBox implements Initializable {
 	}
 
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
+	public void initialize(URL arg0, ResourceBundle resourceBundle) {
 		loadBundles();
 	}
 }

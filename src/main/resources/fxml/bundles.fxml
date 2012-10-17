@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
+<?import com.fornacif.osgi.manager.internal.bundles.*?>
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml"
 	spacing="10" fillWidth="false">
@@ -12,9 +13,10 @@
          <Insets top="10" right="10" bottom="10" left="10"/>
      </padding>
 	<Label fx:id="bundlesLabel" />
-	<TableView fx:id="bundlesTableView">
+
+	<TableView fx:id="bundlesTableView" prefHeight="700">
 		<columns>
-			<TableColumn fx:id="id" text="ID" prefWidth="50">
+			<TableColumn fx:id="id" text="ID" prefWidth="40">
 				<cellValueFactory>
 					<PropertyValueFactory property="id" />
 				</cellValueFactory>
@@ -24,20 +26,34 @@
 					<PropertyValueFactory property="state" />
 				</cellValueFactory>
 			</TableColumn>
-			<TableColumn text="LEVEL" prefWidth="75">
+			<TableColumn text="LEVEL" prefWidth="60">
 				<cellValueFactory>
 					<PropertyValueFactory property="startLevel" />
 				</cellValueFactory>
 			</TableColumn>
-			<TableColumn text="NAME" prefWidth="400">
+			<TableColumn text="NAME" prefWidth="300">
 				<cellValueFactory>
 					<PropertyValueFactory property="name" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="SYMBOLIC NAME" prefWidth="200">
+				<cellValueFactory>
+					<PropertyValueFactory property="symbolicName" />
 				</cellValueFactory>
 			</TableColumn>
 			<TableColumn text="VERSION" prefWidth="150">
 				<cellValueFactory>
 					<PropertyValueFactory property="version" />
 				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="ACTION" prefWidth="180">
+				<cellValueFactory>
+					<PropertyValueFactory property="bundle" />
+				</cellValueFactory>
+				<cellFactory>
+                    <BundleActionCellFactory onAction="#loadBundles">
+					</BundleActionCellFactory>
+                </cellFactory>
 			</TableColumn>
 		</columns>
 		<items>
@@ -47,4 +63,5 @@
 			<fx:reference source="id"/>
 		</sortOrder>   
 	</TableView>
+
 </fx:root>
