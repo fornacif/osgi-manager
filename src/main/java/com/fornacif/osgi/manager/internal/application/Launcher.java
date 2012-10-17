@@ -33,7 +33,6 @@ public class Launcher extends Application implements Runnable {
 	@Override
 	public void start(Stage stage) throws Exception {      
 		FXMLLoader applicationLoader = new FXMLLoader(getClass().getResource(APPLICATION_FXML));
-		applicationLoader.setClassLoader(getClass().getClassLoader());
 		Scene scene = (Scene) applicationLoader.load();
 		TabPane tabPane = (TabPane) scene.getRoot();
 		registerTabPane(tabPane);
