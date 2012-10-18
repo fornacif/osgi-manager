@@ -7,61 +7,77 @@
 <?import javafx.scene.layout.*?>
 <?import com.fornacif.osgi.manager.internal.components.*?>
 <fx:root type="javafx.scene.layout.VBox"
-	xmlns:fx="http://javafx.com/fxml"
-	spacing="10" fillWidth="false">
-	<padding>
-         <Insets top="10" right="10" bottom="10" left="10"/>
-     </padding>
-	<Label fx:id="bundlesLabel" />
-
-	<TableView fx:id="bundlesTableView" prefHeight="700">
-		<columns>
-			<TableColumn fx:id="id" text="ID" prefWidth="40">
-				<cellValueFactory>
-					<PropertyValueFactory property="id" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn text="STATE" prefWidth="75">
-				<cellValueFactory>
-					<PropertyValueFactory property="state" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn text="LEVEL" prefWidth="60">
-				<cellValueFactory>
-					<PropertyValueFactory property="startLevel" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn text="NAME" prefWidth="300">
-				<cellValueFactory>
-					<PropertyValueFactory property="name" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn text="SYMBOLIC NAME" prefWidth="200">
-				<cellValueFactory>
-					<PropertyValueFactory property="symbolicName" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn text="VERSION" prefWidth="150">
-				<cellValueFactory>
-					<PropertyValueFactory property="version" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn text="ACTION" prefWidth="180">
-				<cellValueFactory>
-					<PropertyValueFactory property="bundle" />
-				</cellValueFactory>
-				<cellFactory>
-                    <BundleActionCellFactory onAction="#handleBundleAction">
-					</BundleActionCellFactory>
-                </cellFactory>
-			</TableColumn>
-		</columns>
-		<items>
-			<FXCollections fx:factory="observableArrayList" />
-		</items>
-		<sortOrder>
-			<fx:reference source="id"/>
-		</sortOrder>   
-	</TableView>
-
+	xmlns:fx="http://javafx.com/fxml">
+	<BorderPane>
+		<left>
+			<ToolBar >
+				<Label text="Bundles:" prefHeight="25.0" />
+				<Label fx:id="bundlesCountLabel" />
+			</ToolBar>
+		</left>
+		<center>
+			<ToolBar>
+				<Label prefHeight="25.0"/>
+			</ToolBar>
+		</center>
+		<right>
+			<ToolBar>
+				<TextField fx:id="filterTextField" onKeyReleased="#filterBundles" prefHeight="25.0" prefWidth="250" promptText="filter" />
+			</ToolBar>
+		</right>
+	</BorderPane>
+	<VBox>
+		<padding>
+			<Insets top="10" right="10" bottom="10" left="10"/>
+	    </padding>
+		<TableView fx:id="bundlesTableView" prefHeight="700">
+			<columns>
+				<TableColumn fx:id="id" text="ID" minWidth="40">
+					<cellValueFactory>
+						<PropertyValueFactory property="id" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="STATE" prefWidth="75">
+					<cellValueFactory>
+						<PropertyValueFactory property="state" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="LEVEL" prefWidth="60">
+					<cellValueFactory>
+						<PropertyValueFactory property="startLevel" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="NAME" prefWidth="300">
+					<cellValueFactory>
+						<PropertyValueFactory property="name" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="SYMBOLIC NAME" prefWidth="225">
+					<cellValueFactory>
+						<PropertyValueFactory property="symbolicName" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="VERSION" prefWidth="150">
+					<cellValueFactory>
+						<PropertyValueFactory property="version" />
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn text="ACTION" prefWidth="150">
+					<cellValueFactory>
+						<PropertyValueFactory property="bundle" />
+					</cellValueFactory>
+					<cellFactory>
+	                    <BundleActionCellFactory onAction="#executeBundleAction">
+						</BundleActionCellFactory>
+	                </cellFactory>
+				</TableColumn>
+			</columns>
+			<items>
+				<FXCollections fx:factory="observableArrayList" />
+			</items>
+			<sortOrder>
+				<fx:reference source="id"/>
+			</sortOrder>   
+		</TableView>
+	</VBox>
 </fx:root>

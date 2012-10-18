@@ -19,6 +19,7 @@
 		<target.version>1.7</target.version>
 		<javafx.path>C:/Program Files/Java/jre7/lib/jfxrt.jar</javafx.path>
 		<javafx.version>2.2.1</javafx.version>
+		<guava.version>13.0.1</guava.version>
 	</properties>
 
 	<dependencies>
@@ -58,6 +59,11 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.version}</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
 		</dependency>
 	</dependencies>
 
