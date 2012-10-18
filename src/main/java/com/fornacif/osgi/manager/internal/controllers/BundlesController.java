@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -56,16 +55,15 @@ public class BundlesController extends VBox implements Initializable {
 	
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		loadBundles();
+		listBundles();
 	}
 
-	protected void loadBundles() {
-		List<BundleModel> bundles = new ArrayList<>();
+	protected void listBundles() {
 		try {
-			bundles = bundlesService.listBundles();
+			List<BundleModel> bundles = bundlesService.listBundles();
 			unfilteredBundles.clear();
 			unfilteredBundles.addAll(bundles);
-			updateTableView(bundles);
+			filterBundles();
 			bundlesCountLabel.setText(String.valueOf(bundles.size()));
 		} catch (IOException e) {
 			LOGGER.error("Error during loading bundles", e);
@@ -74,7 +72,7 @@ public class BundlesController extends VBox implements Initializable {
 
 	
 	@FXML
-	protected void filterBundles(KeyEvent keyEvent) {
+	protected void filterBundles() {
 		Predicate<BundleModel> predicate = new Predicate<BundleModel>() {
 			public boolean apply(BundleModel bundleModel) {
 				if (!filterTextField.getText().equals("")) {
@@ -92,7 +90,7 @@ public class BundlesController extends VBox implements Initializable {
 		Action action = bundleActionEvent.getAction();
 		Long bundleId = bundleActionEvent.getBundleId();
 		bundlesService.executeAction(action, bundleId);
-		loadBundles();
+		listBundles();
 	}
 	
 	private void updateTableView(Collection<BundleModel> filteredBundles) {
