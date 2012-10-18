@@ -8,24 +8,10 @@
 <?import com.fornacif.osgi.manager.internal.components.*?>
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml">
-	<BorderPane>
-		<left>
-			<ToolBar >
-				<Label text="Bundles:" prefHeight="25.0" />
-				<Label fx:id="bundlesCountLabel" />
-			</ToolBar>
-		</left>
-		<center>
-			<ToolBar>
-				<Label prefHeight="25.0"/>
-			</ToolBar>
-		</center>
-		<right>
-			<ToolBar>
-				<TextField fx:id="filterTextField" onKeyReleased="#filterBundles" prefHeight="25.0" prefWidth="250" promptText="filter" />
-			</ToolBar>
-		</right>
-	</BorderPane>
+	<ToolBar >
+		<Label text="Bundles:" />
+		<Label fx:id="bundlesCountLabel" />
+	</ToolBar>
 	<VBox>
 		<padding>
 			<Insets top="10" right="10" bottom="10" left="10"/>
@@ -47,7 +33,16 @@
 						<PropertyValueFactory property="startLevel" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn text="NAME" prefWidth="300">
+				<TableColumn prefWidth="300">
+					<graphic>
+						<VBox spacing="5" alignment="CENTER">
+							<padding>
+								<Insets top="5" right="5" bottom="5" left="5"/>
+						    </padding>
+							<Label text="NAME" />
+							<TextField fx:id="bundleNameFilterTextField" promptText="Filter" />
+						</VBox>
+					</graphic>
 					<cellValueFactory>
 						<PropertyValueFactory property="name" />
 					</cellValueFactory>

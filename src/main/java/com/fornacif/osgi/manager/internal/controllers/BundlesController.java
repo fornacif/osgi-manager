@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -44,7 +46,7 @@ public class BundlesController extends VBox implements Initializable {
 	private TableView<BundleModel> bundlesTableView;
 	
 	@FXML
-	private TextField filterTextField;
+	private TextField bundleNameFilterTextField;
 	
 	private List<BundleModel> unfilteredBundles = new ArrayList<>();
 
@@ -56,33 +58,7 @@ public class BundlesController extends VBox implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		listBundles();
-	}
-
-	protected void listBundles() {
-		try {
-			List<BundleModel> bundles = bundlesService.listBundles();
-			unfilteredBundles.clear();
-			unfilteredBundles.addAll(bundles);
-			filterBundles();
-			bundlesCountLabel.setText(String.valueOf(bundles.size()));
-		} catch (IOException e) {
-			LOGGER.error("Error during loading bundles", e);
-		}		
-	}
-
-	
-	@FXML
-	protected void filterBundles() {
-		Predicate<BundleModel> predicate = new Predicate<BundleModel>() {
-			public boolean apply(BundleModel bundleModel) {
-				if (!filterTextField.getText().equals("")) {
-					return bundleModel.getName().toUpperCase().contains(filterTextField.getText().toUpperCase());
-				} 
-				return true;	
-			}
-		};
-		Collection<BundleModel> filteredBundles = Collections2.filter(unfilteredBundles, predicate);
-		updateTableView(filteredBundles);
+		handleBundleNameFilter();	
 	}
 
 	@FXML
@@ -93,7 +69,32 @@ public class BundlesController extends VBox implements Initializable {
 		listBundles();
 	}
 	
-	private void updateTableView(Collection<BundleModel> filteredBundles) {
+	private void listBundles() {
+		try {
+			List<BundleModel> bundles = bundlesService.listBundles();
+			unfilteredBundles.clear();
+			unfilteredBundles.addAll(bundles);
+			filterBundleName();
+			bundlesCountLabel.setText(String.valueOf(bundles.size()));
+		} catch (IOException e) {
+			LOGGER.error("Error during loading bundles", e);
+		}		
+	}
+
+	private void filterBundleName() {
+		Predicate<BundleModel> predicate = new Predicate<BundleModel>() {
+			public boolean apply(BundleModel bundleModel) {
+				if (!bundleNameFilterTextField.getText().equals("")) {
+					return bundleModel.getName().toUpperCase().contains(bundleNameFilterTextField.getText().toUpperCase());
+				} 
+				return true;	
+			}
+		};
+		Collection<BundleModel> filteredBundles = Collections2.filter(unfilteredBundles, predicate);
+		updateTableViewContent(filteredBundles);
+	}
+	
+	private void updateTableViewContent(Collection<BundleModel> filteredBundles) {
 		bundlesTableView.getItems().setAll(filteredBundles);
 		ObservableList<TableColumn<BundleModel, ?>> sortOrder = bundlesTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
@@ -101,5 +102,13 @@ public class BundlesController extends VBox implements Initializable {
 			sortOrder.clear();
 			sortOrder.add(sortedTableColumn);
 		}
+	}
+	
+	private void handleBundleNameFilter() {
+		bundleNameFilterTextField.textProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+            	filterBundleName();
+            }
+        });
 	}
 }
