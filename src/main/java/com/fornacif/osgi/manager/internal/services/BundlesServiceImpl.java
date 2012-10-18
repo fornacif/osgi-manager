@@ -24,9 +24,9 @@ import com.fornacif.osgi.manager.services.JMXService;
 
 @Component
 public class BundlesServiceImpl implements BundlesService {
-	
+
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-	
+
 	private JMXService jmxService;
 
 	@Reference
@@ -44,9 +44,9 @@ public class BundlesServiceImpl implements BundlesService {
 	@Override
 	public void executeAction(Action action, Long bundleId) throws IOException {
 		FrameworkMBean mbeanProxy = jmxService.getFrameworkMBean();
-		
+
 		LOGGER.debug("{} {}", action, bundleId);
-		
+
 		switch (action) {
 		case START:
 			mbeanProxy.startBundle(bundleId);
@@ -62,35 +62,35 @@ public class BundlesServiceImpl implements BundlesService {
 			break;
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private List<BundleModel> buildModel(TabularData bundleData) {
 		List<BundleModel> bundles = new ArrayList<>();
 		Collection<CompositeData> bundlesCompositeData = (Collection<CompositeData>) bundleData.values();
 		for (CompositeData bundleCompositeData : bundlesCompositeData) {
 			BundleModel bundleModel = new BundleModel();
-			
+
 			Long id = (Long) bundleCompositeData.get(BundleStateMBean.IDENTIFIER);
 			String symbolicName = (String) bundleCompositeData.get(BundleStateMBean.SYMBOLIC_NAME);
 			String version = (String) bundleCompositeData.get(BundleStateMBean.VERSION);
 			String state = (String) bundleCompositeData.get(BundleStateMBean.STATE);
 			Integer startLevel = (Integer) bundleCompositeData.get(BundleStateMBean.START_LEVEL);
 			TabularData headers = (TabularData) bundleCompositeData.get(BundleStateMBean.HEADERS);
-			
+
 			bundleModel.setId(id);
 			bundleModel.setSymbolicName(symbolicName);
 			bundleModel.setVersion(version);
 			bundleModel.setState(state);
 			bundleModel.setStartLevel(startLevel);
-			
+
 			Collection<CompositeData> headersCompositeData = (Collection<CompositeData>) headers.values();
 			for (CompositeData headerCompositeData : headersCompositeData) {
 				if (headerCompositeData.containsValue("Bundle-Name")) {
-					String name= (String) headerCompositeData.get("Value");
+					String name = (String) headerCompositeData.get("Value");
 					bundleModel.setName(name);
 				}
 			}
-			
+
 			bundles.add(bundleModel);
 		}
 		return bundles;
