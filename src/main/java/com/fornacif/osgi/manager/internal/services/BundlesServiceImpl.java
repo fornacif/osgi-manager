@@ -23,41 +23,30 @@ import aQute.bnd.annotation.component.Reference;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
 import com.fornacif.osgi.manager.services.BundlesService;
-import com.fornacif.osgi.manager.services.JMXConnectorService;
+import com.fornacif.osgi.manager.services.JMXService;
 
 @Component
 public class BundlesServiceImpl implements BundlesService {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	private final String BUNDLESTATE_BEAN_NAME = "osgi.core:type=bundleState,version=1.7";
-	private final String FRAMEWORK_BEAN_NAME = "osgi.core:type=framework,version=1.7";
-	
-	private ObjectName bundleStateObjectName;
-	private ObjectName frameworkObjectName;
-	
-	private JMXConnectorService jmxConnectorService;
+	private JMXService jmxService;
 
 	@Reference
-	public void bindJmxConnectorService(JMXConnectorService jmxConnectorService) throws MalformedObjectNameException {
-		this.jmxConnectorService = jmxConnectorService;
-		this.bundleStateObjectName = new ObjectName(BUNDLESTATE_BEAN_NAME);
-		this.frameworkObjectName = new ObjectName(FRAMEWORK_BEAN_NAME);
+	public void bindJmxConnectorService(JMXService jmxConnectorService) throws MalformedObjectNameException {
+		this.jmxService = jmxConnectorService;
 	}
 
 	@Override
 	public List<BundleModel> listBundles() throws IOException {
-		MBeanServerConnection mbeanServerConnection = jmxConnectorService.connect();
-		BundleStateMBean mbeanProxy = JMX.newMBeanProxy(mbeanServerConnection, bundleStateObjectName, BundleStateMBean.class, true);
-		TabularData bundles = mbeanProxy.listBundles();
-		jmxConnectorService.close();
+		BundleStateMBean bundleStateMBean = jmxService.getBundleStateMBean();
+		TabularData bundles = bundleStateMBean.listBundles();
 		return buildModel(bundles);
 	}
 
 	@Override
 	public void executeAction(Action action, Long bundleId) throws IOException {
-		MBeanServerConnection mbeanServerConnection = jmxConnectorService.connect();
-		FrameworkMBean mbeanProxy = JMX.newMBeanProxy(mbeanServerConnection, frameworkObjectName, FrameworkMBean.class, true);
+		FrameworkMBean mbeanProxy = jmxService.getFrameworkMBean();
 		LOGGER.debug("{} {}", action, bundleId);
 		
 		switch (action) {
@@ -74,9 +63,6 @@ public class BundlesServiceImpl implements BundlesService {
 			mbeanProxy.uninstallBundle(bundleId);
 			break;
 		}
-		
-		jmxConnectorService.close();
-		
 	}
 	
 	private List<BundleModel> buildModel(TabularData bundleData) {
