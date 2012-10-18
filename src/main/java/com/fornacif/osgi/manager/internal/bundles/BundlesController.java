@@ -7,19 +7,18 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TableView.ResizeFeatures;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
@@ -27,6 +26,8 @@ import aQute.bnd.annotation.component.ConfigurationPolicy;
 
 @Component(name = "BundlesController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
 public class BundlesController extends VBox implements Initializable {
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+	
 	private BundleContext bundleContext;
 
 	@FXML
@@ -40,7 +41,6 @@ public class BundlesController extends VBox implements Initializable {
 		this.bundleContext = bundleContext;
 	}
 
-	@FXML
 	protected void loadBundles() {
 		Bundle[] bundles = bundleContext.getBundles();
 		Collection<BundleTableRow> bundleRows = new ArrayList<>();
@@ -57,6 +57,11 @@ public class BundlesController extends VBox implements Initializable {
 		}
 
 		bundlesLabel.setText("Informations: " + bundles.length + " bundles");
+	}
+	
+	@FXML
+	protected void handleBundleAction(BundleActionEvent bundleActionEvent) {
+		LOGGER.debug("{} {}", bundleActionEvent.getAction(), bundleActionEvent.getBundleId());
 	}
 
 	@Override

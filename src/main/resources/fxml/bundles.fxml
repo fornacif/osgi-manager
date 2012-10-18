@@ -51,7 +51,7 @@
 					<PropertyValueFactory property="bundle" />
 				</cellValueFactory>
 				<cellFactory>
-                    <BundleActionCellFactory onAction="#loadBundles">
+                    <BundleActionCellFactory onAction="#handleBundleAction">
 					</BundleActionCellFactory>
                 </cellFactory>
 			</TableColumn>

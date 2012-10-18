@@ -21,20 +21,17 @@ import javafx.util.Callback;
 import javafx.util.Duration;
 
 import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.fornacif.osgi.manager.internal.bundles.BundleActionEvent.Action;
 
 public class BundleActionCellFactory implements Callback<TableColumn<BundleTableRow, Bundle>, TableCell<BundleTableRow, Bundle>> {
-	
-	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
 	private static final Image STOP_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/stop-16x16.png"));
 	private static final Image START_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/start-16x16.png"));
 	private static final Image UPDATE_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/update-16x16.png"));
 	private static final Image UNINSTALL_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/uninstall-16x16.png"));
 
-	private ObjectProperty<EventHandler<ActionEvent>> propertyOnAction = new SimpleObjectProperty<EventHandler<ActionEvent>>();
+	private ObjectProperty<EventHandler<BundleActionEvent>> propertyOnAction = new SimpleObjectProperty<EventHandler<BundleActionEvent>>();
 
 	@Override
 	public TableCell<BundleTableRow, Bundle> call(TableColumn<BundleTableRow, Bundle> tableColumn) {
@@ -60,20 +57,6 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 				final FadeTransition fadeInTransition = new FadeTransition(Duration.millis(500), confirmationHBox);
 				fadeInTransition.setFromValue(0.0);
 				fadeInTransition.setToValue(1.0);
-
-				final FadeTransition fadeOutTransition = new FadeTransition(Duration.millis(100), confirmationHBox);
-				fadeOutTransition.setFromValue(1.0);
-				fadeOutTransition.setToValue(0.0);
-				fadeOutTransition.setOnFinished(new EventHandler<ActionEvent>() {
-					@Override
-					public void handle(ActionEvent actionEvent) {
-						confirmationHBox.setVisible(false);
-						confirmationHBox.setManaged(false);
-						actionsHBox.setDisable(false);
-						onActionProperty().get().handle(actionEvent);
-					}
-		
-				});
 				
 				Button startStopButton = new Button();
 				startStopButton.setCursor(Cursor.HAND);
@@ -88,28 +71,18 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 				startStopButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						try {
-							if (bundle.getState() == Bundle.ACTIVE) {
-								bundle.stop();
-							} else {
-								bundle.start();
-							}
-						} catch (BundleException e) {
-							LOGGER.error("Error during bundle startup or stop", e);
+						if (bundle.getState() == Bundle.ACTIVE) {
+							onActionProperty().get().handle(new BundleActionEvent(Action.STOP, bundle.getBundleId()));
+						} else {
+							onActionProperty().get().handle(new BundleActionEvent(Action.START, bundle.getBundleId()));
 						}
-						onActionProperty().get().handle(actionEvent);
 					}
 				});
 				
 				Button updateButton = ButtonBuilder.create().tooltip(new Tooltip("Update")).cursor(Cursor.HAND).graphic(new ImageView(UPDATE_ICON_16)).onAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						try {
-							bundle.update();
-						} catch (BundleException e) {
-							LOGGER.error("Error during bundle update", e);
-						}
-						onActionProperty().get().handle(actionEvent);
+						onActionProperty().get().handle(new BundleActionEvent(Action.UPDATE, bundle.getBundleId()));
 					}
 				}).build();
 	
@@ -128,19 +101,19 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 				Button validUninstallButton = ButtonBuilder.create().defaultButton(true).text("Yes").tooltip(new Tooltip("Uninstall")).cursor(Cursor.HAND).onAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						try {
-							fadeOutTransition.play();
-							bundle.uninstall();
-						} catch (BundleException e) {
-							LOGGER.error("Error during bundle uninstall", e);
-						}
+						confirmationHBox.setVisible(false);
+						confirmationHBox.setManaged(false);
+						actionsHBox.setDisable(false);
+						onActionProperty().get().handle(new BundleActionEvent(Action.UNINSTALL, bundle.getBundleId()));
 					}
 				}).build();
 				
 				Button cancelUninstallButton = ButtonBuilder.create().text("No").tooltip(new Tooltip("Cancel")).cursor(Cursor.HAND).onAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						fadeOutTransition.play();
+						confirmationHBox.setVisible(false);
+						confirmationHBox.setManaged(false);
+						actionsHBox.setDisable(false);
 					}
 				}).build();
 				
@@ -154,15 +127,15 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 		return cell;
 	}
 	
-	public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() {
+	public final ObjectProperty<EventHandler<BundleActionEvent>> onActionProperty() {
 		return propertyOnAction;
 	}
 
-	public final void setOnAction(EventHandler<ActionEvent> handler) {
+	public final void setOnAction(EventHandler<BundleActionEvent> handler) {
 		propertyOnAction.set(handler);
 	}
 
-	public final EventHandler<ActionEvent> getOnAction() {
+	public final EventHandler<BundleActionEvent> getOnAction() {
 		return propertyOnAction.get();
 	}
 
