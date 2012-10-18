@@ -1,4 +1,4 @@
-package com.fornacif.osgi.manager.internal.bundles;
+package com.fornacif.osgi.manager.internal.components;
 
 import javafx.animation.FadeTransition;
 import javafx.beans.property.ObjectProperty;
@@ -20,11 +20,11 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import javafx.util.Duration;
 
-import org.osgi.framework.Bundle;
+import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
+import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
+import com.fornacif.osgi.manager.internal.models.BundleModel;
 
-import com.fornacif.osgi.manager.internal.bundles.BundleActionEvent.Action;
-
-public class BundleActionCellFactory implements Callback<TableColumn<BundleTableRow, Bundle>, TableCell<BundleTableRow, Bundle>> {
+public class BundleActionCellFactory implements Callback<TableColumn<BundleModel, BundleModel>, TableCell<BundleModel, BundleModel>> {
 	
 	private static final Image STOP_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/stop-16x16.png"));
 	private static final Image START_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/start-16x16.png"));
@@ -34,10 +34,10 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 	private ObjectProperty<EventHandler<BundleActionEvent>> propertyOnAction = new SimpleObjectProperty<EventHandler<BundleActionEvent>>();
 
 	@Override
-	public TableCell<BundleTableRow, Bundle> call(TableColumn<BundleTableRow, Bundle> tableColumn) {
-		TableCell<BundleTableRow, Bundle> cell = new TableCell<BundleTableRow, Bundle>() {
+	public TableCell<BundleModel, BundleModel> call(TableColumn<BundleModel, BundleModel> tableColumn) {
+		TableCell<BundleModel, BundleModel> cell = new TableCell<BundleModel, BundleModel>() {
 			@Override
-			protected void updateItem(final Bundle bundle, final boolean empty) {
+			protected void updateItem(final BundleModel bundle, final boolean empty) {
 				if (bundle == null) {
 					return;
 				}
@@ -60,7 +60,7 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 				
 				Button startStopButton = new Button();
 				startStopButton.setCursor(Cursor.HAND);
-				if (bundle.getState() == Bundle.ACTIVE) {
+				if (bundle.getState().equals("ACTIVE")) {
 					startStopButton.setTooltip(new Tooltip("Stop"));
 					startStopButton.setGraphic(new ImageView(STOP_ICON_16));
 				} else {
@@ -71,10 +71,10 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 				startStopButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						if (bundle.getState() == Bundle.ACTIVE) {
-							onActionProperty().get().handle(new BundleActionEvent(Action.STOP, bundle.getBundleId()));
+						if (bundle.getState().equals("ACTIVE")) {
+							onActionProperty().get().handle(new BundleActionEvent(Action.STOP, bundle.getId()));
 						} else {
-							onActionProperty().get().handle(new BundleActionEvent(Action.START, bundle.getBundleId()));
+							onActionProperty().get().handle(new BundleActionEvent(Action.START, bundle.getId()));
 						}
 					}
 				});
@@ -82,7 +82,8 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 				Button updateButton = ButtonBuilder.create().tooltip(new Tooltip("Update")).cursor(Cursor.HAND).graphic(new ImageView(UPDATE_ICON_16)).onAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						onActionProperty().get().handle(new BundleActionEvent(Action.UPDATE, bundle.getBundleId()));
+						System.out.println(actionEvent.getTarget());
+						onActionProperty().get().handle(new BundleActionEvent(Action.UPDATE, bundle.getId()));
 					}
 				}).build();
 	
@@ -104,7 +105,7 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleTable
 						confirmationHBox.setVisible(false);
 						confirmationHBox.setManaged(false);
 						actionsHBox.setDisable(false);
-						onActionProperty().get().handle(new BundleActionEvent(Action.UNINSTALL, bundle.getBundleId()));
+						onActionProperty().get().handle(new BundleActionEvent(Action.UNINSTALL, bundle.getId()));
 					}
 				}).build();
 				

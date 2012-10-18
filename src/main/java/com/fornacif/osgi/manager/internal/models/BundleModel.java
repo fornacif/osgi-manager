@@ -1,15 +1,14 @@
-package com.fornacif.osgi.manager.internal.bundles;
+package com.fornacif.osgi.manager.internal.models;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.Constants;
 import org.osgi.framework.startlevel.BundleStartLevel;
 
-public class BundleTableRow {
+public class BundleModel {
 
 	private final SimpleLongProperty id;
 	private final SimpleStringProperty state;
@@ -17,16 +16,14 @@ public class BundleTableRow {
 	private final SimpleStringProperty symbolicName;
 	private final SimpleStringProperty version;
 	private final SimpleIntegerProperty startLevel;
-	private final SimpleObjectProperty<Bundle> bundle;
 
-	public BundleTableRow(Bundle bundle) {
+	public BundleModel(Bundle bundle) {
 		this.id = new SimpleLongProperty(bundle.getBundleId());
 		this.state = getState(bundle);
 		this.name = new SimpleStringProperty(bundle.getHeaders().get(Constants.BUNDLE_NAME).toString());
 		this.symbolicName = new SimpleStringProperty(bundle.getSymbolicName());
 		this.version = new SimpleStringProperty(bundle.getVersion().toString());
 		this.startLevel = getStartLevel(bundle);
-		this.bundle = new SimpleObjectProperty<Bundle>(bundle);
 	}
 
 	private SimpleStringProperty getState(Bundle bundle) {
@@ -101,12 +98,8 @@ public class BundleTableRow {
 		this.startLevel.set(startLevel);
 	}
 	
-	public Bundle getBundle() {
-		return bundle.get();
-	}
-	
-	public void setBundle(Bundle bundle) {
-		this.bundle.set(bundle);
+	public BundleModel getBundle() {
+		return this;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.fornacif.osgi.manager.internal.services;
+package com.fornacif.osgi.manager.internal.controllers;
 
 import java.net.URL;
 import java.util.Map;

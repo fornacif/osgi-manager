@@ -1,4 +1,4 @@
-package com.fornacif.osgi.manager.internal.bundles;
+package com.fornacif.osgi.manager.internal.events;
 
 import javafx.event.ActionEvent;
 
