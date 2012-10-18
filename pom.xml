@@ -11,6 +11,7 @@
 	<properties>
 		<osgi.core.version>4.3.0</osgi.core.version>
 		<osgi.compendium.version>4.3.0</osgi.compendium.version>
+		<osgi.enterprise.version>5.0.0</osgi.enterprise.version>
 		<maven-bundle-plugin.version>2.3.7</maven-bundle-plugin.version>
 		<slf4j.version>1.7.2</slf4j.version>
 		<compiler.version>2.4</compiler.version>
@@ -31,6 +32,12 @@
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.compendium</artifactId>
 			<version>${osgi.compendium.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.osgi</groupId>
+			<artifactId>org.osgi.enterprise</artifactId>
+			<version>${osgi.enterprise.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

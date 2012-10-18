@@ -24,10 +24,10 @@ public class TabPaneManager {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private final static String TAB_FXML_SERVICE_PROPERTY = "tab.fxml";
-	private final static String TAB_POSITION_SERVICE_PROPERTY = "tab.position";
-	private final static String TAB_SELECT_SERVICE_PROPERTY = "tab.select";
-	private final static String TAB_TEXT_SERVICE_PROPERTY = "tab.text";
+	private final String TAB_FXML_SERVICE_PROPERTY = "tab.fxml";
+	private final String TAB_POSITION_SERVICE_PROPERTY = "tab.position";
+	private final String TAB_SELECT_SERVICE_PROPERTY = "tab.select";
+	private final String TAB_TEXT_SERVICE_PROPERTY = "tab.text";
 
 	private TabPane tabPane;
 	private ServiceTracker<Pane, Tab> controllerTracker;

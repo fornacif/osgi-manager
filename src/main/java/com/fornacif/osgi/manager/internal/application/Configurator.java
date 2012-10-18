@@ -21,8 +21,8 @@ import aQute.bnd.annotation.component.Reference;
 public class Configurator {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	private final static String CONFIGURATIONS_DIR = "/configurations";
-	private final static String CONFIGURATION_EXTENSION = ".properties";
+	private final String CONFIGURATIONS_DIR = "/configurations";
+	private final String CONFIGURATION_EXTENSION = ".properties";
 	private ConfigurationAdmin configurationAdmin;
 
 	@Reference
@@ -53,6 +53,7 @@ public class Configurator {
 		}
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void configure(String configurationPath) throws IOException {
 		String configurationFileName = new File(configurationPath).getName();
 		String configurationName = configurationFileName.substring(0, configurationFileName.length() - CONFIGURATION_EXTENSION.length());

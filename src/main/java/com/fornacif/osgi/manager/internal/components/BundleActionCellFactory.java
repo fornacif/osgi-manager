@@ -26,10 +26,10 @@ import com.fornacif.osgi.manager.internal.models.BundleModel;
 
 public class BundleActionCellFactory implements Callback<TableColumn<BundleModel, BundleModel>, TableCell<BundleModel, BundleModel>> {
 	
-	private static final Image STOP_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/stop-16x16.png"));
-	private static final Image START_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/start-16x16.png"));
-	private static final Image UPDATE_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/update-16x16.png"));
-	private static final Image UNINSTALL_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/uninstall-16x16.png"));
+	private final Image STOP_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/stop-16x16.png"));
+	private final Image START_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/start-16x16.png"));
+	private final Image UPDATE_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/update-16x16.png"));
+	private final Image UNINSTALL_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/uninstall-16x16.png"));
 
 	private ObjectProperty<EventHandler<BundleActionEvent>> propertyOnAction = new SimpleObjectProperty<EventHandler<BundleActionEvent>>();
 

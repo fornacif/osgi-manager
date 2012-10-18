@@ -21,8 +21,8 @@ public class Launcher extends Application {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	private final static String APPLICATION_FXML = "/fxml/application.fxml";
-	private final static String TITLE_PROPERTIES = "title";
+	private final String APPLICATION_FXML = "/fxml/application.fxml";
+	private final String TITLE_PROPERTIES = "title";
 
 	private static String title;
 	private static BundleContext bundleContext;
