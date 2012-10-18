@@ -82,7 +82,6 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 				Button updateButton = ButtonBuilder.create().tooltip(new Tooltip("Update")).cursor(Cursor.HAND).graphic(new ImageView(UPDATE_ICON_16)).onAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						System.out.println(actionEvent.getTarget());
 						onActionProperty().get().handle(new BundleActionEvent(Action.UPDATE, bundle.getId()));
 					}
 				}).build();
