@@ -1,14 +1,15 @@
 package com.fornacif.osgi.manager.internal.controllers;
 
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,7 +29,9 @@ import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
-import com.fornacif.osgi.manager.internal.models.BundleModel;
+import com.fornacif.osgi.manager.internal.models.BundleRow;
+import com.fornacif.osgi.manager.internal.models.BundlesModel;
+import com.fornacif.osgi.manager.services.AsynchronousCallerService;
 import com.fornacif.osgi.manager.services.BundlesService;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -36,69 +39,96 @@ import com.google.common.collect.Collections2;
 @Component(name = "BundlesController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
 public class BundlesController extends VBox implements Initializable {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-	
-	private BundlesService bundlesService;
 
 	@FXML
 	private Label bundlesCountLabel;
 
 	@FXML
-	private TableView<BundleModel> bundlesTableView;
+	private TableView<BundleRow> bundlesTableView;
 	
 	@FXML
 	private TextField bundleNameFilterTextField;
 	
-	private List<BundleModel> unfilteredBundles = new ArrayList<>();
+	private BundlesService bundlesService;
+	
+	private BundlesModel bundlesModel;
+	
+	private ObjectProperty<ObservableList<BundleRow>> filteredBundlesProperty = new SimpleObjectProperty<>();
+	
+	private AsynchronousCallerService asynchronousCallerService;
+
+	@Reference
+	public void bindBundlesModel(BundlesModel bundlesModel) {
+		this.bundlesModel = bundlesModel;
+	}
 
 	@Reference
 	public void bindBundlesService(BundlesService bundlesService) {
 		this.bundlesService = bundlesService;
 	}
 	
+	
+	@Reference
+	public void bindAsynchronousCallerService(AsynchronousCallerService asynchronousCallerService) {
+		this.asynchronousCallerService = asynchronousCallerService;
+	}
+	
 	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle) {
+	public void initialize(URL url, ResourceBundle resourceBundle) {	
+		bundlesModel.getBundles().addListener(new ChangeListener<ObservableList<BundleRow>>() {
+			@Override
+			public void changed(ObservableValue<? extends ObservableList<BundleRow>> arg0, ObservableList<BundleRow> arg1, ObservableList<BundleRow> arg2) {
+				LOGGER.debug("Bundle list changed");
+				applyBundleNameFilter();
+			}
+		});
+		
+		bundlesTableView.itemsProperty().bind(filteredBundlesProperty);
+		bundlesCountLabel.textProperty().bind(bundlesModel.getBundlesCount());
+		handleBundleNameFilter();
 		listBundles();
-		handleBundleNameFilter();	
 	}
 
 	@FXML
-	protected void executeBundleAction(BundleActionEvent bundleActionEvent) throws IOException {
-		Action action = bundleActionEvent.getAction();
-		Long bundleId = bundleActionEvent.getBundleId();
-		bundlesService.executeAction(action, bundleId);
-		listBundles();
-	}
-	
-	private void listBundles() {
-		try {
-			List<BundleModel> bundles = bundlesService.listBundles();
-			unfilteredBundles.clear();
-			unfilteredBundles.addAll(bundles);
-			filterBundleName();
-			bundlesCountLabel.setText(String.valueOf(bundles.size()));
-		} catch (IOException e) {
-			LOGGER.error("Error during loading bundles", e);
-		}		
+	protected void executeBundleAction(final BundleActionEvent bundleActionEvent) throws Exception {
+		asynchronousCallerService.callAsynchronously(new Callable<Void>() {
+			@Override
+			public Void call() throws Exception {
+				Action action = bundleActionEvent.getAction();
+				Long bundleId = bundleActionEvent.getBundleId();
+				bundlesService.executeAction(action, bundleId);
+				listBundles();
+				return null;
+			}
+		});
 	}
 
-	private void filterBundleName() {
-		Predicate<BundleModel> predicate = new Predicate<BundleModel>() {
-			public boolean apply(BundleModel bundleModel) {
+	private void listBundles() {
+		try {
+			bundlesService.loadBundles();
+		} catch (Exception e) {
+			LOGGER.error("Error during loading bundles", e);
+		}
+	}
+
+	private void applyBundleNameFilter() {
+		Predicate<BundleRow> predicate = new Predicate<BundleRow>() {
+			public boolean apply(BundleRow bundleModel) {
 				if (!bundleNameFilterTextField.getText().equals("")) {
 					return bundleModel.getName().toUpperCase().contains(bundleNameFilterTextField.getText().toUpperCase());
 				} 
 				return true;	
 			}
 		};
-		Collection<BundleModel> filteredBundles = Collections2.filter(unfilteredBundles, predicate);
-		updateTableViewContent(filteredBundles);
+		Collection<BundleRow> filteredBundles = Collections2.filter(bundlesModel.getBundles().get(), predicate);
+		filteredBundlesProperty.set(FXCollections.observableArrayList(filteredBundles));
+		updateSort();
 	}
 	
-	private void updateTableViewContent(Collection<BundleModel> filteredBundles) {
-		bundlesTableView.getItems().setAll(filteredBundles);
-		ObservableList<TableColumn<BundleModel, ?>> sortOrder = bundlesTableView.getSortOrder();
+	private void updateSort() {
+		ObservableList<TableColumn<BundleRow, ?>> sortOrder = bundlesTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
-			TableColumn<BundleModel, ?> sortedTableColumn = sortOrder.get(0);
+			TableColumn<BundleRow, ?> sortedTableColumn = sortOrder.get(0);
 			sortOrder.clear();
 			sortOrder.add(sortedTableColumn);
 		}
@@ -107,7 +137,7 @@ public class BundlesController extends VBox implements Initializable {
 	private void handleBundleNameFilter() {
 		bundleNameFilterTextField.textProperty().addListener(new ChangeListener<String>() {
             @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-            	filterBundleName();
+            	applyBundleNameFilter();
             }
         });
 	}

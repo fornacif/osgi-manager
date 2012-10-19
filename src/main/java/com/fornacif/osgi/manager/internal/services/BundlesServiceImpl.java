@@ -1,9 +1,11 @@
 package com.fornacif.osgi.manager.internal.services;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.openmbean.CompositeData;
@@ -18,7 +20,8 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
-import com.fornacif.osgi.manager.internal.models.BundleModel;
+import com.fornacif.osgi.manager.internal.models.BundleRow;
+import com.fornacif.osgi.manager.internal.models.BundlesModel;
 import com.fornacif.osgi.manager.services.BundlesService;
 import com.fornacif.osgi.manager.services.JMXService;
 
@@ -28,6 +31,13 @@ public class BundlesServiceImpl implements BundlesService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	private JMXService jmxService;
+	
+	private BundlesModel bundlesModel;
+	
+	@Reference
+	public void bindBundlesModel(BundlesModel bundlesModel) {
+		this.bundlesModel = bundlesModel;
+	}
 
 	@Reference
 	public void bindJmxConnectorService(JMXService jmxConnectorService) throws MalformedObjectNameException {
@@ -35,14 +45,21 @@ public class BundlesServiceImpl implements BundlesService {
 	}
 
 	@Override
-	public List<BundleModel> listBundles() throws IOException {
+	public void loadBundles() throws IOException {
 		BundleStateMBean bundleStateMBean = jmxService.getBundleStateMBean();
 		TabularData bundles = bundleStateMBean.listBundles();
-		return buildModel(bundles);
+		final ObservableList<BundleRow> observableList = buildObservableList(bundles);
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				bundlesModel.getBundles().set(observableList);
+				bundlesModel.getBundlesCount().set(String.valueOf(observableList.size()));		
+			}
+		});	
 	}
 
 	@Override
-	public void executeAction(Action action, Long bundleId) throws IOException {
+	public void executeAction(Action action, Long bundleId) throws IOException {	
 		FrameworkMBean mbeanProxy = jmxService.getFrameworkMBean();
 
 		LOGGER.debug("{} {}", action, bundleId);
@@ -64,11 +81,11 @@ public class BundlesServiceImpl implements BundlesService {
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<BundleModel> buildModel(TabularData bundleData) {
-		List<BundleModel> bundles = new ArrayList<>();
+	private ObservableList<BundleRow> buildObservableList(TabularData bundleData) {
+		ObservableList<BundleRow> bundles = FXCollections.observableArrayList();
 		Collection<CompositeData> bundlesCompositeData = (Collection<CompositeData>) bundleData.values();
 		for (CompositeData bundleCompositeData : bundlesCompositeData) {
-			BundleModel bundleModel = new BundleModel();
+			BundleRow bundleModel = new BundleRow();
 
 			Long id = (Long) bundleCompositeData.get(BundleStateMBean.IDENTIFIER);
 			String symbolicName = (String) bundleCompositeData.get(BundleStateMBean.SYMBOLIC_NAME);

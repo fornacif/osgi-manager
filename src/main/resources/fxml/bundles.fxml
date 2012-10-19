@@ -8,7 +8,7 @@
 <?import com.fornacif.osgi.manager.internal.components.*?>
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml">
-	<ToolBar >
+	<ToolBar>
 		<Label text="Bundles:" />
 		<Label fx:id="bundlesCountLabel" />
 	</ToolBar>
@@ -18,7 +18,7 @@
 	    </padding>
 		<TableView fx:id="bundlesTableView" prefHeight="700">
 			<columns>
-				<TableColumn fx:id="id" text="ID" minWidth="40">
+				<TableColumn fx:id="id" text="ID" minWidth="35">
 					<cellValueFactory>
 						<PropertyValueFactory property="id" />
 					</cellValueFactory>
@@ -28,7 +28,7 @@
 						<PropertyValueFactory property="state" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn text="LEVEL" prefWidth="60">
+				<TableColumn text="LEVEL" prefWidth="50">
 					<cellValueFactory>
 						<PropertyValueFactory property="startLevel" />
 					</cellValueFactory>
@@ -67,9 +67,6 @@
 	                </cellFactory>
 				</TableColumn>
 			</columns>
-			<items>
-				<FXCollections fx:factory="observableArrayList" />
-			</items>
 			<sortOrder>
 				<fx:reference source="id"/>
 			</sortOrder>   

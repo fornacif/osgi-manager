@@ -1,5 +1,7 @@
 package com.fornacif.osgi.manager.internal.application;
 
+import java.util.concurrent.Callable;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +21,8 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 
+import com.fornacif.osgi.manager.services.AsynchronousCallerService;
+
 @Component(name = "TabPaneManager", provide = {})
 public class TabPaneManager {
 	
@@ -30,16 +34,22 @@ public class TabPaneManager {
 	private final String TAB_TEXT_SERVICE_PROPERTY = "tab.text";
 
 	private TabPane tabPane;
-	private ServiceTracker<Pane, Tab> controllerTracker;
+	private ServiceTracker<Pane, Tab> paneTracker;
+	private AsynchronousCallerService asynchronousCallerService;
 
 	@Reference
 	public void bindTabPane(TabPane tabPane) {
 		this.tabPane = tabPane;
 	}
+	
+	@Reference
+	public void bindAsynchronousCallerService(AsynchronousCallerService asynchronousCallerService) {
+		this.asynchronousCallerService = asynchronousCallerService;
+	}
 
 	@Activate
 	public void activate(final BundleContext bundleContext) {
-		controllerTracker = new ServiceTracker<Pane, Tab>(bundleContext, Pane.class, null) {
+		paneTracker = new ServiceTracker<Pane, Tab>(bundleContext, Pane.class, null) {
 			@Override
 			public Tab addingService(ServiceReference<Pane> reference) {
 				Pane paneController = bundleContext.getService(reference);
@@ -63,12 +73,23 @@ public class TabPaneManager {
 				removeTab(tab);
 			}
 		};
-		controllerTracker.open();
+		
+		try {
+			asynchronousCallerService.callAsynchronously(new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					paneTracker.open();
+					return null;
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Deactivate
 	public void deactivate() {
-		controllerTracker.close();
+		paneTracker.close();
 	}
 
 	private Tab addTab(final Pane controller, final Bundle bundle, final String fxml, final String position, final String select, final String text) {
@@ -77,11 +98,11 @@ public class TabPaneManager {
 		} catch (Exception e) {
 			LOGGER.error("Error when loading FXML", e);
 		}
-
+		
 		final Tab tab = new Tab();
 		tab.setText(text);
 		tab.setContent(controller);
-
+		
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -91,6 +112,7 @@ public class TabPaneManager {
 				if (position != null && tabs.size() >= Integer.valueOf(position)) {
 					positionValue = Integer.valueOf(position);
 				}
+
 				tabs.add(Integer.valueOf(positionValue), tab);
 
 				if (select != null && Boolean.valueOf(select)) {

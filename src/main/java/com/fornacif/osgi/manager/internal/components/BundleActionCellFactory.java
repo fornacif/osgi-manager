@@ -22,9 +22,9 @@ import javafx.util.Duration;
 
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
-import com.fornacif.osgi.manager.internal.models.BundleModel;
+import com.fornacif.osgi.manager.internal.models.BundleRow;
 
-public class BundleActionCellFactory implements Callback<TableColumn<BundleModel, BundleModel>, TableCell<BundleModel, BundleModel>> {
+public class BundleActionCellFactory implements Callback<TableColumn<BundleRow, BundleRow>, TableCell<BundleRow, BundleRow>> {
 	
 	private final Image STOP_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/stop-16x16.png"));
 	private final Image START_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/start-16x16.png"));
@@ -34,10 +34,10 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 	private ObjectProperty<EventHandler<BundleActionEvent>> propertyOnAction = new SimpleObjectProperty<EventHandler<BundleActionEvent>>();
 
 	@Override
-	public TableCell<BundleModel, BundleModel> call(TableColumn<BundleModel, BundleModel> tableColumn) {
-		TableCell<BundleModel, BundleModel> cell = new TableCell<BundleModel, BundleModel>() {
+	public TableCell<BundleRow, BundleRow> call(TableColumn<BundleRow, BundleRow> tableColumn) {
+		TableCell<BundleRow, BundleRow> cell = new TableCell<BundleRow, BundleRow>() {
 			@Override
-			protected void updateItem(final BundleModel bundle, final boolean empty) {
+			protected void updateItem(final BundleRow bundle, final boolean empty) {
 				if (bundle == null) {
 					return;
 				}

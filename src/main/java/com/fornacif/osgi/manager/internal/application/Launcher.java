@@ -5,7 +5,7 @@ import java.util.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import org.osgi.framework.BundleContext;
@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
+import aQute.bnd.annotation.component.Reference;
 
 @Component(name = "Launcher", configurationPolicy = ConfigurationPolicy.require)
 public class Launcher extends Application {
@@ -25,11 +26,11 @@ public class Launcher extends Application {
 	private final String TITLE_PROPERTIES = "title";
 
 	private static String title;
-	private static BundleContext bundleContext;
+	
+	private static StackPane applicationController;
 
 	@Activate
 	public void activate(BundleContext bundleContext, Map<String, ?> properties) throws Exception {
-		Launcher.bundleContext = bundleContext;
 		title = (String) properties.get(TITLE_PROPERTIES);
 		new Thread(new Runnable() {
 			@Override
@@ -43,22 +44,25 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		FXMLLoader applicationLoader = new FXMLLoader(getClass().getResource(APPLICATION_FXML));
-		Scene scene = (Scene) applicationLoader.load();
+		applicationLoader.setController(applicationController);
+		applicationLoader.setRoot(applicationController);
+		applicationLoader.load();
+		Scene scene = new Scene(applicationController);
 		scene.getStylesheets().addAll(getClass().getResource("/css/application.css").toExternalForm());
-		TabPane tabPane = (TabPane) scene.getRoot();
-		registerTabPane(tabPane);
 		stage.setScene(scene);
 		stage.setTitle(title);
 		stage.show();
 	}
-	
-	private void registerTabPane(TabPane tabPane) {
-		Launcher.bundleContext.registerService(TabPane.class, tabPane, null);
-	}
+
 	
 	@Override
 	public void stop() throws Exception {
 		System.exit(0);
+	}
+	
+	@Reference
+	public void bindApplicationController(StackPane applicationController) {
+		Launcher.applicationController = applicationController;
 	}
 
 }
