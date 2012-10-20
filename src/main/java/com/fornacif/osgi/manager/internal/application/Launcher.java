@@ -5,7 +5,7 @@ import java.util.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import org.osgi.framework.BundleContext;
@@ -27,7 +27,7 @@ public class Launcher extends Application {
 
 	private static String title;
 	
-	private static StackPane applicationController;
+	private static VBox applicationController;
 
 	@Activate
 	public void activate(BundleContext bundleContext, Map<String, ?> properties) throws Exception {
@@ -61,7 +61,7 @@ public class Launcher extends Application {
 	}
 	
 	@Reference
-	public void bindApplicationController(StackPane applicationController) {
+	public void bindApplicationController(VBox applicationController) {
 		Launcher.applicationController = applicationController;
 	}
 

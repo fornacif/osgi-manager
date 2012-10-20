@@ -5,9 +5,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<fx:root type="javafx.scene.layout.StackPane" xmlns:fx="http://javafx.com/fxml" prefWidth="1024" prefHeight="768">
-	<StackPane>
-		<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" tabMinWidth="150" tabMinHeight="35" side="TOP">
+<fx:root type="javafx.scene.layout.VBox" xmlns:fx="http://javafx.com/fxml" prefWidth="1024" prefHeight="768">
+	<MenuBar>
+		<Menu text="Preferences">
+		</Menu>
+		<Menu text="About">
+		</Menu>
+	</MenuBar>
+    <StackPane>
+    	<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" tabMinWidth="150" tabMinHeight="35" side="TOP">
 		</TabPane>
 		<Group>
 			<ProgressIndicator fx:id="progressIndicator" visible="false" managed="false" />

@@ -4,7 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class BundleRow {
+public class BundleModel {
 
 	private final SimpleLongProperty id = new SimpleLongProperty();
 	private final SimpleStringProperty state = new SimpleStringProperty();
@@ -61,7 +61,7 @@ public class BundleRow {
 		this.startLevel.set(startLevel);
 	}
 	
-	public BundleRow getBundle() {
+	public BundleModel getBundle() {
 		return this;
 	}
 
