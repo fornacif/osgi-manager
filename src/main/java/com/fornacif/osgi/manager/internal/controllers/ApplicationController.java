@@ -4,10 +4,16 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import org.osgi.framework.BundleContext;
@@ -34,6 +40,15 @@ public class ApplicationController extends VBox implements Initializable, EventH
 
 	@FXML
 	private TabPane tabPane;
+	
+	@FXML
+	private ToggleGroup toggleGroup;
+	
+	@FXML
+	private StackPane console;
+	
+	@FXML
+	private VBox applications;
 
 	@Activate
 	public void activate(BundleContext bundleContext) throws Exception {
@@ -43,6 +58,23 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		bundleContext.registerService(TabPane.class, tabPane, null);
+		
+		toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+            @Override public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle selectedToggle) {
+            	String selectedId = ((ToggleButton) selectedToggle).getId();
+            	if ("consoleToggleButton".equals(selectedId)) {
+            		console.setVisible(true);
+            		console.setManaged(true);
+            		applications.setVisible(false);
+            		applications.setManaged(false);
+            	} else {
+            		applications.setVisible(true);
+            		applications.setManaged(true);
+            		console.setVisible(false);
+            		console.setManaged(false);
+            	}
+            }
+        });
 	}
 
 	@Override

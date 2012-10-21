@@ -11,64 +11,59 @@
 	<ToolBar>
 		<Label fx:id="bundlesCountLabel" />
 	</ToolBar>
-	<VBox>
-		<padding>
-			<Insets top="10" right="10" bottom="10" left="10"/>
-	    </padding>
-		<TableView fx:id="bundlesTableView" prefHeight="700">
-			<columns>
-				<TableColumn fx:id="id" text="ID" prefWidth="35">
-					<cellValueFactory>
-						<PropertyValueFactory property="id" />
-					</cellValueFactory>
-				</TableColumn>
-				<TableColumn text="STATE" prefWidth="75">
-					<cellValueFactory>
-						<PropertyValueFactory property="state" />
-					</cellValueFactory>
-				</TableColumn>
-				<TableColumn text="LEVEL" prefWidth="50">
-					<cellValueFactory>
-						<PropertyValueFactory property="startLevel" />
-					</cellValueFactory>
-				</TableColumn>
-				<TableColumn prefWidth="300">
-					<graphic>
-						<VBox spacing="5" alignment="CENTER">
-							<padding>
-								<Insets top="5" right="5" bottom="5" left="5"/>
-						    </padding>
-							<Label text="NAME" />
-							<TextField fx:id="bundleNameFilterTextField" promptText="Filter" />
-						</VBox>
-					</graphic>
-					<cellValueFactory>
-						<PropertyValueFactory property="name" />
-					</cellValueFactory>
-				</TableColumn>
-				<TableColumn text="SYMBOLIC NAME" prefWidth="225">
-					<cellValueFactory>
-						<PropertyValueFactory property="symbolicName" />
-					</cellValueFactory>
-				</TableColumn>
-				<TableColumn text="VERSION" prefWidth="150">
-					<cellValueFactory>
-						<PropertyValueFactory property="version" />
-					</cellValueFactory>
-				</TableColumn>
-				<TableColumn text="ACTION" prefWidth="150">
-					<cellValueFactory>
-						<PropertyValueFactory property="bundle" />
-					</cellValueFactory>
-					<cellFactory>
-	                    <BundleActionCellFactory onAction="#executeBundleAction">
-						</BundleActionCellFactory>
-	                </cellFactory>
-				</TableColumn>
-			</columns>
-			<sortOrder>
-				<fx:reference source="id"/>
-			</sortOrder>   
-		</TableView>
-	</VBox>
+	<TableView fx:id="bundlesTableView" VBox.vgrow="ALWAYS">
+		<columns>
+			<TableColumn fx:id="id" text="ID" prefWidth="35">
+				<cellValueFactory>
+					<PropertyValueFactory property="id" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="STATE" prefWidth="75">
+				<cellValueFactory>
+					<PropertyValueFactory property="state" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="LEVEL" prefWidth="50">
+				<cellValueFactory>
+					<PropertyValueFactory property="startLevel" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn prefWidth="300">
+				<graphic>
+					<VBox spacing="5" alignment="CENTER">
+						<padding>
+							<Insets top="5" right="5" bottom="5" left="5"/>
+					    </padding>
+						<Label text="NAME" />
+						<TextField fx:id="bundleNameFilterTextField" promptText="Filter" />
+					</VBox>
+				</graphic>
+				<cellValueFactory>
+					<PropertyValueFactory property="name" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="SYMBOLIC NAME" prefWidth="225">
+				<cellValueFactory>
+					<PropertyValueFactory property="symbolicName" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="VERSION" prefWidth="150">
+				<cellValueFactory>
+					<PropertyValueFactory property="version" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="ACTION" prefWidth="150">
+				<cellValueFactory>
+					<PropertyValueFactory property="bundle" />
+				</cellValueFactory>
+				<cellFactory>
+                    <BundleActionCellFactory onAction="#executeBundleAction">
+					</BundleActionCellFactory>
+                </cellFactory>
+			</TableColumn>
+		</columns>
+		<sortOrder>
+			<fx:reference source="id"/>
+		</sortOrder>   
+	</TableView>
 </fx:root>

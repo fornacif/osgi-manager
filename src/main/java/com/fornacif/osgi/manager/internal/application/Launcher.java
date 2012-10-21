@@ -48,7 +48,6 @@ public class Launcher extends Application {
 		applicationLoader.setRoot(applicationController);
 		applicationLoader.load();
 		Scene scene = new Scene(applicationController);
-		scene.getStylesheets().addAll(getClass().getResource("/css/application.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle(title);
 		stage.show();
