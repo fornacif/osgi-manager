@@ -1,6 +1,5 @@
 package com.fornacif.osgi.manager.services;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 

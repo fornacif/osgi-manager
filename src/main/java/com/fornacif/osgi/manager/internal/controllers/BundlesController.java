@@ -65,7 +65,7 @@ public class BundlesController extends VBox implements Initializable {
 	}
 
 	@FXML
-	protected void executeBundleAction(final BundleActionEvent bundleActionEvent) throws Exception {
+	protected void executeBundleAction(final BundleActionEvent bundleActionEvent) {
 		Action action = bundleActionEvent.getAction();
 		Long bundleId = bundleActionEvent.getBundleId();
 		serviceCaller.execute(bundlesService.executeAction(action, bundleId), executeActionResult(), null);
