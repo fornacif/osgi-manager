@@ -44,10 +44,10 @@ public class ServiceCallerImpl implements ServiceCaller {
 					@Override
 					protected T call() throws Exception {
 						try {
-							eventAdmin.postEvent(new Event(EventAdminTopics.PROGRESS_INDICATOR_START, new HashMap<String, Object>()));
+							eventAdmin.sendEvent(new Event(EventAdminTopics.PROGRESS_INDICATOR_START, new HashMap<String, Object>()));
 							return callable.call();
 						} finally {
-							eventAdmin.postEvent(new Event(EventAdminTopics.PROGRESS_INDICATOR_STOP, new HashMap<String, Object>()));
+							eventAdmin.sendEvent(new Event(EventAdminTopics.PROGRESS_INDICATOR_STOP, new HashMap<String, Object>()));
 						}
 					}
 				};
