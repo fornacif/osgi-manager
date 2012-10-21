@@ -3,5 +3,5 @@ package com.fornacif.osgi.manager.services;
 import java.util.concurrent.Callable;
 
 public interface ServiceCaller {
-	void execute(Callable<Void> service, Callable<Void> resultHandler);
+	<T> void execute(final Callable<T> callable, final ResultCallable<T> resultHandler, final FaultCallable faultHandler);
 }

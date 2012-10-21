@@ -4,7 +4,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +25,7 @@ import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
 import com.fornacif.osgi.manager.services.BundlesService;
+import com.fornacif.osgi.manager.services.ResultCallable;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -66,38 +66,34 @@ public class BundlesController extends VBox implements Initializable {
 
 	@FXML
 	protected void executeBundleAction(final BundleActionEvent bundleActionEvent) throws Exception {
-		serviceCaller.execute(new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				Action action = bundleActionEvent.getAction();
-				Long bundleId = bundleActionEvent.getBundleId();
-				bundlesService.executeAction(action, bundleId);
-				bundles = bundlesService.listBundles();
-				return null;
-			}
-		}, new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				applyBundleNameFilter();
-				return null;
-			}
-		});
+		Action action = bundleActionEvent.getAction();
+		Long bundleId = bundleActionEvent.getBundleId();
+		serviceCaller.execute(bundlesService.executeAction(action, bundleId), executeActionResult(), null);
 	}
 
 	private void listBundles() {
-		serviceCaller.execute(new Callable<Void>() {
+		serviceCaller.execute(bundlesService.listBundles(), listBundlesResult(), null);	
+	}
+	
+	private ResultCallable<Void> executeActionResult() {
+		return new ResultCallable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				bundles = bundlesService.listBundles();
+				listBundles();
 				return null;
 			}
-		}, new Callable<Void>() {
+		};
+	}
+	
+	private ResultCallable<List<BundleModel>> listBundlesResult() {
+		return new ResultCallable<List<BundleModel>>() {
 			@Override
 			public Void call() throws Exception {
+				bundles = getResult();
 				applyBundleNameFilter();
 				return null;
 			}
-		});	
+		};
 	}
 
 	private void applyBundleNameFilter() {

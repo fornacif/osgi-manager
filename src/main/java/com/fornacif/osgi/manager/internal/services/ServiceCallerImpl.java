@@ -17,6 +17,8 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.constants.EventAdminTopics;
+import com.fornacif.osgi.manager.services.FaultCallable;
+import com.fornacif.osgi.manager.services.ResultCallable;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 
 @Component
@@ -34,13 +36,13 @@ public class ServiceCallerImpl implements ServiceCaller {
 	}
 
 	@Override
-	public void execute(final Callable<Void> callable, final Callable<Void> resultHandler) {
-		Service<Void> service = new Service<Void>() {
+	public <T> void execute(final Callable<T> callable, final ResultCallable<T> resultHandler, final FaultCallable faultHandler) {
+		Service<T> service = new Service<T>() {
 			@Override
-			protected Task<Void> createTask() {
-				return new Task<Void>() {
+			protected Task<T> createTask() {
+				return new Task<T>() {
 					@Override
-					protected Void call() throws Exception {
+					protected T call() throws Exception {
 						try {
 							eventAdmin.postEvent(new Event(EventAdminTopics.PROGRESS_INDICATOR_START, new HashMap<String, Object>()));
 							return callable.call();
@@ -55,9 +57,10 @@ public class ServiceCallerImpl implements ServiceCaller {
 			protected void succeeded() {
 				if (resultHandler != null) {
 					try {
+						resultHandler.setResult(getValue());
 						resultHandler.call();
 					} catch (Exception e) {
-						LOGGER.error("Error calling the result handler", e);
+						LOGGER.error("Error on result handler", e);
 					}
 				}
 			}
@@ -65,6 +68,14 @@ public class ServiceCallerImpl implements ServiceCaller {
 			@Override
 			protected void failed() {
 				LOGGER.error("Error during service call", getException());
+				if (faultHandler != null) {
+					try {
+						faultHandler.setExeception(getException());
+						faultHandler.call();
+					} catch (Exception e) {
+						LOGGER.error("Error on fault handler", e);
+					}
+				}
 			}
 		};	
 		service.setExecutor(executorService);
