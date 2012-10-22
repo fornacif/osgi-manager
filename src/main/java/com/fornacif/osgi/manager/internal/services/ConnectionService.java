@@ -31,7 +31,7 @@ public class ConnectionService {
 		this.configurationService = configurationService;
 	}
 
-	public Callable<List<ConnectionModel>> listVirtualMachines() {
+	public Callable<List<ConnectionModel>> listConnections() {
 		return new Callable<List<ConnectionModel>>() {
 			@Override
 			public List<ConnectionModel> call() throws Exception {

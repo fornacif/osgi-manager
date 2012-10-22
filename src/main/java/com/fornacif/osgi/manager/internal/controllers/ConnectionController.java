@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -39,14 +40,14 @@ public class ConnectionController extends VBox implements Initializable {
 
 	private ConnectionService connectionService;
 
-	private List<ConnectionModel> virtualMachines;
+	private List<ConnectionModel> connections;
 
-	private ConnectionModel lastConnection;
+	private ConnectionModel selectedConnection;
 
 	private ConfigurationService configurationService;
 
 	@FXML
-	private TableView<ConnectionModel> virtualMachinesTableView;
+	private TableView<ConnectionModel> connectionsTableView;
 
 	@Reference
 	private void bindServiceCaller(ServiceCaller serviceCaller) {
@@ -65,23 +66,41 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@Reference(optional = true, dynamic = true)
 	public void bindJmxService(JMXService jmxService) {
-		lastConnection.setConnected(true);
+		Platform.runLater(new Runnable() {			
+			@Override
+			public void run() {
+				selectedConnection.setConnected(true);
+				fillVirtualMachinesListView();
+			}
+		});
+		
 	}
 
 	public void unbindJmxService(JMXService jmxService) {
-		lastConnection.setConnected(false);
+		Platform.runLater(new Runnable() {			
+			@Override
+			public void run() {
+				selectedConnection.setConnected(false);
+				fillVirtualMachinesListView();
+			}
+		});
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		listVirtualMachines();
+		connectionsTableView.getSelectionModel().setCellSelectionEnabled(false);
+		connectionsTableView.setEditable(false);
 	}
 
 	@FXML
 	protected void executeAction(final ConnectionActionEvent connectionActionEvent) throws IOException {
+		if (selectedConnection != null) {
+			selectedConnection.setConnected(false);
+		}
 		ConnectionModel connection = connectionActionEvent.getConnection();
+		selectedConnection = connection;
 		if (connectionActionEvent.getAction() == Action.CONNECT) {
-			lastConnection = connection;
 			serviceCaller.execute(connectionService.configureConnection(connection.getVirtualMachine()), null, null);
 		} else {
 			this.configurationService.removeConfiguration("JMXService");
@@ -90,14 +109,14 @@ public class ConnectionController extends VBox implements Initializable {
 	}
 
 	private void listVirtualMachines() {
-		serviceCaller.execute(connectionService.listVirtualMachines(), listVirtualMachinesResult(), null);
+		serviceCaller.execute(connectionService.listConnections(), listConnectionsResult(), null);
 	}
 
-	private ResultCallable<List<ConnectionModel>> listVirtualMachinesResult() {
+	private ResultCallable<List<ConnectionModel>> listConnectionsResult() {
 		return new ResultCallable<List<ConnectionModel>>() {
 			@Override
 			public Void call() throws Exception {
-				virtualMachines = getResult();
+				connections = getResult();
 				fillVirtualMachinesListView();
 				return null;
 			}
@@ -105,12 +124,14 @@ public class ConnectionController extends VBox implements Initializable {
 	}
 
 	private void fillVirtualMachinesListView() {
-		virtualMachinesTableView.setItems(FXCollections.observableArrayList(virtualMachines));
+		connectionsTableView.setItems(null); 
+		connectionsTableView.layout();
+		connectionsTableView.setItems(FXCollections.observableArrayList(connections));
 		updateSort();
 	}
 
 	private void updateSort() {
-		ObservableList<TableColumn<ConnectionModel, ?>> sortOrder = virtualMachinesTableView.getSortOrder();
+		ObservableList<TableColumn<ConnectionModel, ?>> sortOrder = connectionsTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
 			TableColumn<ConnectionModel, ?> sortedTableColumn = sortOrder.get(0);
 			sortOrder.clear();

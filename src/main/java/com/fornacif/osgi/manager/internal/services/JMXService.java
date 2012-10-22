@@ -11,6 +11,8 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
 import org.slf4j.Logger;
@@ -21,7 +23,7 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Deactivate;
 
-@Component(name = "JMXService", provide=JMXService.class , configurationPolicy = ConfigurationPolicy.require)
+@Component(name = "JMXService", configurationPolicy = ConfigurationPolicy.require)
 public class JMXService {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
@@ -36,30 +38,33 @@ public class JMXService {
 
 	private ObjectName bundleStateObjectName;
 	private ObjectName frameworkObjectName;
+
+	private ServiceRegistration<JMXService> serviceRegistration;
 	
 	@Activate
-	private void activate(Map<String, ?> properties) throws IOException, MalformedObjectNameException {
+	private void activate(BundleContext bundleContext, Map<String, ?> properties) throws IOException, MalformedObjectNameException {
 		this.jmxServiceURL = new JMXServiceURL((String) properties.get(JMX_SERVICE_URL));
 		this.bundleStateObjectName = new ObjectName((String) properties.get(BUNDLESTATE_BEAN_NAME));
 		this.frameworkObjectName = new ObjectName((String) properties.get(FRAMEWORK_BEAN_NAME));
 		
-		connect();
+		jmxConnector = JMXConnectorFactory.connect(jmxServiceURL, null);
+		mbeanServerConnection = jmxConnector.getMBeanServerConnection();
+		
+		if (mbeanServerConnection.isRegistered(frameworkObjectName)) {
+			serviceRegistration = bundleContext.registerService(JMXService.class, this, null);
+		} else {
+			LOGGER.info("Connection not open due to missing OSGi MBeans");
+		}
 	}
 	
 	@Deactivate
 	private void deactivate() throws IOException {
-		close();
-	}
-
-	public void connect() throws IOException {
-		jmxConnector = JMXConnectorFactory.connect(jmxServiceURL, null);
-		mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-	}
-
-	public void close() throws IOException {
+		if (serviceRegistration != null) {
+			serviceRegistration.unregister();
+		}
 		jmxConnector.close();
 	}
-
+	
 	public BundleStateMBean getBundleStateMBean() {
 		return JMX.newMBeanProxy(mbeanServerConnection, bundleStateObjectName, BundleStateMBean.class, true);
 	}

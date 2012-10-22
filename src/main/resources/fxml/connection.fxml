@@ -11,7 +11,8 @@
 	<padding>
 		<Insets top="10" right="10" bottom="10" left="10" />
     </padding>
-	<TableView fx:id="virtualMachinesTableView" prefHeight="200">
+    <Label text="Local VM" />
+	<TableView fx:id="connectionsTableView" prefHeight="200">
 		<columns>
 			<TableColumn text="ID" prefWidth="75">
 				<cellValueFactory>
