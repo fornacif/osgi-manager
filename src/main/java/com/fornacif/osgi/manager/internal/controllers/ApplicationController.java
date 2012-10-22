@@ -4,17 +4,11 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import org.osgi.framework.BundleContext;
@@ -48,12 +42,6 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	private TabPane tabPane;
 	
 	@FXML
-	private ToggleGroup toggleGroup;
-	
-	@FXML
-	private StackPane console;
-	
-	@FXML
 	private VBox connection;
 
 	@Activate
@@ -69,26 +57,7 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		bundleContext.registerService(EventListenerHook.class, new FXMLLoaderDelegator(bundleContext), null);
-		
-		bundleContext.registerService(TabPane.class, tabPane, null);
-		
-		toggleGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-            @Override public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle selectedToggle) {
-            	String selectedId = ((ToggleButton) selectedToggle).getId();
-            	if ("consoleToggleButton".equals(selectedId)) {
-            		console.setVisible(true);
-            		console.setManaged(true);
-            		connection.setVisible(false);
-            		connection.setManaged(false);
-            	} else {
-            		connection.setVisible(true);
-            		connection.setManaged(true);
-            		console.setVisible(false);
-            		console.setManaged(false);
-            	}
-            }
-        });
-		
+		bundleContext.registerService(TabPane.class, tabPane, null);	
 		connection.getChildren().add(connectionController);	
 	}
 

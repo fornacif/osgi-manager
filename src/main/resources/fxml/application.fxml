@@ -16,13 +16,13 @@
 		<ToggleButton fx:id="consoleToggleButton" text="Console" toggleGroup="$toggleGroup" prefHeight="30" prefWidth="200" />
 		<ToggleButton fx:id="connectionToggleButton" text="Connection" toggleGroup="$toggleGroup" selected="true" prefHeight="30" prefWidth="200" />
 	</HBox>
-	<StackPane VBox.vgrow="ALWAYS" fx:id="console" visible="false" managed="false">
+	<StackPane VBox.vgrow="ALWAYS" fx:id="console" visible="${consoleToggleButton.selected}" managed="${consoleToggleButton.selected}">
     	<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" tabMinWidth="150" tabMinHeight="25" side="TOP">
 		</TabPane>
 		<Group>
 			<ProgressIndicator fx:id="progressIndicator" visible="false" managed="false" />
 		</Group>
 	</StackPane>
-	<VBox fx:id="connection">
+	<VBox fx:id="connection" visible="${connectionToggleButton.selected}" managed="${connectionToggleButton.selected}">
 	</VBox>
 </fx:root>
