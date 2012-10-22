@@ -9,7 +9,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.hooks.service.EventListenerHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,7 @@ public class Launcher extends Application {
 	private static Pane applicationController;
 
 	@Activate
-	public void activate(final BundleContext bundleContext, Map<String, ?> properties) throws Exception {
+	private void activate(final BundleContext bundleContext, Map<String, ?> properties) throws Exception {
 		title = (String) properties.get(TITLE_PROPERTIES);
 		new Thread(new Runnable() {
 			@Override
@@ -62,7 +61,7 @@ public class Launcher extends Application {
 	}
 	
 	@Reference(target="(component.name=ApplicationController)")
-	public void bindApplicationController(Pane applicationController) {
+	private void bindApplicationController(Pane applicationController) {
 		Launcher.applicationController = applicationController;
 	}
 

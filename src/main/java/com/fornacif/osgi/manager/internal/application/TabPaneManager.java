@@ -34,12 +34,12 @@ public class TabPaneManager {
 	private ServiceTracker<Pane, Tab> paneTracker;
 
 	@Reference
-	public void bindTabPane(TabPane tabPane) {
+	private void bindTabPane(TabPane tabPane) {
 		this.tabPane = tabPane;
 	}
 
 	@Activate
-	public void activate(final BundleContext bundleContext) throws InvalidSyntaxException {
+	private void activate(final BundleContext bundleContext) throws InvalidSyntaxException {
 		paneTracker = new ServiceTracker<Pane, Tab>(bundleContext, bundleContext.createFilter(PANE_SERVICE_FILTER), null) {
 			@Override
 			public Tab addingService(ServiceReference<Pane> serviceReference) {
@@ -60,7 +60,7 @@ public class TabPaneManager {
 	}
 
 	@Deactivate
-	public void deactivate() {
+	private void deactivate() {
 		paneTracker.close();
 	}
 

@@ -5,7 +5,36 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
+<?import com.fornacif.osgi.manager.internal.components.*?>
 <fx:root type="javafx.scene.layout.VBox"
-	xmlns:fx="http://javafx.com/fxml">
-	<Label text="Connection" />
+	xmlns:fx="http://javafx.com/fxml" fillWidth="false" spacing="10">
+	<padding>
+		<Insets top="10" right="10" bottom="10" left="10" />
+    </padding>
+	<TableView fx:id="virtualMachinesTableView" prefHeight="200">
+		<columns>
+			<TableColumn text="ID" prefWidth="75">
+				<cellValueFactory>
+					<PropertyValueFactory property="id" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn fx:id="name" text="NAME" prefWidth="500">
+				<cellValueFactory>
+					<PropertyValueFactory property="name" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="ACTION" prefWidth="125">
+				<cellValueFactory>
+					<PropertyValueFactory property="model" />
+				</cellValueFactory>
+				<cellFactory>
+                    <ConnectionActionCellFactory onAction="#executeAction">
+					</ConnectionActionCellFactory>
+                </cellFactory>
+			</TableColumn>
+		</columns>
+		<sortOrder>
+			<fx:reference source="name"/>
+		</sortOrder>   
+	</TableView>
 </fx:root>

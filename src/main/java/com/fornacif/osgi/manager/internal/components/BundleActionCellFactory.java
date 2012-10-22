@@ -37,8 +37,8 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 	public TableCell<BundleModel, BundleModel> call(TableColumn<BundleModel, BundleModel> tableColumn) {
 		TableCell<BundleModel, BundleModel> cell = new TableCell<BundleModel, BundleModel>() {
 			@Override
-			protected void updateItem(final BundleModel bundle, final boolean empty) {
-				if (bundle == null) {
+			protected void updateItem(final BundleModel bundleModel, final boolean empty) {
+				if (bundleModel == null) {
 					return;
 				}
 				
@@ -60,7 +60,7 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 				
 				Button startStopButton = new Button();
 				startStopButton.setCursor(Cursor.HAND);
-				if (bundle.getState().equals("ACTIVE")) {
+				if (bundleModel.getState().equals("ACTIVE")) {
 					startStopButton.setTooltip(new Tooltip("Stop"));
 					startStopButton.setGraphic(new ImageView(STOP_ICON_16));
 				} else {
@@ -71,10 +71,10 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 				startStopButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						if (bundle.getState().equals("ACTIVE")) {
-							onActionProperty().get().handle(new BundleActionEvent(Action.STOP, bundle.getId()));
+						if (bundleModel.getState().equals("ACTIVE")) {
+							onActionProperty().get().handle(new BundleActionEvent(Action.STOP, bundleModel.getId()));
 						} else {
-							onActionProperty().get().handle(new BundleActionEvent(Action.START, bundle.getId()));
+							onActionProperty().get().handle(new BundleActionEvent(Action.START, bundleModel.getId()));
 						}
 					}
 				});
@@ -82,7 +82,7 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 				Button updateButton = ButtonBuilder.create().tooltip(new Tooltip("Update")).cursor(Cursor.HAND).graphic(new ImageView(UPDATE_ICON_16)).onAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
-						onActionProperty().get().handle(new BundleActionEvent(Action.UPDATE, bundle.getId()));
+						onActionProperty().get().handle(new BundleActionEvent(Action.UPDATE, bundleModel.getId()));
 					}
 				}).build();
 	
@@ -104,7 +104,7 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 						confirmationHBox.setVisible(false);
 						confirmationHBox.setManaged(false);
 						actionsHBox.setDisable(false);
-						onActionProperty().get().handle(new BundleActionEvent(Action.UNINSTALL, bundle.getId()));
+						onActionProperty().get().handle(new BundleActionEvent(Action.UNINSTALL, bundleModel.getId()));
 					}
 				}).build();
 				

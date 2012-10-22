@@ -45,12 +45,12 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	private VBox connection;
 
 	@Activate
-	public void activate(BundleContext bundleContext) throws Exception {
+	private void activate(BundleContext bundleContext) throws Exception {
 		this.bundleContext = bundleContext;
 	}
 	
 	@Reference(target="(component.name=ConnectionController)")
-	public void bindConnectionController(Pane connectionController) {
+	private void bindConnectionController(Pane connectionController) {
 		this.connectionController = connectionController;
 	}
 

@@ -24,7 +24,7 @@ import aQute.bnd.annotation.component.Reference;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
-import com.fornacif.osgi.manager.services.BundlesService;
+import com.fornacif.osgi.manager.internal.services.BundlesService;
 import com.fornacif.osgi.manager.services.ResultCallable;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 import com.google.common.base.Predicate;
@@ -49,12 +49,12 @@ public class BundlesController extends VBox implements Initializable {
 	private ServiceCaller serviceCaller;
 	
 	@Reference
-	public void bindServiceCaller(ServiceCaller serviceCaller) {
+	private void bindServiceCaller(ServiceCaller serviceCaller) {
 		this.serviceCaller = serviceCaller;
 	}
 
 	@Reference
-	public void bindBundlesService(BundlesService bundlesService) {
+	private void bindBundlesService(BundlesService bundlesService) {
 		this.bundlesService = bundlesService;
 	}
 	

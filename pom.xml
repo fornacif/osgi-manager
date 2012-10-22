@@ -17,6 +17,8 @@
 		<compiler.version>2.4</compiler.version>
 		<source.version>1.7</source.version>
 		<target.version>1.7</target.version>
+		<tools.path>C:/Program Files/Java/jdk1.7.0_07/lib/tools.jar</tools.path>
+		<tools.version>1.7.0_07</tools.version>
 		<javafx.path>C:/Program Files/Java/jre7/lib/jfxrt.jar</javafx.path>
 		<javafx.version>2.2.1</javafx.version>
 		<guava.version>13.0.1</guava.version>
@@ -46,6 +48,13 @@
 			<artifactId>javafx</artifactId>
 			<version>${javafx.version}</version>
 			<systemPath>${javafx.path}</systemPath>
+			<scope>system</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>tools</artifactId>
+			<version>${tools.version}</version>
+			<systemPath>${tools.path}</systemPath>
 			<scope>system</scope>
 		</dependency>
 		<dependency>

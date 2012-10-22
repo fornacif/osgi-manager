@@ -18,22 +18,19 @@ import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
-import com.fornacif.osgi.manager.services.BundlesService;
-import com.fornacif.osgi.manager.services.JMXService;
 
-@Component
-public class BundlesServiceImpl implements BundlesService {
+@Component(name="BundlesService", provide=BundlesService.class)
+public class BundlesService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	private JMXService jmxService;
 
 	@Reference
-	public void bindJmxConnectorService(JMXService jmxConnectorService) {
+	private void bindJmxConnectorService(JMXService jmxConnectorService) {
 		this.jmxService = jmxConnectorService;
 	}
 
-	@Override
 	public Callable<List<BundleModel>> listBundles() {
 		return new Callable<List<BundleModel>>() {
 			@Override
@@ -45,7 +42,6 @@ public class BundlesServiceImpl implements BundlesService {
 		};
 	}
 
-	@Override
 	public Callable<Void> executeAction(final Action action, final Long bundleId) {
 		return new Callable<Void>() {
 			@Override

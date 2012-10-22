@@ -1,17 +1,20 @@
 package com.fornacif.osgi.manager.internal.models;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class BundleModel {
 
-	private final SimpleLongProperty id = new SimpleLongProperty();
-	private final SimpleStringProperty state = new SimpleStringProperty();
-	private final SimpleStringProperty name = new SimpleStringProperty();
-	private final SimpleStringProperty symbolicName = new SimpleStringProperty();
-	private final SimpleStringProperty version = new SimpleStringProperty();
-	private final SimpleIntegerProperty startLevel = new SimpleIntegerProperty();
+	private final LongProperty id = new SimpleLongProperty();
+	private final StringProperty state = new SimpleStringProperty();
+	private final StringProperty name = new SimpleStringProperty();
+	private final StringProperty symbolicName = new SimpleStringProperty();
+	private final StringProperty version = new SimpleStringProperty();
+	private final IntegerProperty startLevel = new SimpleIntegerProperty();
 
 	public Long getId() {
 		return id.get();
@@ -61,7 +64,7 @@ public class BundleModel {
 		this.startLevel.set(startLevel);
 	}
 	
-	public BundleModel getBundle() {
+	public BundleModel getModel() {
 		return this;
 	}
 

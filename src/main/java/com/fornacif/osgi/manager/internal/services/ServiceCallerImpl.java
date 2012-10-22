@@ -31,7 +31,7 @@ public class ServiceCallerImpl implements ServiceCaller {
 	private ExecutorService executorService = Executors.newSingleThreadExecutor();
 	
 	@Reference
-	public void bindEventAdmin(EventAdmin eventAdmin) {
+	private void bindEventAdmin(EventAdmin eventAdmin) {
 		this.eventAdmin = eventAdmin;
 	}
 

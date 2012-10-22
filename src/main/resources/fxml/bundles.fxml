@@ -9,7 +9,7 @@
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml">
 	<padding>
-		<Insets top="5" right="5" bottom="5" left="5" />
+		<Insets top="10" right="10" bottom="10" left="10" />
     </padding>
 	<Label fx:id="bundlesCountLabel" />
 	<TableView fx:id="bundlesTableView" VBox.vgrow="ALWAYS">
@@ -55,7 +55,7 @@
 			</TableColumn>
 			<TableColumn text="ACTION" prefWidth="150">
 				<cellValueFactory>
-					<PropertyValueFactory property="bundle" />
+					<PropertyValueFactory property="model" />
 				</cellValueFactory>
 				<cellFactory>
                     <BundleActionCellFactory onAction="#executeBundleAction">
