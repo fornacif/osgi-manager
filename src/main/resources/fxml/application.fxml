@@ -14,7 +14,7 @@
 	        <ToggleGroup fx:id="toggleGroup"/>
 	    </fx:define>
 		<ToggleButton fx:id="consoleToggleButton" text="Console" toggleGroup="$toggleGroup" prefHeight="30" prefWidth="200" />
-		<ToggleButton fx:id="applicationsToggleButton" text="Applications" toggleGroup="$toggleGroup" selected="true" prefHeight="30" prefWidth="200" />
+		<ToggleButton fx:id="connectionToggleButton" text="Connection" toggleGroup="$toggleGroup" selected="true" prefHeight="30" prefWidth="200" />
 	</HBox>
 	<StackPane VBox.vgrow="ALWAYS" fx:id="console" visible="false" managed="false">
     	<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" tabMinWidth="150" tabMinHeight="25" side="TOP">
@@ -23,7 +23,6 @@
 			<ProgressIndicator fx:id="progressIndicator" visible="false" managed="false" />
 		</Group>
 	</StackPane>
-	<VBox fx:id="applications">
-		<Label text="Applications" />
+	<VBox fx:id="connection">
 	</VBox>
 </fx:root>

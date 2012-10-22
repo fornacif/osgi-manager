@@ -5,10 +5,6 @@
     -fx-focus-color: #E8F2FE;
 }
 
-.tool-bar {
-	-fx-background-color: #FFFFFF;
-}
-
 #menubar {
 	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
 }

@@ -8,9 +8,10 @@
 <?import com.fornacif.osgi.manager.internal.components.*?>
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml">
-	<ToolBar>
-		<Label fx:id="bundlesCountLabel" />
-	</ToolBar>
+	<padding>
+		<Insets top="5" right="5" bottom="5" left="5" />
+    </padding>
+	<Label fx:id="bundlesCountLabel" />
 	<TableView fx:id="bundlesTableView" VBox.vgrow="ALWAYS">
 		<columns>
 			<TableColumn fx:id="id" text="ID" prefWidth="35">

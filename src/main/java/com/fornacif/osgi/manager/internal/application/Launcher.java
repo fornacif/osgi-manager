@@ -5,10 +5,11 @@ import java.util.Map;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.hooks.service.EventListenerHook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +28,10 @@ public class Launcher extends Application {
 
 	private static String title;
 	
-	private static VBox applicationController;
+	private static Pane applicationController;
 
 	@Activate
-	public void activate(BundleContext bundleContext, Map<String, ?> properties) throws Exception {
+	public void activate(final BundleContext bundleContext, Map<String, ?> properties) throws Exception {
 		title = (String) properties.get(TITLE_PROPERTIES);
 		new Thread(new Runnable() {
 			@Override
@@ -39,6 +40,7 @@ public class Launcher extends Application {
 			}
 		}, "OSGi Manager Launcher").start();
 		LOGGER.debug("Launching OSGi Manager");
+		
 	}
 
 	@Override
@@ -59,8 +61,8 @@ public class Launcher extends Application {
 		System.exit(0);
 	}
 	
-	@Reference
-	public void bindApplicationController(VBox applicationController) {
+	@Reference(target="(component.name=ApplicationController)")
+	public void bindApplicationController(Pane applicationController) {
 		Launcher.applicationController = applicationController;
 	}
 
