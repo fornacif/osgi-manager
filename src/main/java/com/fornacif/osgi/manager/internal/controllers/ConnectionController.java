@@ -47,7 +47,7 @@ public class ConnectionController extends VBox implements Initializable {
 	private ConfigurationService configurationService;
 
 	@FXML
-	private TableView<ConnectionModel> connectionsTableView;
+	private TableView<ConnectionModel> localConnectionsTableView;
 
 	@Reference
 	private void bindServiceCaller(ServiceCaller serviceCaller) {
@@ -89,23 +89,20 @@ public class ConnectionController extends VBox implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		listVirtualMachines();
-		connectionsTableView.getSelectionModel().setCellSelectionEnabled(false);
-		connectionsTableView.setEditable(false);
 	}
 
 	@FXML
 	protected void executeAction(final ConnectionActionEvent connectionActionEvent) throws IOException {
-		if (selectedConnection != null) {
-			selectedConnection.setConnected(false);
-		}
 		ConnectionModel connection = connectionActionEvent.getConnection();
-		selectedConnection = connection;
 		if (connectionActionEvent.getAction() == Action.CONNECT) {
+			if (selectedConnection != null && connection != selectedConnection) {
+				selectedConnection.setConnected(false);
+			}
 			serviceCaller.execute(connectionService.configureConnection(connection.getVirtualMachine()), null, null);
 		} else {
 			this.configurationService.removeConfiguration("JMXService");
-		}
-
+		}	
+		selectedConnection = connection;
 	}
 
 	private void listVirtualMachines() {
@@ -124,14 +121,14 @@ public class ConnectionController extends VBox implements Initializable {
 	}
 
 	private void fillVirtualMachinesListView() {
-		connectionsTableView.setItems(null); 
-		connectionsTableView.layout();
-		connectionsTableView.setItems(FXCollections.observableArrayList(connections));
+		localConnectionsTableView.setItems(null); 
+		localConnectionsTableView.layout();
+		localConnectionsTableView.setItems(FXCollections.observableArrayList(connections));
 		updateSort();
 	}
 
 	private void updateSort() {
-		ObservableList<TableColumn<ConnectionModel, ?>> sortOrder = connectionsTableView.getSortOrder();
+		ObservableList<TableColumn<ConnectionModel, ?>> sortOrder = localConnectionsTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
 			TableColumn<ConnectionModel, ?> sortedTableColumn = sortOrder.get(0);
 			sortOrder.clear();

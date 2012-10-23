@@ -57,7 +57,7 @@ public class ConfigurationService {
 		Configuration configuration = this.configurationAdmin.getConfiguration(configurationName, null);
 		Properties properties = new Properties();
 		properties.load(getClass().getResourceAsStream("/" + configurationPath));
-		if (additionalProperties != null) {			
+		if (additionalProperties != null) {		
 			properties.putAll(additionalProperties);
 		}
 		configuration.update(new Hashtable(properties));

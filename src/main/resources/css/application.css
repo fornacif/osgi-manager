@@ -5,6 +5,10 @@
     -fx-focus-color: #E8F2FE;
 }
 
+.table-row-cell .table-cell {
+    -fx-border-width: 0px;
+}
+
 #menubar {
 	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
 }

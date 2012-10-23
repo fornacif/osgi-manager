@@ -22,6 +22,7 @@ public class FXMLLoaderDelegator implements EventListenerHook {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	private final String FXML_SERVICE_PROPERTY = "fxml";
+	private final String CSS_SERVICE_PROPERTY = "css";
 	
 	public FXMLLoaderDelegator(BundleContext bundleContext) {
 		try {
@@ -50,6 +51,7 @@ public class FXMLLoaderDelegator implements EventListenerHook {
 
 	private void loadFXML(final ServiceReference<?> serviceReference) {
 		final String fxml = (String) serviceReference.getProperty(FXML_SERVICE_PROPERTY);
+		final String css = (String) serviceReference.getProperty(CSS_SERVICE_PROPERTY);
 		if (fxml != null) {
 			BundleContext bundleContext = serviceReference.getBundle().getBundleContext();
 			final Pane controller = (Pane) bundleContext.getService(serviceReference);
@@ -60,6 +62,9 @@ public class FXMLLoaderDelegator implements EventListenerHook {
 						FXMLLoader fxmlLoader = new FXMLLoader(controller.getClass().getResource(fxml));
 						fxmlLoader.setRoot(controller);
 						fxmlLoader.setController(controller);
+						if (css != null) {
+							controller.getStylesheets().add(controller.getClass().getResource(css).toExternalForm());
+						}
 						fxmlLoader.load();
 					} catch (Exception e) {
 						LOGGER.error("Error loading FXML for service", e);

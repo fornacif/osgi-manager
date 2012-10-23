@@ -19,13 +19,13 @@ import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
-@Component(name="ConnectionService", provide=ConnectionService.class)
+@Component(name = "ConnectionService", provide = ConnectionService.class)
 public class ConnectionService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-	
+
 	private ConfigurationService configurationService;
-	
+
 	@Reference
 	private void bindConfigurationService(ConfigurationService configurationService) {
 		this.configurationService = configurationService;
@@ -46,8 +46,15 @@ public class ConnectionService {
 			public List<Void> call() throws Exception {
 				Map<String, Object> properties = new HashMap<>();
 				Properties vmProperties = virtualMachine.getAgentProperties();
-				properties.put(JMXService.JMX_SERVICE_URL, vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress"));
-				configurationService.configure("/configurations/JMXService.properties", properties);
+				String jmxServiceURL = vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
+				if (jmxServiceURL != null) {
+					properties.put(JMXService.JMX_SERVICE_URL, jmxServiceURL);
+					configurationService.configure("/configurations/JMXService.properties", properties);
+				} else {
+					configurationService.removeConfiguration("JMXService");
+					LOGGER.info("Not JMX service URL found for VM ID {}", virtualMachine.id());
+				}
+
 				return null;
 			}
 		};
@@ -65,9 +72,9 @@ public class ConnectionService {
 				virtualMachines.add(virtualMachineModel);
 			} catch (AttachNotSupportedException | IOException e) {
 				LOGGER.debug("Unable to attach Java process {}", virtualMachineDescriptor.id());
-			}	
+			}
 		}
 		return virtualMachines;
-	}	
+	}
 
 }
