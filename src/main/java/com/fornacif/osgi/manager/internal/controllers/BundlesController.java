@@ -32,22 +32,22 @@ import com.google.common.collect.Collections2;
 
 @Component(name = "BundlesController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
 public class BundlesController extends VBox implements Initializable {
-	
+
 	@FXML
 	private Label bundlesCountLabel;
 
 	@FXML
 	private TableView<BundleModel> bundlesTableView;
-	
+
 	@FXML
 	private TextField bundleNameFilterTextField;
-	
+
 	private BundlesService bundlesService;
-	
+
 	private List<BundleModel> bundles = new ArrayList<>();
-	
+
 	private ServiceCaller serviceCaller;
-	
+
 	@Reference
 	private void bindServiceCaller(ServiceCaller serviceCaller) {
 		this.serviceCaller = serviceCaller;
@@ -57,9 +57,9 @@ public class BundlesController extends VBox implements Initializable {
 	private void bindBundlesService(BundlesService bundlesService) {
 		this.bundlesService = bundlesService;
 	}
-	
+
 	@Override
-	public void initialize(URL url, ResourceBundle resourceBundle) {			
+	public void initialize(URL url, ResourceBundle resourceBundle) {
 		handleBundleNameFilter();
 		listBundles();
 	}
@@ -72,9 +72,9 @@ public class BundlesController extends VBox implements Initializable {
 	}
 
 	private void listBundles() {
-		serviceCaller.execute(bundlesService.listBundles(), listBundlesResult(), null);	
+		serviceCaller.execute(bundlesService.listBundles(), listBundlesResult(), null);
 	}
-	
+
 	private ResultCallable<Void> executeActionResult() {
 		return new ResultCallable<Void>() {
 			@Override
@@ -84,7 +84,7 @@ public class BundlesController extends VBox implements Initializable {
 			}
 		};
 	}
-	
+
 	private ResultCallable<List<BundleModel>> listBundlesResult() {
 		return new ResultCallable<List<BundleModel>>() {
 			@Override
@@ -101,16 +101,16 @@ public class BundlesController extends VBox implements Initializable {
 			public boolean apply(BundleModel bundleModel) {
 				if (!bundleNameFilterTextField.getText().equals("")) {
 					return bundleModel.getName().toUpperCase().contains(bundleNameFilterTextField.getText().toUpperCase());
-				} 
-				return true;	
+				}
+				return true;
 			}
 		};
 		ObservableList<BundleModel> filteredBundles = FXCollections.observableArrayList(Collections2.filter(bundles, predicate));
 		bundlesTableView.setItems(filteredBundles);
-		bundlesCountLabel.setText("Bundles: "+ String.valueOf(filteredBundles.size()));
+		bundlesCountLabel.setText("Bundles: " + String.valueOf(filteredBundles.size()));
 		updateSort();
 	}
-	
+
 	private void updateSort() {
 		ObservableList<TableColumn<BundleModel, ?>> sortOrder = bundlesTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
@@ -119,12 +119,13 @@ public class BundlesController extends VBox implements Initializable {
 			sortOrder.add(sortedTableColumn);
 		}
 	}
-	
+
 	private void handleBundleNameFilter() {
 		bundleNameFilterTextField.textProperty().addListener(new ChangeListener<String>() {
-            @Override public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-            	applyBundleNameFilter();
-            }
-        });
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				applyBundleNameFilter();
+			}
+		});
 	}
 }

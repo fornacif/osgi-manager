@@ -13,12 +13,12 @@
 		<fx:define>
 	        <ToggleGroup fx:id="toggleGroup"/>
 	    </fx:define>
-		<ToggleButton fx:id="consoleToggleButton" text="Console" toggleGroup="$toggleGroup" prefHeight="30" prefWidth="200" />
+		<ToggleButton fx:id="consoleToggleButton" text="Console" toggleGroup="$toggleGroup" disable="true" prefHeight="30" prefWidth="200" />
 		<ToggleButton fx:id="connectionToggleButton" text="Connections" toggleGroup="$toggleGroup" selected="true" prefHeight="30" prefWidth="200" />
 	</HBox>
 	<StackPane VBox.vgrow="ALWAYS">
 		<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" tabMinWidth="150" tabMinHeight="25" side="TOP" visible="${consoleToggleButton.selected}" managed="${consoleToggleButton.selected}" />
-		<VBox fx:id="connection" visible="${connectionToggleButton.selected}" managed="${connectionToggleButton.selected}" />
+		<StackPane fx:id="connection" visible="${connectionToggleButton.selected}" managed="${connectionToggleButton.selected}" />
 		<Group>
 			<ProgressIndicator fx:id="progressIndicator" visible="false" managed="false" />
 		</Group>
