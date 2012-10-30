@@ -59,13 +59,14 @@ public class FXMLLoaderDelegator implements EventListenerHook {
 				@Override
 				public void run() {
 					try {
-						FXMLLoader fxmlLoader = new FXMLLoader(controller.getClass().getResource(fxml));
+						FXMLLoader fxmlLoader = new FXMLLoader();
+						fxmlLoader.setClassLoader(controller.getClass().getClassLoader());
 						fxmlLoader.setRoot(controller);
 						fxmlLoader.setController(controller);
 						if (css != null) {
 							controller.getStylesheets().add(controller.getClass().getResource(css).toExternalForm());
 						}
-						fxmlLoader.load();
+						fxmlLoader.load(controller.getClass().getResourceAsStream(fxml));
 					} catch (Exception e) {
 						LOGGER.error("Error loading FXML for service", e);
 					}		

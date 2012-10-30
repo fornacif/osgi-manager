@@ -14,13 +14,13 @@
 		<osgi.enterprise.version>5.0.0</osgi.enterprise.version>
 		<maven-bundle-plugin.version>2.3.7</maven-bundle-plugin.version>
 		<slf4j.version>1.7.2</slf4j.version>
-		<compiler.version>2.4</compiler.version>
+		<compiler.version>2.5.1</compiler.version>
 		<source.version>1.7</source.version>
 		<target.version>1.7</target.version>
-		<tools.path>C:/Program Files/Java/jdk1.7.0_07/lib/tools.jar</tools.path>
-		<tools.version>1.7.0_07</tools.version>
+		<tools.path>C:/Program Files/Java/jdk1.7.0_09/lib/tools.jar</tools.path>
+		<tools.version>1.7.0_09</tools.version>
 		<javafx.path>C:/Program Files/Java/jre7/lib/jfxrt.jar</javafx.path>
-		<javafx.version>2.2.1</javafx.version>
+		<javafx.version>2.2.3</javafx.version>
 		<guava.version>13.0.1</guava.version>
 	</properties>
 
@@ -97,6 +97,7 @@
 					<unpackBundle>true</unpackBundle>
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
+						<DynamicImport-Package>javafx.*;version=${javafx.version}</DynamicImport-Package>
 						<Service-Component>com.fornacif.osgi.manager.internal.*</Service-Component>
 					</instructions>
 				</configuration>

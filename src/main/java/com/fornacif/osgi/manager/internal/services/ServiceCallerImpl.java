@@ -21,7 +21,7 @@ import com.fornacif.osgi.manager.services.FaultCallable;
 import com.fornacif.osgi.manager.services.ResultCallable;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 
-@Component
+@Component(name="ServiceCaller")
 public class ServiceCallerImpl implements ServiceCaller {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());

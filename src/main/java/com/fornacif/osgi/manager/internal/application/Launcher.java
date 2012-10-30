@@ -22,16 +22,21 @@ public class Launcher extends Application {
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	private final String APPLICATION_FXML = "/fxml/application.fxml";
-	private final String TITLE_PROPERTIES = "title";
+	private final String FXML = "fxml";
+	private final String TITLE = "title";
+	private final String CSS = "css";
 
+	private static String fxml;
+	private static String css;
 	private static String title;
 	
 	private static Pane applicationController;
 
 	@Activate
 	private void activate(final BundleContext bundleContext, Map<String, ?> properties) throws Exception {
-		title = (String) properties.get(TITLE_PROPERTIES);
+		fxml = (String) properties.get(FXML);
+		css = (String) properties.get(CSS);
+		title = (String) properties.get(TITLE);
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -44,9 +49,11 @@ public class Launcher extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		FXMLLoader applicationLoader = new FXMLLoader(getClass().getResource(APPLICATION_FXML));
+		FXMLLoader applicationLoader = new FXMLLoader(getClass().getResource(fxml));
+		applicationLoader.setClassLoader(getClass().getClassLoader());
 		applicationLoader.setController(applicationController);
 		applicationLoader.setRoot(applicationController);
+		applicationController.getStylesheets().add(getClass().getResource(css).toExternalForm());
 		applicationLoader.load();
 		Scene scene = new Scene(applicationController);
 		stage.setScene(scene);
