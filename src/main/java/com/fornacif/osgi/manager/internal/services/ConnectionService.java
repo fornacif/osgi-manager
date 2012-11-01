@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,33 +30,21 @@ public class ConnectionService {
 		this.configurationService = configurationService;
 	}
 
-	public Callable<List<ConnectionModel>> listConnections() {
-		return new Callable<List<ConnectionModel>>() {
-			@Override
-			public List<ConnectionModel> call() throws Exception {
-				return listVirtualMachines(VirtualMachine.list());
-			}
-		};
+	public List<ConnectionModel> listConnections() {
+		return listVirtualMachines(VirtualMachine.list());
 	}
 
-	public Callable<List<Void>> configureConnection(final VirtualMachine virtualMachine) {
-		return new Callable<List<Void>>() {
-			@Override
-			public List<Void> call() throws Exception {
-				Map<String, Object> properties = new HashMap<>();
-				Properties vmProperties = virtualMachine.getAgentProperties();
-				String jmxServiceURL = vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
-				if (jmxServiceURL != null) {
-					properties.put(JMXService.JMX_SERVICE_URL, jmxServiceURL);
-					configurationService.configure("/configurations/JMXService.properties", properties);
-				} else {
-					configurationService.removeConfiguration("JMXService");
-					LOGGER.info("Not JMX service URL found for VM ID {}", virtualMachine.id());
-				}
-
-				return null;
-			}
-		};
+	public void configureConnection(final VirtualMachine virtualMachine) throws IOException {
+		Map<String, Object> properties = new HashMap<>();
+		Properties vmProperties = virtualMachine.getAgentProperties();
+		String jmxServiceURL = vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
+		if (jmxServiceURL != null) {
+			properties.put(JMXService.JMX_SERVICE_URL, jmxServiceURL);
+			configurationService.configure("/configurations/JMXService.properties", properties);
+		} else {
+			configurationService.removeConfiguration("JMXService");
+			LOGGER.info("Not JMX service URL found for VM ID {}", virtualMachine.id());
+		}
 	}
 
 	private List<ConnectionModel> listVirtualMachines(List<VirtualMachineDescriptor> virtualMachineDescriptors) {

@@ -1,9 +1,9 @@
 package com.fornacif.osgi.manager.internal.services;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.TabularData;
@@ -31,43 +31,29 @@ public class BundlesService {
 		this.jmxService = jmxConnectorService;
 	}
 
-	public Callable<List<BundleModel>> listBundles() {
-		return new Callable<List<BundleModel>>() {
-			@Override
-			public List<BundleModel> call() throws Exception {
-				BundleStateMBean bundleStateMBean = jmxService.getBundleStateMBean();
-				TabularData bundles = bundleStateMBean.listBundles();
-				return listBundles(bundles);
-			}
-		};
+	public List<BundleModel> listBundles() throws IOException {
+		BundleStateMBean bundleStateMBean = jmxService.getBundleStateMBean();
+		TabularData bundles = bundleStateMBean.listBundles();
+		return listBundles(bundles);
 	}
 
-	public Callable<Void> executeAction(final Action action, final Long bundleId) {
-		return new Callable<Void>() {
-			@Override
-			public Void call() throws Exception {
-				FrameworkMBean mbeanProxy = jmxService.getFrameworkMBean();
-
-				LOGGER.debug("{} {}", action, bundleId);
-
-				switch (action) {
-				case START:
-					mbeanProxy.startBundle(bundleId);
-					break;
-				case STOP:
-					mbeanProxy.stopBundle(bundleId);
-					break;
-				case UPDATE:
-					mbeanProxy.updateBundle(bundleId);
-					break;
-				case UNINSTALL:
-					mbeanProxy.uninstallBundle(bundleId);
-					break;
-				}
-				return null;
-			}
-		};
-		
+	public void executeAction(final Action action, final Long bundleId) throws IOException {
+		FrameworkMBean mbeanProxy = jmxService.getFrameworkMBean();
+		LOGGER.debug("{} {}", action, bundleId);
+		switch (action) {
+		case START:
+			mbeanProxy.startBundle(bundleId);
+			break;
+		case STOP:
+			mbeanProxy.stopBundle(bundleId);
+			break;
+		case UPDATE:
+			mbeanProxy.updateBundle(bundleId);
+			break;
+		case UNINSTALL:
+			mbeanProxy.uninstallBundle(bundleId);
+			break;
+		}		
 	}
 
 	@SuppressWarnings("unchecked")

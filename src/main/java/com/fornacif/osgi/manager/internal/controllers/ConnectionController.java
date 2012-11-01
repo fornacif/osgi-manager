@@ -28,7 +28,7 @@ import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 import com.fornacif.osgi.manager.internal.services.ConfigurationService;
 import com.fornacif.osgi.manager.internal.services.ConnectionService;
 import com.fornacif.osgi.manager.internal.services.JMXService;
-import com.fornacif.osgi.manager.services.ResultCallable;
+import com.fornacif.osgi.manager.services.AsynchService;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 
 @Component(name = "ConnectionController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
@@ -93,12 +93,18 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@FXML
 	protected void executeAction(final ConnectionActionEvent connectionActionEvent) throws IOException {
-		ConnectionModel connection = connectionActionEvent.getConnection();
+		final ConnectionModel connection = connectionActionEvent.getConnection();
 		if (connectionActionEvent.getAction() == Action.CONNECT) {
 			if (selectedConnection != null && connection != selectedConnection) {
 				selectedConnection.setConnected(false);
 			}
-			serviceCaller.execute(connectionService.configureConnection(connection.getVirtualMachine()), null, null);
+			serviceCaller.execute(new AsynchService<Void>() {
+				@Override
+				public Void call() throws Exception {
+					connectionService.configureConnection(connection.getVirtualMachine());
+					return null;
+				}
+			});
 		} else {
 			this.configurationService.removeConfiguration("JMXService");
 		}	
@@ -106,18 +112,17 @@ public class ConnectionController extends VBox implements Initializable {
 	}
 
 	private void listVirtualMachines() {
-		serviceCaller.execute(connectionService.listConnections(), listConnectionsResult(), null);
-	}
-
-	private ResultCallable<List<ConnectionModel>> listConnectionsResult() {
-		return new ResultCallable<List<ConnectionModel>>() {
+		serviceCaller.execute(new AsynchService<List<ConnectionModel>>() {
 			@Override
-			public Void call() throws Exception {
-				connections = getResult();
-				fillVirtualMachinesListView();
-				return null;
+			public List<ConnectionModel> call() throws Exception {
+				return connectionService.listConnections();
 			}
-		};
+			@Override
+			public void succeeded(List<ConnectionModel> result) {
+				connections = result;
+				fillVirtualMachinesListView();
+			}
+		});
 	}
 
 	private void fillVirtualMachinesListView() {

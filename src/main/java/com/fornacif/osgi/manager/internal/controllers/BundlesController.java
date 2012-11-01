@@ -25,7 +25,7 @@ import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
 import com.fornacif.osgi.manager.internal.services.BundlesService;
-import com.fornacif.osgi.manager.services.ResultCallable;
+import com.fornacif.osgi.manager.services.AsynchService;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -66,34 +66,33 @@ public class BundlesController extends VBox implements Initializable {
 
 	@FXML
 	protected void executeBundleAction(final BundleActionEvent bundleActionEvent) {
-		Action action = bundleActionEvent.getAction();
-		Long bundleId = bundleActionEvent.getBundleId();
-		serviceCaller.execute(bundlesService.executeAction(action, bundleId), executeActionResult(), null);
+		serviceCaller.execute(new AsynchService<Void>() {
+			@Override
+			public Void call() throws Exception {
+				Action action = bundleActionEvent.getAction();
+				Long bundleId = bundleActionEvent.getBundleId();
+				bundlesService.executeAction(action, bundleId);
+				return null;
+			}
+			@Override
+			public void succeeded(Void result) {
+				listBundles();	
+			}
+		});
 	}
 
 	private void listBundles() {
-		serviceCaller.execute(bundlesService.listBundles(), listBundlesResult(), null);
-	}
-
-	private ResultCallable<Void> executeActionResult() {
-		return new ResultCallable<Void>() {
+		serviceCaller.execute(new AsynchService<List<BundleModel>>() {
 			@Override
-			public Void call() throws Exception {
-				listBundles();
-				return null;
+			public List<BundleModel> call() throws Exception {
+				return bundlesService.listBundles();
 			}
-		};
-	}
-
-	private ResultCallable<List<BundleModel>> listBundlesResult() {
-		return new ResultCallable<List<BundleModel>>() {
 			@Override
-			public Void call() throws Exception {
-				bundles = getResult();
+			public void succeeded(List<BundleModel> result) {
+				bundles = result;
 				applyBundleNameFilter();
-				return null;
 			}
-		};
+		});
 	}
 
 	private void applyBundleNameFilter() {

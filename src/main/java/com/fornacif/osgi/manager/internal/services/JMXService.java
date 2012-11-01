@@ -47,7 +47,7 @@ public class JMXService {
 		this.bundleStateObjectName = new ObjectName((String) properties.get(BUNDLESTATE_BEAN_NAME));
 		this.frameworkObjectName = new ObjectName((String) properties.get(FRAMEWORK_BEAN_NAME));
 		
-		jmxConnector = JMXConnectorFactory.connect(jmxServiceURL, null);
+		jmxConnector = JMXConnectorFactory.connect(jmxServiceURL);
 		mbeanServerConnection = jmxConnector.getMBeanServerConnection();
 		
 		if (mbeanServerConnection.isRegistered(frameworkObjectName)) {
