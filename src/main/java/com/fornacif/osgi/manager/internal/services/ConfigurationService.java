@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Properties;
 
 import org.osgi.framework.BundleContext;
@@ -22,7 +21,7 @@ import aQute.bnd.annotation.component.Reference;
 public class ConfigurationService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	private final String CONFIGURATIONS_DIR = "/configurations/load";
+	private final String CONFIGURATIONS_DIR = "/configurations";
 	private final String CONFIGURATION_EXTENSION = ".properties";
 	private ConfigurationAdmin configurationAdmin;
 
@@ -46,20 +45,13 @@ public class ConfigurationService {
 		
 	}
 	
-	public void configure(String configurationPath) throws IOException {
-		configure(configurationPath, null);
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void configure(String configurationPath, Map<String, ?> additionalProperties) throws IOException {
+	public void configure(String configurationPath) throws IOException {
 		String configurationFileName = new File(configurationPath).getName();
 		String configurationName = configurationFileName.substring(0, configurationFileName.length() - CONFIGURATION_EXTENSION.length());
 		Configuration configuration = this.configurationAdmin.getConfiguration(configurationName, null);
 		Properties properties = new Properties();
 		properties.load(getClass().getResourceAsStream("/" + configurationPath));
-		if (additionalProperties != null) {		
-			properties.putAll(additionalProperties);
-		}
 		configuration.update(new Hashtable(properties));
 		LOGGER.debug("Configuration " + configurationName + " created");
 	}
@@ -71,11 +63,5 @@ public class ConfigurationService {
 			configure(configuration);
 		}
 	}
-
-	public void removeConfiguration(String configurationName) throws IOException {
-		Configuration configuration = this.configurationAdmin.getConfiguration(configurationName);
-		configuration.delete();
-	}
-	
 
 }

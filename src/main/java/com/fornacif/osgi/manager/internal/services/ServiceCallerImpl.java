@@ -60,6 +60,9 @@ public class ServiceCallerImpl implements ServiceCaller {
 			protected void failed() {
 				LOGGER.error("Error during service call", getException());
 				asynchService.failed(getException());
+				HashMap<String, String> properties = new HashMap<>();
+				properties.put("MESSAGE", "An error occured");
+				eventAdmin.sendEvent(new Event(EventAdminTopics.NOTIFICATION, properties));
 			}
 		};	
 		service.setExecutor(executorService);

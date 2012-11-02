@@ -12,3 +12,14 @@
 #menubar {
 	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
 }
+
+#notificationBar {
+	-fx-border-color: -fx-base;
+}
+
+#notification {
+	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
+	-fx-background-radius: 5;
+	-fx-border-color: -fx-base;
+	-fx-border-radius: 5;
+}

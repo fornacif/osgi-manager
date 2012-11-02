@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.Pane;
@@ -36,11 +35,15 @@ public class ApplicationController extends VBox implements Initializable, EventH
 
 	private BundleContext bundleContext;
 
-	@FXML
 	private Pane connectionController;
-
+	
+	private Pane notificationController;
+	
 	@FXML
-	private ProgressIndicator progressIndicator;
+	private VBox notificationBar;
+	
+	@FXML
+	private VBox progressIndicator;
 
 	@FXML
 	private TabPane tabPane;
@@ -64,6 +67,11 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		this.connectionController = connectionController;
 	}
 	
+	@Reference(target = "(component.name=NotificationController)")
+	private void bindNotificationController(Pane notificationController) {
+		this.notificationController = notificationController;
+	}
+	
 	@Reference(optional=true, dynamic=true)
 	private void bindJmxConnectorService(JMXService jmxConnectorService) {
 		consoleToggleButton.setDisable(false);
@@ -81,6 +89,7 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		bundleContext.registerService(EventListenerHook.class, new FXMLLoaderDelegator(bundleContext), null);
 		bundleContext.registerService(TabPane.class, tabPane, null);
 		connection.getChildren().add(connectionController);
+		notificationBar.getChildren().add(notificationController);
 	}
 
 	@Override

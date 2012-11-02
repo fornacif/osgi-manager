@@ -14,10 +14,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
@@ -25,7 +21,6 @@ import aQute.bnd.annotation.component.Reference;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.ConnectionModel;
-import com.fornacif.osgi.manager.internal.services.ConfigurationService;
 import com.fornacif.osgi.manager.internal.services.ConnectionService;
 import com.fornacif.osgi.manager.internal.services.JMXService;
 import com.fornacif.osgi.manager.services.AsynchService;
@@ -34,8 +29,6 @@ import com.fornacif.osgi.manager.services.ServiceCaller;
 @Component(name = "ConnectionController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
 public class ConnectionController extends VBox implements Initializable {
 
-	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-
 	private ServiceCaller serviceCaller;
 
 	private ConnectionService connectionService;
@@ -43,8 +36,6 @@ public class ConnectionController extends VBox implements Initializable {
 	private List<ConnectionModel> connections;
 
 	private ConnectionModel selectedConnection;
-
-	private ConfigurationService configurationService;
 
 	@FXML
 	private TableView<ConnectionModel> localConnectionsTableView;
@@ -57,11 +48,6 @@ public class ConnectionController extends VBox implements Initializable {
 	@Reference
 	private void bindConnectionService(ConnectionService connectionService) {
 		this.connectionService = connectionService;
-	}
-
-	@Reference
-	private void bindConfigurationService(ConfigurationService configurationService) {
-		this.configurationService = configurationService;
 	}
 
 	@Reference(optional = true, dynamic = true)
@@ -101,12 +87,12 @@ public class ConnectionController extends VBox implements Initializable {
 			serviceCaller.execute(new AsynchService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					connectionService.configureConnection(connection.getVirtualMachine());
+					connectionService.connect(connection.getVirtualMachine());
 					return null;
 				}
 			});
 		} else {
-			this.configurationService.removeConfiguration("JMXService");
+			connectionService.disconnect();
 		}	
 		selectedConnection = connection;
 	}
