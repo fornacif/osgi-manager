@@ -8,15 +8,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.stage.*?>
 <fx:root type="javafx.scene.layout.HBox"
-	xmlns:fx="http://javafx.com/fxml" visible="false" managed="false"
-	fx:id="notification">
+	xmlns:fx="http://javafx.com/fxml" visible="false" managed="false" spacing="10"
+	fx:id="notification" alignment="CENTER">
 	<padding>
-		<Insets top="5" right="5" bottom="5" left="5" />
+		<Insets top="3" right="5" bottom="3" left="5" />
     </padding>
-   	<ImageView>
-	    <image>
-	        <Image url="@/icons/error-16x16.png"/>
-	    </image>
-	</ImageView>
+   	<ImageView fx:id="image" />
 	<Label fx:id="notificationMessage" />
 </fx:root>

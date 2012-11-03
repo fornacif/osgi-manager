@@ -92,7 +92,13 @@ public class ConnectionController extends VBox implements Initializable {
 				}
 			});
 		} else {
-			connectionService.disconnect();
+			serviceCaller.execute(new AsynchService<Void>() {
+				@Override
+				public Void call() throws Exception {
+					connectionService.disconnect();
+					return null;
+				}
+			});
 		}	
 		selectedConnection = connection;
 	}
@@ -125,7 +131,6 @@ public class ConnectionController extends VBox implements Initializable {
 			sortOrder.clear();
 			sortOrder.add(sortedTableColumn);
 		}
-
 	}
 
 }
