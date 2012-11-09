@@ -61,7 +61,7 @@ public class ConnectionService {
 		if (jmxServiceURL != null) {
 			connect(new JMXServiceURL(jmxServiceURL));
 		} else {
-			LOGGER.info("Not JMX service URL found for VM ID {}", virtualMachine.id());
+			throw new IOException("Not JMX service URL found for VM ID " + virtualMachine.id());
 		}
 	}
 	
@@ -73,7 +73,7 @@ public class ConnectionService {
 			JMXService jmxService = new JMXService(mbeanServerConnection, frameworkObjectName, bundleStateObjectName);
 			serviceRegistration = bundleContext.registerService(JMXService.class, jmxService, null);
 		} else {
-			LOGGER.info("Connection not open due to missing OSGi MBeans");
+			throw new IOException("Connection not open due to missing OSGi MBeans");
 		}
 	}
 	
