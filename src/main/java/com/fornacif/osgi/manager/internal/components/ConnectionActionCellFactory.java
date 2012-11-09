@@ -55,7 +55,7 @@ public class ConnectionActionCellFactory implements Callback<TableColumn<Connect
 
 				setGraphic(connectionHBox);
 			}
-		};
+		};		
 		return cell;
 	}
 	

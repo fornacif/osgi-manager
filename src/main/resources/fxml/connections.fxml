@@ -14,7 +14,7 @@
 		<Insets top="10" right="10" bottom="10" left="10" />
     </padding>
     <Label text="Local VM" />
-	<TableView fx:id="localConnectionsTableView" prefHeight="200">
+	<TableView fx:id="localConnectionsTableView" prefHeight="150">
 		<columns>
 			<TableColumn text="ID" prefWidth="75">
 				<cellValueFactory>
@@ -40,17 +40,18 @@
 			<fx:reference source="name"/>
 		</sortOrder>   
 	</TableView>
+	<Region prefHeight="20" />
 	<Label text="Remote VM" />
-	<TableView fx:id="remoteConnectionsTableView" prefHeight="200">
+	<TableView fx:id="remoteConnectionsTableView" prefHeight="150">
 		<columns>
-			<TableColumn text="ID" prefWidth="75">
-				<cellValueFactory>
-					<PropertyValueFactory property="id" />
-				</cellValueFactory>
-			</TableColumn>
-			<TableColumn fx:id="name" text="NAME" prefWidth="500">
+			<TableColumn fx:id="name" text="NAME" prefWidth="150">
 				<cellValueFactory>
 					<PropertyValueFactory property="name" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="URL" prefWidth="425">
+				<cellValueFactory>
+					<PropertyValueFactory property="url" />
 				</cellValueFactory>
 			</TableColumn>
 			<TableColumn text="ACTION" prefWidth="125">
@@ -58,8 +59,7 @@
 					<PropertyValueFactory property="model" />
 				</cellValueFactory>
 				<cellFactory>
-                    <ConnectionActionCellFactory onAction="#executeAction">
-					</ConnectionActionCellFactory>
+                    <ConnectionActionCellFactory onAction="#executeAction" />
                 </cellFactory>
 			</TableColumn>
 		</columns>
@@ -67,4 +67,10 @@
 			<fx:reference source="name"/>
 		</sortOrder>   
 	</TableView>
+	<HBox spacing="10" alignment="CENTER">
+		<TextField fx:id="remoteConnectionName" promptText="name" prefWidth="145" />
+		<TextField fx:id="remoteServiceURLTextField" prefWidth="420" text="service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi" />
+		<Button text="Add connection" onAction="#addRemoteConnection" />
+	</HBox>
+	
 </fx:root>

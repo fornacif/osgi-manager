@@ -6,7 +6,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
 
-import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
@@ -51,7 +50,7 @@ public class NotificationController extends HBox implements EventHandler, Initia
 		TranslateTransition showNotification = new TranslateTransition(Duration.millis(500), NotificationController.this);
 		showNotification.setFromY(30.0);
 		showNotification.setToY(0.0);
-		
+
 		TranslateTransition hideNotification = new TranslateTransition(Duration.millis(500), NotificationController.this);
 		hideNotification.setFromY(0.0);
 		hideNotification.setToY(30.0);

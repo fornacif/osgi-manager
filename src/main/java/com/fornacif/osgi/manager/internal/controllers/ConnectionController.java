@@ -2,6 +2,8 @@ package com.fornacif.osgi.manager.internal.controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -12,12 +14,18 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
+
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
 
+import com.fornacif.osgi.manager.constants.EventAdminTopics;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.ConnectionModel;
@@ -33,12 +41,30 @@ public class ConnectionController extends VBox implements Initializable {
 
 	private ConnectionService connectionService;
 
-	private List<ConnectionModel> connections;
+	private List<ConnectionModel> localConnections;
+	
+	private List<ConnectionModel> remoteConnections = new ArrayList<>();
 
 	private ConnectionModel selectedConnection;
+	
+	private EventAdmin eventAdmin;
 
 	@FXML
 	private TableView<ConnectionModel> localConnectionsTableView;
+	
+	@FXML
+	private TableView<ConnectionModel> remoteConnectionsTableView;
+	
+	@FXML
+	private TextField remoteConnectionName;
+	
+	@FXML
+	private TextField remoteServiceURLTextField;
+	
+	@Reference
+	private void bindEventAdmin(EventAdmin eventAdmin) {
+		this.eventAdmin = eventAdmin;
+	}
 
 	@Reference
 	private void bindServiceCaller(ServiceCaller serviceCaller) {
@@ -56,7 +82,7 @@ public class ConnectionController extends VBox implements Initializable {
 			@Override
 			public void run() {
 				selectedConnection.setConnected(true);
-				fillVirtualMachinesListView();
+				fillConnectionsTableViews();
 			}
 		});
 		
@@ -67,18 +93,18 @@ public class ConnectionController extends VBox implements Initializable {
 			@Override
 			public void run() {
 				selectedConnection.setConnected(false);
-				fillVirtualMachinesListView();
+				fillConnectionsTableViews();
 			}
 		});
 	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		listVirtualMachines();
+		listLocalConnections();
 	}
 
 	@FXML
-	protected void executeAction(final ConnectionActionEvent connectionActionEvent) throws IOException {
+	private void executeAction(final ConnectionActionEvent connectionActionEvent) throws IOException {
 		final ConnectionModel connection = connectionActionEvent.getConnection();
 		if (connectionActionEvent.getAction() == Action.CONNECT) {
 			if (selectedConnection != null && connection != selectedConnection) {
@@ -87,7 +113,7 @@ public class ConnectionController extends VBox implements Initializable {
 			serviceCaller.execute(new AsynchService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					connectionService.connect(connection.getVirtualMachine());
+					connectionService.connect(connection);
 					return null;
 				}
 			});
@@ -102,30 +128,51 @@ public class ConnectionController extends VBox implements Initializable {
 		}	
 		selectedConnection = connection;
 	}
+	
+	@FXML
+	private void addRemoteConnection() {
+		ConnectionModel connectionModel = new ConnectionModel();
+		connectionModel.setName(remoteConnectionName.getText());
+		connectionModel.setUrl(remoteServiceURLTextField.getText());
+		if (!remoteConnections.contains(connectionModel)) {
+			remoteConnections.add(connectionModel);
+			fillConnectionsTableViews();
+		} else {
+			HashMap<String, String> properties = new HashMap<>();
+			properties.put("TYPE", "ERROR");
+			properties.put("MESSAGE", "Remote connection with the same name already exists");
+			eventAdmin.sendEvent(new Event(EventAdminTopics.NOTIFICATION, properties));
+		}
+	}
 
-	private void listVirtualMachines() {
+	private void listLocalConnections() {
 		serviceCaller.execute(new AsynchService<List<ConnectionModel>>() {
 			@Override
 			public List<ConnectionModel> call() throws Exception {
-				return connectionService.listConnections();
+				return connectionService.listLocalConnections();
 			}
 			@Override
 			public void succeeded(List<ConnectionModel> result) {
-				connections = result;
-				fillVirtualMachinesListView();
+				localConnections = result;
+				fillConnectionsTableViews();
 			}
 		});
 	}
-
-	private void fillVirtualMachinesListView() {
-		localConnectionsTableView.setItems(null); 
-		localConnectionsTableView.layout();
-		localConnectionsTableView.setItems(FXCollections.observableArrayList(connections));
-		updateSort();
+	
+	private void fillConnectionsTableViews() {
+		fillConnectionsTableView(localConnectionsTableView, localConnections);
+		fillConnectionsTableView(remoteConnectionsTableView, remoteConnections);
 	}
 
-	private void updateSort() {
-		ObservableList<TableColumn<ConnectionModel, ?>> sortOrder = localConnectionsTableView.getSortOrder();
+	private void fillConnectionsTableView(TableView<ConnectionModel> connectionsTableView, List<ConnectionModel> connections) {
+		connectionsTableView.setItems(null); 
+		connectionsTableView.layout();
+		connectionsTableView.setItems(FXCollections.observableArrayList(connections));
+		updateSort(connectionsTableView);
+	}
+
+	private void updateSort(TableView<ConnectionModel> connectionsTableView) {
+		ObservableList<TableColumn<ConnectionModel, ?>> sortOrder = connectionsTableView.getSortOrder();
 		if (sortOrder.size() > 0) {
 			TableColumn<ConnectionModel, ?> sortedTableColumn = sortOrder.get(0);
 			sortOrder.clear();
