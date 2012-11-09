@@ -51,29 +51,21 @@ public class ConnectionService {
 		this.frameworkObjectName = new ObjectName((String) properties.get(FRAMEWORK_BEAN_NAME));
 	}
 
-	public List<ConnectionModel> listConnections() {
-		return listVirtualMachines(VirtualMachine.list());
-	}
-
-	public void connect(final VirtualMachine virtualMachine) throws IOException {
-		Properties vmProperties = virtualMachine.getAgentProperties();
-		String jmxServiceURL = vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
-		if (jmxServiceURL != null) {
-			connect(new JMXServiceURL(jmxServiceURL));
-		} else {
-			throw new IOException("Not JMX service URL found for VM ID " + virtualMachine.id());
-		}
+	public List<ConnectionModel> listLocalConnections() {
+		return listLocalVirtualMachines(VirtualMachine.list());
 	}
 	
-	private void connect(JMXServiceURL jmxServiceURL) throws IOException {
-		jmxConnector = JMXConnectorFactory.connect(jmxServiceURL);
+	public void connect(ConnectionModel connectionModel) throws Exception {
+		disconnect();
+		
+		jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(connectionModel.getUrl()));
 		MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
 		
 		if (mbeanServerConnection.isRegistered(frameworkObjectName)) {
 			JMXService jmxService = new JMXService(mbeanServerConnection, frameworkObjectName, bundleStateObjectName);
 			serviceRegistration = bundleContext.registerService(JMXService.class, jmxService, null);
 		} else {
-			throw new IOException("Connection not open due to missing OSGi MBeans");
+			throw new Exception("Connection not open due to missing OSGi MBeans");
 		}
 	}
 	
@@ -81,19 +73,28 @@ public class ConnectionService {
 		if (serviceRegistration != null) {
 			serviceRegistration.unregister();
 		}
-		jmxConnector.close();
+		if (jmxConnector != null) {
+			jmxConnector.close();
+		}
 	}
 
-	private List<ConnectionModel> listVirtualMachines(List<VirtualMachineDescriptor> virtualMachineDescriptors) {
+	private List<ConnectionModel> listLocalVirtualMachines(List<VirtualMachineDescriptor> virtualMachineDescriptors) {
 		List<ConnectionModel> virtualMachines = new ArrayList<>();
 		for (VirtualMachineDescriptor virtualMachineDescriptor : virtualMachineDescriptors) {
 			try {
 				VirtualMachine virtualMachine = VirtualMachine.attach(virtualMachineDescriptor);
-				ConnectionModel virtualMachineModel = new ConnectionModel();
-				virtualMachineModel.setId(virtualMachineDescriptor.id());
-				virtualMachineModel.setName(virtualMachineDescriptor.displayName());
-				virtualMachineModel.setVirtualMachine(virtualMachine);
-				virtualMachines.add(virtualMachineModel);
+				Properties vmProperties = virtualMachine.getAgentProperties();
+				String jmxServiceURL = vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
+				if (jmxServiceURL != null) {
+					ConnectionModel virtualMachineModel = new ConnectionModel();
+					virtualMachineModel.setId(virtualMachineDescriptor.id());
+					virtualMachineModel.setName(virtualMachineDescriptor.displayName());
+					virtualMachineModel.setUrl(jmxServiceURL);
+					virtualMachines.add(virtualMachineModel);
+				} else {
+					LOGGER.debug("Not JMX service URL found for VM ID {}", virtualMachine.id());
+				}
+				
 			} catch (AttachNotSupportedException | IOException e) {
 				LOGGER.debug("Unable to attach Java process {}", virtualMachineDescriptor.id());
 			}

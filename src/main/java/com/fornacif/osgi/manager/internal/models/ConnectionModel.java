@@ -1,18 +1,14 @@
 package com.fornacif.osgi.manager.internal.models;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import com.sun.tools.attach.VirtualMachine;
 
 public class ConnectionModel {
 	private final StringProperty id = new SimpleStringProperty();
 	private final StringProperty name = new SimpleStringProperty();
-	private final ObjectProperty<VirtualMachine> virtualMachine = new SimpleObjectProperty<VirtualMachine>();
+	private final StringProperty url = new SimpleStringProperty();
 	private final BooleanProperty connected = new SimpleBooleanProperty(false);
 	
 	public String getId() {
@@ -31,12 +27,12 @@ public class ConnectionModel {
 		this.name.set(name);
 	}
 	
-	public VirtualMachine getVirtualMachine() {
-		return this.virtualMachine.get();
+	public String getUrl() {
+		return url.get();
 	}
-	
-	public void setVirtualMachine(VirtualMachine virtualMachine) {
-		this.virtualMachine.set(virtualMachine);
+
+	public void setUrl(String url) {
+		this.url.set(url);
 	}
 
 	public Boolean isConnected() {
@@ -49,6 +45,17 @@ public class ConnectionModel {
 	
 	public ConnectionModel getModel() {
 		return this;
+	}
+	
+	@Override
+	public boolean equals(Object object) {
+		if (object == null) {
+			return false;
+		}
+		if (!(object instanceof ConnectionModel)) {
+			return false;
+		}
+		return ((ConnectionModel) object).getName().equals(getName());
 	}
 
 }
