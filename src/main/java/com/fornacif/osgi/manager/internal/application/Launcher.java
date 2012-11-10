@@ -44,7 +44,6 @@ public class Launcher extends Application {
 			}
 		}, "OSGi Manager Launcher").start();
 		LOGGER.debug("Launching OSGi Manager");
-		
 	}
 
 	@Override
