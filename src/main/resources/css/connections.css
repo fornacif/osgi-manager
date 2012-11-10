@@ -1,8 +1,15 @@
 .cell {
-	-fx-background-color: #F4F4F4;
+	-fx-background-color: #FFFFFF;
 	-fx-text-fill: -fx-dark-text-color;
 }
 
 .table-row-cell {
     -fx-cell-size: 30;
+}
+
+.connection-box {
+	-fx-background-color: #F4F4F4;
+	-fx-background-radius: 5;
+	-fx-border-color: #F4F4F4;
+	-fx-border-radius: 5;
 }

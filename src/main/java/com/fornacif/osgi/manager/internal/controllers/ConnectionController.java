@@ -40,25 +40,25 @@ public class ConnectionController extends VBox implements Initializable {
 	private ConnectionService connectionService;
 
 	private List<ConnectionModel> localConnections;
-	
+
 	private List<ConnectionModel> remoteConnections = new ArrayList<>();
 
 	private ConnectionModel selectedConnection;
-	
+
 	private EventAdmin eventAdmin;
 
 	@FXML
 	private TableView<ConnectionModel> localConnectionsTableView;
-	
+
 	@FXML
 	private TableView<ConnectionModel> remoteConnectionsTableView;
-	
+
 	@FXML
 	private TextField remoteConnectionName;
-	
+
 	@FXML
 	private TextField remoteServiceURLTextField;
-	
+
 	@Reference
 	private void bindEventAdmin(EventAdmin eventAdmin) {
 		this.eventAdmin = eventAdmin;
@@ -76,18 +76,18 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@Reference(optional = true, dynamic = true)
 	public void bindJmxService(JMXService jmxService) {
-		Platform.runLater(new Runnable() {			
+		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				selectedConnection.setConnected(true);
 				fillConnectionsTableViews();
 			}
 		});
-		
+
 	}
 
 	public void unbindJmxService(JMXService jmxService) {
-		Platform.runLater(new Runnable() {			
+		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
 				selectedConnection.setConnected(false);
@@ -123,12 +123,16 @@ public class ConnectionController extends VBox implements Initializable {
 					return null;
 				}
 			});
-		}	
+		}
 		selectedConnection = connection;
 	}
-	
+
 	@FXML
-	private void addRemoteConnection() {	
+	private void addRemoteConnection() {
+		if (remoteConnectionName.getText().isEmpty()) {
+			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Connection name cannot be empty"));
+			return;
+		} 
 		ConnectionModel connectionModel = new ConnectionModel();
 		connectionModel.setName(remoteConnectionName.getText());
 		connectionModel.setUrl(remoteServiceURLTextField.getText());
@@ -146,6 +150,7 @@ public class ConnectionController extends VBox implements Initializable {
 			public List<ConnectionModel> call() throws Exception {
 				return connectionService.listLocalConnections();
 			}
+
 			@Override
 			public void succeeded(List<ConnectionModel> result) {
 				localConnections = result;
@@ -153,14 +158,14 @@ public class ConnectionController extends VBox implements Initializable {
 			}
 		});
 	}
-	
+
 	private void fillConnectionsTableViews() {
 		fillConnectionsTableView(localConnectionsTableView, localConnections);
 		fillConnectionsTableView(remoteConnectionsTableView, remoteConnections);
 	}
 
 	private void fillConnectionsTableView(TableView<ConnectionModel> connectionsTableView, List<ConnectionModel> connections) {
-		connectionsTableView.setItems(null); 
+		connectionsTableView.setItems(null);
 		connectionsTableView.layout();
 		connectionsTableView.setItems(FXCollections.observableArrayList(connections));
 		updateSort(connectionsTableView);
