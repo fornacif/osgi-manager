@@ -41,8 +41,7 @@ public class ConfigurationService {
 					LOGGER.error("Error loading configuration", e);
 				}		
 			}
-		}, "OSGi Manager Configurator").start();
-		
+		}, "OSGi Manager Configurator").start();	
 	}
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
