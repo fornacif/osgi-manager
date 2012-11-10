@@ -9,6 +9,10 @@
     -fx-border-width: 0px;
 }
 
+.bold {
+	-fx-font-weight: bold;
+}
+
 #menuBar {
 	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
 }
