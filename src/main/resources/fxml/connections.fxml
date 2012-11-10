@@ -13,7 +13,7 @@
 	<padding>
 		<Insets top="10" right="10" bottom="10" left="10" />
     </padding>
-    <Label text="Local VM" />
+    <Label text="Local VMs" />
 	<TableView fx:id="localConnectionsTableView" prefHeight="150">
 		<columns>
 			<TableColumn text="ID" prefWidth="75">
@@ -41,7 +41,7 @@
 		</sortOrder>   
 	</TableView>
 	<Region prefHeight="20" />
-	<Label text="Remote VM" />
+	<Label text="Remote VMs" />
 	<TableView fx:id="remoteConnectionsTableView" prefHeight="150">
 		<columns>
 			<TableColumn fx:id="name" text="NAME" prefWidth="150">
@@ -67,6 +67,7 @@
 			<fx:reference source="name"/>
 		</sortOrder>   
 	</TableView>
+	<Label text="New Remote VM" />
 	<HBox spacing="10" alignment="CENTER">
 		<TextField fx:id="remoteConnectionName" promptText="name" prefWidth="145" />
 		<TextField fx:id="remoteServiceURLTextField" prefWidth="420" text="service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi" />

@@ -25,6 +25,8 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fornacif.osgi.manager.internal.events.NotificationEvent;
+
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 
@@ -33,7 +35,7 @@ public class NotificationController extends HBox implements EventHandler, Initia
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private final BlockingQueue<Event> queue = new ArrayBlockingQueue<>(100);
+	private final BlockingQueue<NotificationEvent> queue = new ArrayBlockingQueue<>(100);
 
 	private final Semaphore semaphore = new Semaphore(1);
 
@@ -71,24 +73,22 @@ public class NotificationController extends HBox implements EventHandler, Initia
 			public void run() {
 				while (true) {
 					try {
-						final Event event = queue.take();
+						final NotificationEvent event = queue.take();
 						semaphore.acquire();
 
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
-								String type = (String) event.getProperty("TYPE");
-								switch (type) {
-								case "ERROR":
+								switch (event.getLevel()) {
+								case ERROR:
 									image.setImage(new Image("/icons/error-16x16.png"));
 									break;
-								case "INFO":
+								case INFO:
 									image.setImage(new Image("/icons/info-16x16.png"));
 									break;
 								}
-
-								String message = (String) event.getProperty("MESSAGE");
-								notificationMessage.setText(message);
+								
+								notificationMessage.setText(event.getMessage());
 
 								setManaged(true);
 								setVisible(true);
@@ -108,7 +108,7 @@ public class NotificationController extends HBox implements EventHandler, Initia
 	@Override
 	public void handleEvent(final Event event) {
 		try {
-			queue.put(event);
+			queue.put((NotificationEvent) event);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

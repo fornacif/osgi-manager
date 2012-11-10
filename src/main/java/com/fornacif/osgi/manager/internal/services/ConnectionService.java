@@ -72,9 +72,11 @@ public class ConnectionService {
 	public void disconnect() throws IOException {
 		if (serviceRegistration != null) {
 			serviceRegistration.unregister();
+			serviceRegistration = null;
 		}
 		if (jmxConnector != null) {
 			jmxConnector.close();
+			jmxConnector = null;
 		}
 	}
 

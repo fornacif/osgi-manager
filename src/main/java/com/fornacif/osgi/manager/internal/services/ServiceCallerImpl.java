@@ -9,7 +9,6 @@ import java.util.concurrent.Executors;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,8 @@ import org.slf4j.LoggerFactory;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Reference;
 
-import com.fornacif.osgi.manager.constants.EventAdminTopics;
+import com.fornacif.osgi.manager.internal.events.NotificationEvent;
+import com.fornacif.osgi.manager.internal.events.ProgressIndicatorEvent;
 import com.fornacif.osgi.manager.services.AsynchService;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 
@@ -40,10 +40,7 @@ public class ServiceCallerImpl implements ServiceCaller {
 	@Override
 	public <T> void execute(final AsynchService<T> asynchService) {
 		if (services.containsKey(asynchService)) {
-			HashMap<String, String> properties = new HashMap<>();
-			properties.put("TYPE", "INFO");
-			properties.put("MESSAGE", "Waiting for a task to be completed");
-			eventAdmin.sendEvent(new Event(EventAdminTopics.NOTIFICATION, properties));
+			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.INFO, "Waiting for a task to be completed"));
 		} else {
 			Service<T> service = new Service<T>() {
 				@Override
@@ -52,10 +49,10 @@ public class ServiceCallerImpl implements ServiceCaller {
 						@Override
 						protected T call() throws Exception {
 							try {
-								eventAdmin.sendEvent(new Event(EventAdminTopics.PROGRESS_INDICATOR_START, new HashMap<String, Object>()));
+								eventAdmin.sendEvent(new ProgressIndicatorEvent(ProgressIndicatorEvent.Type.START));
 								return asynchService.call();
 							} finally {
-								eventAdmin.sendEvent(new Event(EventAdminTopics.PROGRESS_INDICATOR_STOP, new HashMap<String, Object>()));
+								eventAdmin.sendEvent(new ProgressIndicatorEvent(ProgressIndicatorEvent.Type.STOP));
 							}
 						}
 					};
@@ -72,10 +69,7 @@ public class ServiceCallerImpl implements ServiceCaller {
 					services.remove(asynchService);
 					LOGGER.error("Error during service call", getException());
 					asynchService.failed(getException());
-					HashMap<String, String> properties = new HashMap<>();
-					properties.put("TYPE", "ERROR");
-					properties.put("MESSAGE", "An error occured");
-					eventAdmin.sendEvent(new Event(EventAdminTopics.NOTIFICATION, properties));
+					eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "An error occured"));
 				}
 			};
 			service.setExecutor(executorService);

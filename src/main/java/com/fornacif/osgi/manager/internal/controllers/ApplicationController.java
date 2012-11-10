@@ -26,8 +26,8 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
 
-import com.fornacif.osgi.manager.constants.EventAdminTopics;
 import com.fornacif.osgi.manager.internal.application.FXMLLoaderDelegator;
+import com.fornacif.osgi.manager.internal.events.ProgressIndicatorEvent;
 import com.fornacif.osgi.manager.internal.services.JMXService;
 
 @Component(name = "ApplicationController", provide = { Pane.class, EventHandler.class }, configurationPolicy = ConfigurationPolicy.require)
@@ -99,19 +99,17 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				String topic = event.getTopic();
-				LOGGER.debug("Event {} received", topic);
-
-				switch (topic) {
-				case EventAdminTopics.PROGRESS_INDICATOR_START:
+				switch (((ProgressIndicatorEvent)event).getType()) {
+				case START:
 					progressIndicator.setManaged(true);
 					progressIndicator.setVisible(true);
 					break;
-				case EventAdminTopics.PROGRESS_INDICATOR_STOP:
+				case STOP:
 					progressIndicator.setManaged(false);
 					progressIndicator.setVisible(false);
 					break;
 				}
+				LOGGER.debug("Event {} received", event.getTopic());
 			}
 		});
 	}

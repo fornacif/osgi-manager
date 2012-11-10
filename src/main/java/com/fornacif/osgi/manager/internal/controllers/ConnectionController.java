@@ -3,7 +3,6 @@ package com.fornacif.osgi.manager.internal.controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -18,16 +17,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
-import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
 
-import com.fornacif.osgi.manager.constants.EventAdminTopics;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent.Action;
+import com.fornacif.osgi.manager.internal.events.NotificationEvent;
 import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 import com.fornacif.osgi.manager.internal.services.ConnectionService;
 import com.fornacif.osgi.manager.internal.services.JMXService;
@@ -130,7 +128,7 @@ public class ConnectionController extends VBox implements Initializable {
 	}
 	
 	@FXML
-	private void addRemoteConnection() {
+	private void addRemoteConnection() {	
 		ConnectionModel connectionModel = new ConnectionModel();
 		connectionModel.setName(remoteConnectionName.getText());
 		connectionModel.setUrl(remoteServiceURLTextField.getText());
@@ -138,10 +136,7 @@ public class ConnectionController extends VBox implements Initializable {
 			remoteConnections.add(connectionModel);
 			fillConnectionsTableViews();
 		} else {
-			HashMap<String, String> properties = new HashMap<>();
-			properties.put("TYPE", "ERROR");
-			properties.put("MESSAGE", "Remote connection with the same name already exists");
-			eventAdmin.sendEvent(new Event(EventAdminTopics.NOTIFICATION, properties));
+			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Remote connection with the same name already exists"));
 		}
 	}
 
