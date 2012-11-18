@@ -1,5 +1,6 @@
 package com.fornacif.osgi.manager.internal.services;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,8 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 
 import com.fornacif.osgi.manager.internal.models.ConnectionModel;
+import com.sun.tools.attach.AgentInitializationException;
+import com.sun.tools.attach.AgentLoadException;
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
@@ -31,19 +34,19 @@ import com.sun.tools.attach.VirtualMachineDescriptor;
 public class ConnectionService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-	
+
 	private static final String BUNDLESTATE_BEAN_NAME = "bundestate.mbean.name";
 	private static final String FRAMEWORK_BEAN_NAME = "framework.mbean.name";
-	
+
 	private ObjectName bundleStateObjectName;
 	private ObjectName frameworkObjectName;
-	
+
 	private JMXConnector jmxConnector;
 
 	private BundleContext bundleContext;
 
 	private ServiceRegistration<JMXService> serviceRegistration;
-	
+
 	@Activate
 	private void activate(BundleContext bundleContext, Map<String, ?> properties) throws IOException, MalformedObjectNameException {
 		this.bundleContext = bundleContext;
@@ -54,13 +57,13 @@ public class ConnectionService {
 	public List<ConnectionModel> listLocalConnections() {
 		return listLocalVirtualMachines(VirtualMachine.list());
 	}
-	
+
 	public void connect(ConnectionModel connectionModel) throws Exception {
 		disconnect();
-		
+
 		jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(connectionModel.getUrl()));
 		MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-		
+
 		if (mbeanServerConnection.isRegistered(frameworkObjectName)) {
 			JMXService jmxService = new JMXService(mbeanServerConnection, frameworkObjectName, bundleStateObjectName);
 			serviceRegistration = bundleContext.registerService(JMXService.class, jmxService, null);
@@ -68,7 +71,7 @@ public class ConnectionService {
 			throw new Exception("Connection not open due to missing OSGi MBeans");
 		}
 	}
-	
+
 	public void disconnect() throws IOException {
 		if (serviceRegistration != null) {
 			serviceRegistration.unregister();
@@ -82,12 +85,25 @@ public class ConnectionService {
 
 	private List<ConnectionModel> listLocalVirtualMachines(List<VirtualMachineDescriptor> virtualMachineDescriptors) {
 		List<ConnectionModel> virtualMachines = new ArrayList<>();
+		int initialPort = 9999;
 		for (VirtualMachineDescriptor virtualMachineDescriptor : virtualMachineDescriptors) {
 			VirtualMachine virtualMachine = null;
 			try {
 				virtualMachine = VirtualMachine.attach(virtualMachineDescriptor);
-				Properties vmProperties = virtualMachine.getAgentProperties();	
-				String jmxServiceURL = vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
+
+				Properties agentProperties = virtualMachine.getAgentProperties();
+				String jmxServiceURL = agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
+
+				if (jmxServiceURL == null) {
+					Properties systemProperties = virtualMachine.getSystemProperties();
+					String home = systemProperties.getProperty("java.home");
+					String agent = home + File.separator + "lib" + File.separator + "management-agent.jar";
+					virtualMachine.loadAgent(agent, "com.sun.management.jmxremote.port=" + initialPort + ",com.sun.management.jmxremote.authenticate=false,com.sun.management.jmxremote.ssl=false");
+					initialPort++;
+				}
+
+				agentProperties = virtualMachine.getAgentProperties();
+				jmxServiceURL = agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
 				if (jmxServiceURL != null) {
 					ConnectionModel virtualMachineModel = new ConnectionModel();
 					virtualMachineModel.setId(virtualMachineDescriptor.id());
@@ -97,9 +113,11 @@ public class ConnectionService {
 				} else {
 					LOGGER.debug("Not JMX service URL found for VM ID {}", virtualMachine.id());
 				}
-				
+
 			} catch (AttachNotSupportedException | IOException e) {
 				LOGGER.debug("Unable to attach Java process {}", virtualMachineDescriptor.id());
+			} catch (AgentLoadException | AgentInitializationException e) {
+				LOGGER.error("Error during loading the management agent", e);
 			} finally {
 				if (virtualMachine != null) {
 					try {
