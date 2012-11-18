@@ -111,7 +111,7 @@ public class ConnectionService {
 					virtualMachineModel.setUrl(jmxServiceURL);
 					virtualMachines.add(virtualMachineModel);
 				} else {
-					LOGGER.debug("Not JMX service URL found for VM ID {}", virtualMachine.id());
+					LOGGER.debug("No JMX agent found for VM ID {}", virtualMachine.id());
 				}
 
 			} catch (AttachNotSupportedException | IOException e) {

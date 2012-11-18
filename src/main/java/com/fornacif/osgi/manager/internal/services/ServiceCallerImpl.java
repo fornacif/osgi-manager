@@ -75,7 +75,7 @@ public class ServiceCallerImpl implements ServiceCaller {
 					services.remove(asynchService);
 					LOGGER.error("Error during service call", getException());
 					asynchService.failed(getException());
-					eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "An error occured"));
+					eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, getException().getMessage()));
 				}
 			};
 			service.setExecutor(executorService);
