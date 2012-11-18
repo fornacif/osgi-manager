@@ -31,9 +31,12 @@ public class Launcher extends Application {
 	private static String title;
 	
 	private static Pane applicationController;
+	
+	private static BundleContext bundleContext; 
 
 	@Activate
 	private void activate(final BundleContext bundleContext, Map<String, ?> properties) throws Exception {
+		Launcher.bundleContext = bundleContext;
 		fxml = (String) properties.get(FXML);
 		css = (String) properties.get(CSS);
 		title = (String) properties.get(TITLE);
@@ -63,7 +66,7 @@ public class Launcher extends Application {
 	
 	@Override
 	public void stop() throws Exception {
-		System.exit(0);
+		bundleContext.getBundle(0).stop();
 	}
 	
 	@Reference(target="(component.name=ApplicationController)")

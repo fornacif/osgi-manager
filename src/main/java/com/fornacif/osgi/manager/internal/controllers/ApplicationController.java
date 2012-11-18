@@ -38,12 +38,12 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	private BundleContext bundleContext;
 
 	private Pane connectionController;
-	
+
 	private Pane notificationController;
-	
+
 	@FXML
 	private HBox notificationBar;
-	
+
 	@FXML
 	private ProgressIndicator progressIndicator;
 
@@ -52,10 +52,10 @@ public class ApplicationController extends VBox implements Initializable, EventH
 
 	@FXML
 	private StackPane connection;
-	
+
 	@FXML
 	private ToggleButton consoleToggleButton;
-	
+
 	@FXML
 	private ToggleButton connectionToggleButton;
 
@@ -69,17 +69,39 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		this.connectionController = connectionController;
 	}
 	
+	private void unbindConnectionController(final Pane connectionController) {
+		if (connection != null) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					connection.getChildren().remove(connectionController);
+				}
+			});
+		}
+	}
+
 	@Reference(target = "(component.name=NotificationController)")
 	private void bindNotificationController(Pane notificationController) {
 		this.notificationController = notificationController;
 	}
 	
-	@Reference(optional=true, dynamic=true)
+	private void unbindNotificationController(final Pane notificationController) {
+		if (notificationBar != null) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					notificationBar.getChildren().remove(notificationController);
+				}
+			});
+		}	
+	}
+
+	@Reference(optional = true, dynamic = true)
 	private void bindJmxConnectorService(JMXService jmxConnectorService) {
 		consoleToggleButton.setDisable(false);
 		consoleToggleButton.selectedProperty().set(true);
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void unbindJmxConnectorService(JMXService jmxConnectorService) {
 		consoleToggleButton.setDisable(true);
@@ -99,7 +121,7 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				switch (((ProgressIndicatorEvent)event).getType()) {
+				switch (((ProgressIndicatorEvent) event).getType()) {
 				case START:
 					progressIndicator.setManaged(true);
 					progressIndicator.setVisible(true);
@@ -109,7 +131,7 @@ public class ApplicationController extends VBox implements Initializable, EventH
 					progressIndicator.setVisible(false);
 					break;
 				}
-				LOGGER.debug("Event {} received", event.getTopic());
+				LOGGER.debug("Event {}[{}] received", event.getTopic(), ((ProgressIndicatorEvent) event).getType());
 			}
 		});
 	}

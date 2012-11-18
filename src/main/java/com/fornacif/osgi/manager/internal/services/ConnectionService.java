@@ -83,9 +83,10 @@ public class ConnectionService {
 	private List<ConnectionModel> listLocalVirtualMachines(List<VirtualMachineDescriptor> virtualMachineDescriptors) {
 		List<ConnectionModel> virtualMachines = new ArrayList<>();
 		for (VirtualMachineDescriptor virtualMachineDescriptor : virtualMachineDescriptors) {
+			VirtualMachine virtualMachine = null;
 			try {
-				VirtualMachine virtualMachine = VirtualMachine.attach(virtualMachineDescriptor);
-				Properties vmProperties = virtualMachine.getAgentProperties();
+				virtualMachine = VirtualMachine.attach(virtualMachineDescriptor);
+				Properties vmProperties = virtualMachine.getAgentProperties();	
 				String jmxServiceURL = vmProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
 				if (jmxServiceURL != null) {
 					ConnectionModel virtualMachineModel = new ConnectionModel();
@@ -99,6 +100,14 @@ public class ConnectionService {
 				
 			} catch (AttachNotSupportedException | IOException e) {
 				LOGGER.debug("Unable to attach Java process {}", virtualMachineDescriptor.id());
+			} finally {
+				if (virtualMachine != null) {
+					try {
+						virtualMachine.detach();
+					} catch (IOException e) {
+						LOGGER.debug("Unable to dettach VM ID {}", virtualMachine.id());
+					}
+				}
 			}
 		}
 		return virtualMachines;

@@ -57,5 +57,13 @@ public class ConnectionModel {
 		}
 		return ((ConnectionModel) object).getName().equals(getName());
 	}
+	
+	public void toJson() {
+		
+	}
+	
+	private void fromJson(String json) {
+		
+	}
 
 }

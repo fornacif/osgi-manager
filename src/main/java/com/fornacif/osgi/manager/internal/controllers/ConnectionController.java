@@ -18,7 +18,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import org.osgi.service.event.EventAdmin;
+import org.osgi.service.prefs.PreferencesService;
 
+import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
@@ -46,6 +48,8 @@ public class ConnectionController extends VBox implements Initializable {
 	private ConnectionModel selectedConnection;
 
 	private EventAdmin eventAdmin;
+	
+	private PreferencesService preferencesService;
 
 	@FXML
 	private TableView<ConnectionModel> localConnectionsTableView;
@@ -58,7 +62,16 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@FXML
 	private TextField remoteServiceURLTextField;
-
+	
+	@Activate
+	private void loadPreferences() {
+		// TODO
+	}
+	
+	private void savePreferences() {
+		// TODO
+	}
+	
 	@Reference
 	private void bindEventAdmin(EventAdmin eventAdmin) {
 		this.eventAdmin = eventAdmin;
@@ -72,6 +85,11 @@ public class ConnectionController extends VBox implements Initializable {
 	@Reference
 	private void bindConnectionService(ConnectionService connectionService) {
 		this.connectionService = connectionService;
+	}
+	
+	@Reference
+	public void bindPreferencesService(PreferencesService preferencesService) {
+		this.preferencesService = preferencesService;
 	}
 
 	@Reference(optional = true, dynamic = true)
@@ -139,9 +157,15 @@ public class ConnectionController extends VBox implements Initializable {
 		if (!remoteConnections.contains(connectionModel)) {
 			remoteConnections.add(connectionModel);
 			fillConnectionsTableViews();
+			resetRemoteConnectionForm();
+			savePreferences();
 		} else {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Remote connection with the same name already exists"));
 		}
+	}
+
+	private void resetRemoteConnectionForm() {
+		remoteConnectionName.setText("");
 	}
 
 	private void listLocalConnections() {

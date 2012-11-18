@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import aQute.bnd.annotation.component.Component;
+import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.internal.events.NotificationEvent;
@@ -31,6 +32,11 @@ public class ServiceCallerImpl implements ServiceCaller {
 	private ExecutorService executorService = Executors.newSingleThreadExecutor();
 
 	private Map<AsynchService<?>, Service<?>> services = Collections.synchronizedMap(new HashMap<AsynchService<?>, Service<?>>());
+	
+	@Deactivate
+	private void shutdown() {
+		executorService.shutdown();
+	}
 
 	@Reference
 	private void bindEventAdmin(EventAdmin eventAdmin) {
