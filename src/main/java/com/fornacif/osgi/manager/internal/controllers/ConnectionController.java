@@ -17,8 +17,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
+import org.codehaus.jackson.type.TypeReference;
 import org.osgi.service.event.EventAdmin;
-import org.osgi.service.prefs.PreferencesService;
 
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
@@ -31,6 +31,7 @@ import com.fornacif.osgi.manager.internal.events.NotificationEvent;
 import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 import com.fornacif.osgi.manager.internal.services.ConnectionService;
 import com.fornacif.osgi.manager.internal.services.JMXService;
+import com.fornacif.osgi.manager.internal.services.SystemPreferencesService;
 import com.fornacif.osgi.manager.services.AsynchService;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 
@@ -49,7 +50,7 @@ public class ConnectionController extends VBox implements Initializable {
 
 	private EventAdmin eventAdmin;
 	
-	private PreferencesService preferencesService;
+	private SystemPreferencesService systemPreferencesService;
 
 	@FXML
 	private TableView<ConnectionModel> localConnectionsTableView;
@@ -65,11 +66,22 @@ public class ConnectionController extends VBox implements Initializable {
 	
 	@Activate
 	private void loadPreferences() {
-		// TODO
+		try {
+			remoteConnections = systemPreferencesService.load("remoteConnections", new TypeReference<List<ConnectionModel>>() {});
+			if (remoteConnections == null) {
+				remoteConnections = new ArrayList<>();
+			}
+		} catch (IOException e) {
+			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Error during loading remote connections"));
+		}
 	}
 	
-	private void savePreferences() {
-		// TODO
+	private void saveRemoteConnections() {
+		try {
+			systemPreferencesService.save("remoteConnections", remoteConnections);
+		} catch (IOException e) {
+			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Error during saving remote connections"));
+		}
 	}
 	
 	@Reference
@@ -88,8 +100,8 @@ public class ConnectionController extends VBox implements Initializable {
 	}
 	
 	@Reference
-	public void bindPreferencesService(PreferencesService preferencesService) {
-		this.preferencesService = preferencesService;
+	public void bindSystemPreferencesService(SystemPreferencesService systemPreferencesService) {
+		this.systemPreferencesService = systemPreferencesService;
 	}
 
 	@Reference(optional = true, dynamic = true)
@@ -158,7 +170,7 @@ public class ConnectionController extends VBox implements Initializable {
 			remoteConnections.add(connectionModel);
 			fillConnectionsTableViews();
 			resetRemoteConnectionForm();
-			savePreferences();
+			saveRemoteConnections();
 		} else {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Remote connection with the same name already exists"));
 		}

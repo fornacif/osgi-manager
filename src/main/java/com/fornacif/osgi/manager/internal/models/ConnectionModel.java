@@ -1,5 +1,7 @@
 package com.fornacif.osgi.manager.internal.models;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +13,7 @@ public class ConnectionModel {
 	private final StringProperty url = new SimpleStringProperty();
 	private final BooleanProperty connected = new SimpleBooleanProperty(false);
 	
+	@JsonIgnore
 	public String getId() {
 		return id.get();
 	}
@@ -35,6 +38,7 @@ public class ConnectionModel {
 		this.url.set(url);
 	}
 
+	@JsonIgnore
 	public Boolean isConnected() {
 		return connected.get();
 	}
@@ -43,6 +47,7 @@ public class ConnectionModel {
 		this.connected.set(connected);
 	}
 	
+	@JsonIgnore
 	public ConnectionModel getModel() {
 		return this;
 	}
@@ -56,14 +61,6 @@ public class ConnectionModel {
 			return false;
 		}
 		return ((ConnectionModel) object).getName().equals(getName());
-	}
-	
-	public void toJson() {
-		
-	}
-	
-	private void fromJson(String json) {
-		
 	}
 
 }
