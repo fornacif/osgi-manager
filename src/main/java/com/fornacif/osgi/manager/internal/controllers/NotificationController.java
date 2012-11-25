@@ -2,12 +2,10 @@ package com.fornacif.osgi.manager.internal.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.FillTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
@@ -20,7 +18,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import org.osgi.service.event.Event;
@@ -38,7 +35,7 @@ public class NotificationController extends VBox implements EventHandler, Initia
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private final BlockingQueue<NotificationEvent> queue = new ArrayBlockingQueue<>(100);
+	private final BlockingQueue<NotificationEvent> queue = new LinkedBlockingQueue<>();
 
 	private final Semaphore semaphore = new Semaphore(1);
 
@@ -59,9 +56,6 @@ public class NotificationController extends VBox implements EventHandler, Initia
 		TranslateTransition hideNotification = new TranslateTransition(Duration.millis(500), this);
 		hideNotification.setFromY(0.0);
 		hideNotification.setToY(30.0);
-		
-		this.setStyle("-fx-background-color: #F0F0F0");
-		
 
 		sequence = new SequentialTransition(showNotification, new PauseTransition(Duration.seconds(3)), hideNotification);
 
@@ -100,11 +94,6 @@ public class NotificationController extends VBox implements EventHandler, Initia
 								setVisible(true);
 
 								sequence.play();
-								
-								FadeTransition ft = new FadeTransition(Duration.millis(500), NotificationController.this);
-							     ft.setFromValue(0.0);
-							     ft.setToValue(1.0);
-								ft.play();
 							}
 						});
 					} catch (InterruptedException e) {
@@ -113,7 +102,7 @@ public class NotificationController extends VBox implements EventHandler, Initia
 
 				}
 			}
-		}).start();
+		}, "Notification Thread").start();
 	}
 
 	@Override
