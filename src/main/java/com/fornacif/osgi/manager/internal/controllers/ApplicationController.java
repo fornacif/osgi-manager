@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -42,7 +41,7 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	private Pane notificationController;
 
 	@FXML
-	private HBox notificationBar;
+	private VBox notificationBar;
 
 	@FXML
 	private ProgressIndicator progressIndicator;

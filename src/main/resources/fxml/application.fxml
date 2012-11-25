@@ -25,10 +25,5 @@
 			<ProgressIndicator fx:id="progressIndicator" managed="false" visible="false" />
 		</Group>
 	</StackPane>
-	<HBox prefHeight="38" fx:id="notificationBar">
-		<padding>
-			<Insets top="5" right="5" bottom="5" left="5" />
-	    </padding>
-		<VBox fx:id="notificationContainer" />
-	</HBox>
+	<VBox prefHeight="40" fx:id="notificationBar" />
 </fx:root>

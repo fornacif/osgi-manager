@@ -173,7 +173,12 @@ public class ConnectionController extends VBox implements Initializable {
 		if (remoteConnectionName.getText().isEmpty()) {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Connection name cannot be empty"));
 			return;
-		} 
+		}
+		if (remoteServiceURLTextField.getText().isEmpty()) {
+			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Connection JMX URL cannot be empty"));
+			return;
+		}
+		
 		ConnectionModel connectionModel = new ConnectionModel();
 		connectionModel.setName(remoteConnectionName.getText());
 		connectionModel.setUrl(remoteServiceURLTextField.getText());

@@ -9,7 +9,7 @@
 <?import javafx.stage.*?>
 <?import com.fornacif.osgi.manager.internal.components.*?>
 <fx:root type="javafx.scene.layout.VBox"
-	xmlns:fx="http://javafx.com/fxml" fillWidth="false">
+	xmlns:fx="http://javafx.com/fxml" spacing="10">
 	<padding>
 		<Insets top="10" right="10" bottom="10" left="10" />
     </padding>
@@ -32,12 +32,12 @@
 						<PropertyValueFactory property="id" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn fx:id="name" text="NAME" prefWidth="550">
+				<TableColumn fx:id="name" text="Name" prefWidth="700">
 					<cellValueFactory>
 						<PropertyValueFactory property="name" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn text="ACTION" prefWidth="125">
+				<TableColumn text="Action" prefWidth="125">
 					<cellValueFactory>
 						<PropertyValueFactory property="model" />
 					</cellValueFactory>
@@ -51,7 +51,6 @@
 			</sortOrder>   
 		</TableView>
 	</VBox>
-	<Region prefHeight="20" />
 	<VBox styleClass="connection-box" spacing="10">
 		<padding>
 			<Insets top="10" right="10" bottom="10" left="10" />
@@ -66,7 +65,7 @@
 		</HBox>
 		<TableView fx:id="remoteConnectionsTableView" prefHeight="240">
 			<columns>
-				<TableColumn prefWidth="50">
+				<TableColumn prefWidth="75">
 					<cellValueFactory>
 						<PropertyValueFactory property="model" />
 					</cellValueFactory>
@@ -74,17 +73,17 @@
 	                    <RemoveConnectionCellFactory onAction="#removeConnection" />
 	                </cellFactory>
 				</TableColumn>
-				<TableColumn fx:id="name" text="NAME" prefWidth="150">
+				<TableColumn fx:id="name" text="Name" prefWidth="200">
 					<cellValueFactory>
 						<PropertyValueFactory property="name" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn text="URL" prefWidth="425">
+				<TableColumn text="URL" prefWidth="500">
 					<cellValueFactory>
 						<PropertyValueFactory property="url" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn text="ACTION" prefWidth="125">
+				<TableColumn text="Action" prefWidth="125">
 					<cellValueFactory>
 						<PropertyValueFactory property="model" />
 					</cellValueFactory>
@@ -105,9 +104,9 @@
 	        </ImageView>
 			<Label text="Add Remote VM" />
 		</HBox>
-		<HBox spacing="10" alignment="CENTER">
-			<TextField fx:id="remoteConnectionName" promptText="name" prefWidth="195" />
-			<TextField fx:id="remoteServiceURLTextField" prefWidth="420" text="service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi" />
+		<HBox spacing="10">
+			<TextField fx:id="remoteConnectionName" promptText="Name" prefWidth="265" />
+			<TextField fx:id="remoteServiceURLTextField" promptText="JMX Service URL" prefWidth="500" text="service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi" />
 			<Button text="Add connection" onAction="#addRemoteConnection" />
 		</HBox>
 	</VBox>

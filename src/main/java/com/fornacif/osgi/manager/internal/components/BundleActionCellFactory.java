@@ -38,12 +38,13 @@ public class BundleActionCellFactory implements Callback<TableColumn<BundleModel
 		TableCell<BundleModel, BundleModel> cell = new TableCell<BundleModel, BundleModel>() {
 			@Override
 			protected void updateItem(final BundleModel bundleModel, final boolean empty) {
-				if (bundleModel == null) {
-					return;
-				}
-				
 				final VBox vBox = new VBox();
 				vBox.setSpacing(10);
+				
+				if (bundleModel == null) {
+					setGraphic(vBox);
+					return;
+				}
 				
 				final HBox actionsHBox = new HBox();
 				actionsHBox.setSpacing(5);

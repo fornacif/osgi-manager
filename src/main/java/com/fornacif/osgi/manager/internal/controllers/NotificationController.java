@@ -6,6 +6,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Semaphore;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.FillTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
@@ -16,8 +18,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import org.osgi.service.event.Event;
@@ -25,13 +28,13 @@ import org.osgi.service.event.EventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fornacif.osgi.manager.internal.events.NotificationEvent;
-
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 
+import com.fornacif.osgi.manager.internal.events.NotificationEvent;
+
 @Component(name = "NotificationController", provide = { Pane.class, EventHandler.class }, configurationPolicy = ConfigurationPolicy.require)
-public class NotificationController extends HBox implements EventHandler, Initializable {
+public class NotificationController extends VBox implements EventHandler, Initializable {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -40,7 +43,7 @@ public class NotificationController extends HBox implements EventHandler, Initia
 	private final Semaphore semaphore = new Semaphore(1);
 
 	@FXML
-	private Label notificationMessage;
+	private Label notificationLabel;
 
 	@FXML
 	private ImageView image;
@@ -49,15 +52,18 @@ public class NotificationController extends HBox implements EventHandler, Initia
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		TranslateTransition showNotification = new TranslateTransition(Duration.millis(500), NotificationController.this);
+		TranslateTransition showNotification = new TranslateTransition(Duration.millis(500), this);
 		showNotification.setFromY(30.0);
 		showNotification.setToY(0.0);
 
-		TranslateTransition hideNotification = new TranslateTransition(Duration.millis(500), NotificationController.this);
+		TranslateTransition hideNotification = new TranslateTransition(Duration.millis(500), this);
 		hideNotification.setFromY(0.0);
 		hideNotification.setToY(30.0);
+		
+		this.setStyle("-fx-background-color: #F0F0F0");
+		
 
-		sequence = new SequentialTransition(showNotification, new PauseTransition(Duration.seconds(2)), hideNotification);
+		sequence = new SequentialTransition(showNotification, new PauseTransition(Duration.seconds(3)), hideNotification);
 
 		sequence.setOnFinished(new javafx.event.EventHandler<ActionEvent>() {
 			@Override
@@ -87,13 +93,18 @@ public class NotificationController extends HBox implements EventHandler, Initia
 									image.setImage(new Image("/icons/info-16x16.png"));
 									break;
 								}
-								
-								notificationMessage.setText(event.getMessage());
+
+								notificationLabel.setText(event.getMessage());
 
 								setManaged(true);
 								setVisible(true);
 
 								sequence.play();
+								
+								FadeTransition ft = new FadeTransition(Duration.millis(500), NotificationController.this);
+							     ft.setFromValue(0.0);
+							     ft.setToValue(1.0);
+								ft.play();
 							}
 						});
 					} catch (InterruptedException e) {

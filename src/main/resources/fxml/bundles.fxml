@@ -21,12 +21,12 @@
 					<PropertyValueFactory property="id" />
 				</cellValueFactory>
 			</TableColumn>
-			<TableColumn text="STATE" prefWidth="75">
+			<TableColumn text="State" prefWidth="75">
 				<cellValueFactory>
 					<PropertyValueFactory property="state" />
 				</cellValueFactory>
 			</TableColumn>
-			<TableColumn text="LEVEL" prefWidth="50">
+			<TableColumn text="Level" prefWidth="50">
 				<cellValueFactory>
 					<PropertyValueFactory property="startLevel" />
 				</cellValueFactory>
@@ -37,7 +37,7 @@
 						<padding>
 							<Insets top="5" right="5" bottom="5" left="5"/>
 					    </padding>
-						<Label text="NAME" />
+						<Label text="Name" />
 						<TextField fx:id="bundleNameFilterTextField" promptText="Filter" />
 					</VBox>
 				</graphic>
@@ -45,23 +45,22 @@
 					<PropertyValueFactory property="name" />
 				</cellValueFactory>
 			</TableColumn>
-			<TableColumn text="SYMBOLIC NAME" prefWidth="225">
+			<TableColumn text="Symbolic Name" prefWidth="225">
 				<cellValueFactory>
 					<PropertyValueFactory property="symbolicName" />
 				</cellValueFactory>
 			</TableColumn>
-			<TableColumn text="VERSION" prefWidth="150">
+			<TableColumn text="Version" prefWidth="150">
 				<cellValueFactory>
 					<PropertyValueFactory property="version" />
 				</cellValueFactory>
 			</TableColumn>
-			<TableColumn text="ACTION" prefWidth="150">
+			<TableColumn text="Action" prefWidth="150">
 				<cellValueFactory>
 					<PropertyValueFactory property="model" />
 				</cellValueFactory>
 				<cellFactory>
-                    <BundleActionCellFactory onAction="#executeBundleAction">
-					</BundleActionCellFactory>
+                    <BundleActionCellFactory onAction="#executeBundleAction" />
                 </cellFactory>
 			</TableColumn>
 		</columns>

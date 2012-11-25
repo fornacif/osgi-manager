@@ -17,10 +17,6 @@
 	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
 }
 
-#notificationBar {
-	-fx-border-color: -fx-base
-}
-
 #progressIndicator {
 	-fx-background-color: #7A7F85;
 	-fx-background-radius: 5;
@@ -29,9 +25,13 @@
 	-fx-padding: 5;
 }
 
-#notification {
+#notificationBar {
+	-fx-background-color: #F0F0F0;
+}
+
+#notificationHBox {
 	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
 	-fx-background-radius: 5;
-	-fx-border-color: -fx-base;
+	-fx-border-color: #A0A0A0;
 	-fx-border-radius: 5;
 }

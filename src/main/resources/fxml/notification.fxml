@@ -7,12 +7,16 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.stage.*?>
-<fx:root type="javafx.scene.layout.HBox"
-	xmlns:fx="http://javafx.com/fxml" visible="false" managed="false" spacing="10"
-	fx:id="notification" alignment="CENTER">
+<fx:root type="javafx.scene.layout.VBox" 
+	xmlns:fx="http://javafx.com/fxml" fx:id="notification" visible="false" managed="false">
 	<padding>
-		<Insets top="3" right="5" bottom="3" left="5" />
-    </padding>
-   	<ImageView fx:id="image" />
-	<Label fx:id="notificationMessage" />
+		<Insets top="5" right="10" bottom="5" left="10" />
+	</padding>
+	<HBox fx:id="notificationHBox" maxWidth="-Infinity" spacing="5" alignment="CENTER">
+		<padding>
+			<Insets top="5" right="5" bottom="5" left="5" />
+		</padding>
+	   	<ImageView fx:id="image" />
+		<Label fx:id="notificationLabel" />
+	</HBox>
 </fx:root>

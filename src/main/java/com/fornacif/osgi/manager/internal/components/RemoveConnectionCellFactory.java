@@ -20,7 +20,7 @@ import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 
 public class RemoveConnectionCellFactory implements Callback<TableColumn<ConnectionModel, ConnectionModel>, TableCell<ConnectionModel, ConnectionModel>> {
 
-	private final Image DELETE_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/delete-16x16.png"));
+	private final Image DELETE_ICON_16 = new Image(BundleActionCellFactory.class.getResourceAsStream("/icons/uninstall-16x16.png"));
 
 	private ObjectProperty<EventHandler<RemoveConnectionEvent>> propertyOnAction = new SimpleObjectProperty<EventHandler<RemoveConnectionEvent>>();
 
