@@ -161,7 +161,13 @@ public class ConnectionController extends VBox implements Initializable {
 	@FXML
 	private void removeConnection(final RemoveConnectionEvent removeConnectionEvent) throws IOException {
 		if (selectedConnection != null && selectedConnection.equals(removeConnectionEvent.getConnection())) {
-			connectionService.disconnect();
+			serviceCaller.execute(new AsynchService<Void>() {
+				@Override
+				public Void call() throws Exception {
+					connectionService.disconnect();
+					return null;
+				}
+			});
 		}
 		remoteConnections.remove(removeConnectionEvent.getConnection());
 		saveRemoteConnections();

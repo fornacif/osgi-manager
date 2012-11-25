@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.ToggleButton;
@@ -63,38 +64,28 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		this.bundleContext = bundleContext;
 	}
 
-	@Reference(target = "(component.name=ConnectionController)")
+	@Reference(target = "(component.name=ConnectionController)", optional=true, dynamic=true)
 	private void bindConnectionController(Pane connectionController) {
 		this.connectionController = connectionController;
+		addControllerToPane(connection, connectionController);
 	}
 	
 	@SuppressWarnings("unused")
-	private void unbindConnectionController(final Pane connectionController) {
-		if (connection != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					connection.getChildren().remove(connectionController);
-				}
-			});
-		}
+	private void unbindConnectionController(Pane connectionController) {
+		removeControllerFromPane(connection, connectionController);
+		this.connectionController = null;
 	}
 
-	@Reference(target = "(component.name=NotificationController)")
+	@Reference(target = "(component.name=NotificationController)", optional=true, dynamic=true)
 	private void bindNotificationController(Pane notificationController) {
 		this.notificationController = notificationController;
+		addControllerToPane(notificationBar, notificationController);
 	}
 	
 	@SuppressWarnings("unused")
-	private void unbindNotificationController(final Pane notificationController) {
-		if (notificationBar != null) {
-			Platform.runLater(new Runnable() {
-				@Override
-				public void run() {
-					notificationBar.getChildren().remove(notificationController);
-				}
-			});
-		}	
+	private void unbindNotificationController(Pane notificationController) {
+		removeControllerFromPane(notificationBar, notificationController);
+		this.notificationController = null;
 	}
 
 	@Reference(optional = true, dynamic = true)
@@ -113,8 +104,8 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		bundleContext.registerService(EventListenerHook.class, new FXMLLoaderDelegator(bundleContext), null);
 		bundleContext.registerService(TabPane.class, tabPane, null);
-		connection.getChildren().add(connectionController);
-		notificationBar.getChildren().add(notificationController);
+		addControllerToPane(connection, connectionController);
+		addControllerToPane(notificationBar, notificationController);
 	}
 
 	@Override
@@ -135,6 +126,28 @@ public class ApplicationController extends VBox implements Initializable, EventH
 				LOGGER.debug("Event {}[{}] received", event.getTopic(), ((ProgressIndicatorEvent) event).getType());
 			}
 		});
+	}
+	
+	private <T extends Pane, S extends Node> void addControllerToPane(final T node, final S controller){
+		if (node != null && !node.getChildren().contains(controller)) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					node.getChildren().add(controller);
+				}
+			});
+		}
+	}
+	
+	private <T extends Pane, S extends Node> void removeControllerFromPane(final T node, final S controller){
+		if (node != null && node.getChildren().contains(controller)) {
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					node.getChildren().remove(controller);
+				}
+			});
+		}
 	}
 
 }
