@@ -64,7 +64,7 @@
 	        </ImageView>
 			<Label text="Remote VMs" />
 		</HBox>
-		<TableView fx:id="remoteConnectionsTableView" prefHeight="250">
+		<TableView fx:id="remoteConnectionsTableView" prefHeight="240">
 			<columns>
 				<TableColumn prefWidth="50">
 					<cellValueFactory>

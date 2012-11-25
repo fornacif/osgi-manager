@@ -69,6 +69,7 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		this.connectionController = connectionController;
 	}
 	
+	@SuppressWarnings("unused")
 	private void unbindConnectionController(final Pane connectionController) {
 		if (connection != null) {
 			Platform.runLater(new Runnable() {
@@ -85,6 +86,7 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		this.notificationController = notificationController;
 	}
 	
+	@SuppressWarnings("unused")
 	private void unbindNotificationController(final Pane notificationController) {
 		if (notificationBar != null) {
 			Platform.runLater(new Runnable() {

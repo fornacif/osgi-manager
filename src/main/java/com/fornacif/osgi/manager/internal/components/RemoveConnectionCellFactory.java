@@ -34,11 +34,11 @@ public class RemoveConnectionCellFactory implements Callback<TableColumn<Connect
 				}
 
 				final HBox hBox = new HBox();
-				hBox.setAlignment(Pos.CENTER);
+				hBox.setAlignment(Pos.CENTER_LEFT);
 
 				Button deleteButton = new Button();
 				deleteButton.setCursor(Cursor.HAND);
-				deleteButton.setTooltip(new Tooltip("Remove"));
+				deleteButton.setTooltip(new Tooltip("Disconnect and remove"));
 				deleteButton.setGraphic(new ImageView(DELETE_ICON_16));
 
 				deleteButton.setOnAction(new EventHandler<ActionEvent>() {

@@ -9,6 +9,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
@@ -30,14 +31,16 @@ public class ConnectionActionCellFactory implements Callback<TableColumn<Connect
 				}
 
 				final HBox connectionHBox = new HBox();
-				connectionHBox.setAlignment(Pos.CENTER);
+				connectionHBox.setAlignment(Pos.BASELINE_CENTER);
 
 				Button connectionButton = new Button();
 				connectionButton.setCursor(Cursor.HAND);
 				if (connectionModel.isConnected()) {
 					connectionButton.setText("Disconnect");
+					connectionButton.setTooltip(new Tooltip("Disconnect"));
 				} else {
 					connectionButton.setText("Connect");
+					connectionButton.setTooltip(new Tooltip("Connect"));
 				}
 				connectionButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
