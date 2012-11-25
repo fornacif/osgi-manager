@@ -28,6 +28,7 @@ import aQute.bnd.annotation.component.Reference;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent.Action;
 import com.fornacif.osgi.manager.internal.events.NotificationEvent;
+import com.fornacif.osgi.manager.internal.events.RemoveConnectionEvent;
 import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 import com.fornacif.osgi.manager.internal.services.ConnectionService;
 import com.fornacif.osgi.manager.internal.services.JMXService;
@@ -155,6 +156,16 @@ public class ConnectionController extends VBox implements Initializable {
 			});
 		}
 		selectedConnection = connection;
+	}
+	
+	@FXML
+	private void removeConnection(final RemoveConnectionEvent removeConnectionEvent) throws IOException {
+		if (selectedConnection != null && selectedConnection.equals(removeConnectionEvent.getConnection())) {
+			connectionService.disconnect();
+		}
+		remoteConnections.remove(removeConnectionEvent.getConnection());
+		saveRemoteConnections();
+		fillConnectionsTableViews();
 	}
 
 	@FXML

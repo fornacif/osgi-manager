@@ -28,18 +28,18 @@ public class ConnectionActionCellFactory implements Callback<TableColumn<Connect
 				if (connectionModel == null) {
 					return;
 				}
-				
+
 				final HBox connectionHBox = new HBox();
 				connectionHBox.setAlignment(Pos.CENTER);
-				
-				Button connection = new Button();
-				connection.setCursor(Cursor.HAND);
+
+				Button connectionButton = new Button();
+				connectionButton.setCursor(Cursor.HAND);
 				if (connectionModel.isConnected()) {
-					connection.setText("Disconnect");
+					connectionButton.setText("Disconnect");
 				} else {
-					connection.setText("Connect");
+					connectionButton.setText("Connect");
 				}
-				connection.setOnAction(new EventHandler<ActionEvent>() {
+				connectionButton.setOnAction(new EventHandler<ActionEvent>() {
 					@Override
 					public void handle(ActionEvent actionEvent) {
 						if (connectionModel.isConnected()) {
@@ -47,18 +47,18 @@ public class ConnectionActionCellFactory implements Callback<TableColumn<Connect
 						} else {
 							onActionProperty().get().handle(new ConnectionActionEvent(Action.CONNECT, connectionModel));
 						}
-						
+
 					}
 				});
-				
-				connectionHBox.getChildren().add(connection);
+
+				connectionHBox.getChildren().add(connectionButton);
 
 				setGraphic(connectionHBox);
 			}
-		};		
+		};
 		return cell;
 	}
-	
+
 	public final ObjectProperty<EventHandler<ConnectionActionEvent>> onActionProperty() {
 		return propertyOnAction;
 	}
@@ -70,6 +70,5 @@ public class ConnectionActionCellFactory implements Callback<TableColumn<Connect
 	public final EventHandler<ConnectionActionEvent> getOnAction() {
 		return propertyOnAction.get();
 	}
-
 
 }

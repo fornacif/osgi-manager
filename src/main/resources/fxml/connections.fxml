@@ -32,7 +32,7 @@
 						<PropertyValueFactory property="id" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn fx:id="name" text="NAME" prefWidth="500">
+				<TableColumn fx:id="name" text="NAME" prefWidth="550">
 					<cellValueFactory>
 						<PropertyValueFactory property="name" />
 					</cellValueFactory>
@@ -42,8 +42,7 @@
 						<PropertyValueFactory property="model" />
 					</cellValueFactory>
 					<cellFactory>
-	                    <ConnectionActionCellFactory onAction="#executeAction">
-						</ConnectionActionCellFactory>
+	                    <ConnectionActionCellFactory onAction="#executeAction" />
 	                </cellFactory>
 				</TableColumn>
 			</columns>
@@ -65,8 +64,16 @@
 	        </ImageView>
 			<Label text="Remote VMs" />
 		</HBox>
-		<TableView fx:id="remoteConnectionsTableView" prefHeight="150">
+		<TableView fx:id="remoteConnectionsTableView" prefHeight="250">
 			<columns>
+				<TableColumn prefWidth="50">
+					<cellValueFactory>
+						<PropertyValueFactory property="model" />
+					</cellValueFactory>
+					<cellFactory>
+	                    <RemoveConnectionCellFactory onAction="#removeConnection" />
+	                </cellFactory>
+				</TableColumn>
 				<TableColumn fx:id="name" text="NAME" prefWidth="150">
 					<cellValueFactory>
 						<PropertyValueFactory property="name" />
@@ -99,7 +106,7 @@
 			<Label text="Add Remote VM" />
 		</HBox>
 		<HBox spacing="10" alignment="CENTER">
-			<TextField fx:id="remoteConnectionName" promptText="name" prefWidth="145" />
+			<TextField fx:id="remoteConnectionName" promptText="name" prefWidth="195" />
 			<TextField fx:id="remoteServiceURLTextField" prefWidth="420" text="service:jmx:rmi:///jndi/rmi://localhost:9999/jmxrmi" />
 			<Button text="Add connection" onAction="#addRemoteConnection" />
 		</HBox>
