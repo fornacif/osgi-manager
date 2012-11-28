@@ -37,6 +37,7 @@ public class ConnectionService {
 
 	private static final String BUNDLESTATE_BEAN_NAME = "bundestate.mbean.name";
 	private static final String FRAMEWORK_BEAN_NAME = "framework.mbean.name";
+	private static final String INITIAL_JMX_PORT = "intial.jmx.port";
 
 	private ObjectName bundleStateObjectName;
 	private ObjectName frameworkObjectName;
@@ -47,14 +48,17 @@ public class ConnectionService {
 
 	private ServiceRegistration<JMXService> serviceRegistration;
 
+	private int initialJMXPort;
+
 	@Activate
 	private void activate(BundleContext bundleContext, Map<String, ?> properties) throws IOException, MalformedObjectNameException {
 		this.bundleContext = bundleContext;
 		this.bundleStateObjectName = new ObjectName((String) properties.get(BUNDLESTATE_BEAN_NAME));
 		this.frameworkObjectName = new ObjectName((String) properties.get(FRAMEWORK_BEAN_NAME));
+		this.initialJMXPort = Integer.valueOf((String) properties.get(INITIAL_JMX_PORT));
 	}
 
-	public List<ConnectionModel> listLocalConnections() {
+	public List<ConnectionModel> listLocalConnections() throws Exception {
 		return listLocalVirtualMachines(VirtualMachine.list());
 	}
 
@@ -83,9 +87,8 @@ public class ConnectionService {
 		}
 	}
 
-	private List<ConnectionModel> listLocalVirtualMachines(List<VirtualMachineDescriptor> virtualMachineDescriptors) {
+	private List<ConnectionModel> listLocalVirtualMachines(List<VirtualMachineDescriptor> virtualMachineDescriptors) throws Exception {
 		List<ConnectionModel> virtualMachines = new ArrayList<>();
-		int initialPort = 9999;
 		for (VirtualMachineDescriptor virtualMachineDescriptor : virtualMachineDescriptors) {
 			VirtualMachine virtualMachine = null;
 			try {
@@ -98,8 +101,8 @@ public class ConnectionService {
 					Properties systemProperties = virtualMachine.getSystemProperties();
 					String home = systemProperties.getProperty("java.home");
 					String agent = home + File.separator + "lib" + File.separator + "management-agent.jar";
-					virtualMachine.loadAgent(agent, "com.sun.management.jmxremote.port=" + initialPort + ",com.sun.management.jmxremote.authenticate=false,com.sun.management.jmxremote.ssl=false");
-					initialPort++;
+					virtualMachine.loadAgent(agent, "com.sun.management.jmxremote.port=" + initialJMXPort + ",com.sun.management.jmxremote.authenticate=false,com.sun.management.jmxremote.ssl=false");
+					initialJMXPort++;
 				}
 
 				agentProperties = virtualMachine.getAgentProperties();
@@ -111,19 +114,19 @@ public class ConnectionService {
 					virtualMachineModel.setUrl(jmxServiceURL);
 					virtualMachines.add(virtualMachineModel);
 				} else {
-					LOGGER.debug("No JMX agent found for VM ID {}", virtualMachine.id());
+					LOGGER.info("No JMX agent found for VM ID {}", virtualMachine.id());
 				}
 
 			} catch (AttachNotSupportedException | IOException e) {
-				LOGGER.debug("Unable to attach Java process {}", virtualMachineDescriptor.id());
+				LOGGER.info("Unable to attach Java process {}", virtualMachineDescriptor.id());
 			} catch (AgentLoadException | AgentInitializationException e) {
-				LOGGER.error("Error during loading the management agent", e);
+				LOGGER.info("Unable to load the management agent for Java process {}", virtualMachineDescriptor.id());
 			} finally {
 				if (virtualMachine != null) {
 					try {
 						virtualMachine.detach();
 					} catch (IOException e) {
-						LOGGER.debug("Unable to dettach VM ID {}", virtualMachine.id());
+						LOGGER.info("Unable to dettach VM ID {}", virtualMachine.id());
 					}
 				}
 			}

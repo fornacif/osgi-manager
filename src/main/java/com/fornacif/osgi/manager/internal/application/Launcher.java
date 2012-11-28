@@ -19,9 +19,9 @@ import aQute.bnd.annotation.component.Reference;
 
 @Component(name = "Launcher", configurationPolicy = ConfigurationPolicy.require)
 public class Launcher extends Application {
-	
+
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-	
+
 	private final String FXML = "fxml";
 	private final String TITLE = "title";
 	private final String CSS = "css";
@@ -29,24 +29,17 @@ public class Launcher extends Application {
 	private static String fxml;
 	private static String css;
 	private static String title;
-	
+
 	private static Pane applicationController;
-	
-	private static BundleContext bundleContext; 
+
+	private static BundleContext bundleContext;
 
 	@Activate
 	private void activate(final BundleContext bundleContext, Map<String, ?> properties) throws Exception {
 		Launcher.bundleContext = bundleContext;
 		fxml = (String) properties.get(FXML);
 		css = (String) properties.get(CSS);
-		title = (String) properties.get(TITLE);
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				launch(Launcher.class);	
-			}
-		}, "OSGi Manager Launcher").start();
-		LOGGER.debug("Launching OSGi Manager");
+		title = (String) properties.get(TITLE);	
 	}
 
 	@Override
@@ -63,15 +56,21 @@ public class Launcher extends Application {
 		stage.show();
 	}
 
-	
 	@Override
 	public void stop() throws Exception {
 		bundleContext.getBundle(0).stop();
 	}
-	
-	@Reference(target="(component.name=ApplicationController)")
+
+	@Reference(target = "(component.name=ApplicationController)")
 	private void bindApplicationController(Pane applicationController) {
 		Launcher.applicationController = applicationController;
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				launch(Launcher.class);
+			}
+		}, "OSGi Manager Launcher").start();
+		LOGGER.debug("Launching OSGi Manager");
 	}
 
 }

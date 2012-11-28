@@ -30,6 +30,7 @@ import com.fornacif.osgi.manager.internal.application.FXMLLoaderDelegator;
 import com.fornacif.osgi.manager.internal.events.ProgressIndicatorEvent;
 import com.fornacif.osgi.manager.internal.services.JMXService;
 
+@SuppressWarnings("unused")
 @Component(name = "ApplicationController", provide = { Pane.class, EventHandler.class }, configurationPolicy = ConfigurationPolicy.require)
 public class ApplicationController extends VBox implements Initializable, EventHandler {
 
@@ -64,25 +65,23 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		this.bundleContext = bundleContext;
 	}
 
-	@Reference(target = "(component.name=ConnectionController)", optional=true, dynamic=true)
+	@Reference(target = "(component.name=ConnectionController)", optional = true, dynamic = true)
 	private void bindConnectionController(Pane connectionController) {
 		this.connectionController = connectionController;
 		addControllerToPane(connection, connectionController);
 	}
-	
-	@SuppressWarnings("unused")
+
 	private void unbindConnectionController(Pane connectionController) {
 		removeControllerFromPane(connection, connectionController);
 		this.connectionController = null;
 	}
 
-	@Reference(target = "(component.name=NotificationController)", optional=true, dynamic=true)
+	@Reference(target = "(component.name=NotificationController)", optional = true, dynamic = true)
 	private void bindNotificationController(Pane notificationController) {
 		this.notificationController = notificationController;
 		addControllerToPane(notificationBar, notificationController);
 	}
-	
-	@SuppressWarnings("unused")
+
 	private void unbindNotificationController(Pane notificationController) {
 		removeControllerFromPane(notificationBar, notificationController);
 		this.notificationController = null;
@@ -94,7 +93,6 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		consoleToggleButton.selectedProperty().set(true);
 	}
 
-	@SuppressWarnings("unused")
 	private void unbindJmxConnectorService(JMXService jmxConnectorService) {
 		consoleToggleButton.setDisable(true);
 		connectionToggleButton.selectedProperty().set(true);
@@ -127,9 +125,9 @@ public class ApplicationController extends VBox implements Initializable, EventH
 			}
 		});
 	}
-	
-	private <T extends Pane, S extends Node> void addControllerToPane(final T node, final S controller){
-		if (node != null && !node.getChildren().contains(controller)) {
+
+	private <T extends Pane, S extends Node> void addControllerToPane(final T node, final S controller) {
+		if (node != null && controller != null && !node.getChildren().contains(controller)) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
@@ -138,9 +136,9 @@ public class ApplicationController extends VBox implements Initializable, EventH
 			});
 		}
 	}
-	
-	private <T extends Pane, S extends Node> void removeControllerFromPane(final T node, final S controller){
-		if (node != null && node.getChildren().contains(controller)) {
+
+	private <T extends Pane, S extends Node> void removeControllerFromPane(final T node, final S controller) {
+		if (node != null && controller != null && node.getChildren().contains(controller)) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {

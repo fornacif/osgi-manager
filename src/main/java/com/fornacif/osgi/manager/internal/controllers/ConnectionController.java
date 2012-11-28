@@ -23,6 +23,7 @@ import org.osgi.service.event.EventAdmin;
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
+import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
@@ -75,6 +76,11 @@ public class ConnectionController extends VBox implements Initializable {
 		} catch (IOException e) {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Error during loading remote connections"));
 		}
+	}
+	
+	@Deactivate
+	private void disconnect() throws IOException {
+		connectionService.disconnect();
 	}
 	
 	private void saveRemoteConnections() {
@@ -169,6 +175,7 @@ public class ConnectionController extends VBox implements Initializable {
 				}
 			});
 		}
+		
 		remoteConnections.remove(removeConnectionEvent.getConnection());
 		saveRemoteConnections();
 		fillConnectionsTableViews();
