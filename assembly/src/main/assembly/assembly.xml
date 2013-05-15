@@ -16,6 +16,7 @@
 		<dependencySet>
 			<scope>runtime</scope>
 			<useTransitiveDependencies>false</useTransitiveDependencies>
+			<outputDirectory>/</outputDirectory>
 		</dependencySet>
 	</dependencySets>
 </assembly>

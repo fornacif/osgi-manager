@@ -126,12 +126,14 @@ public class ApplicationController extends VBox implements Initializable, EventH
 		});
 	}
 
-	private synchronized <T extends Pane, S extends Node> void addControllerToPane(final T node, final S controller) {
-		if (node != null && controller != null && !node.getChildren().contains(controller)) {
+	private <T extends Pane, S extends Node> void addControllerToPane(final T node, final S controller) {
+		if (node != null && controller != null) {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
-					node.getChildren().add(controller);
+					if (!node.getChildren().contains(controller)) {
+						node.getChildren().add(controller);
+					}
 				}
 			});
 		}

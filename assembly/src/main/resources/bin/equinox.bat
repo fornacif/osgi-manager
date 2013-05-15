@@ -1,0 +1,1 @@
+java -Dlogback.configurationFile=../configuration/logback.xml -cp ../org.eclipse.osgi-3.8.0.v20120529-1548.jar;"C:/Program Files/Java/jre7/lib"/jfxrt.jar org.eclipse.core.runtime.adaptor.EclipseStarter -console
