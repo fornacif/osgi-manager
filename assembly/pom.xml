@@ -134,7 +134,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.gemini</groupId>
+			<groupId>org.eclipse</groupId>
 			<artifactId>org.eclipse.gemini.management</artifactId>
 			<scope>runtime</scope>
 		</dependency>
