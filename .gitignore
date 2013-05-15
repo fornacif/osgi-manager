@@ -1,3 +1,4 @@
-/target
-/META-INF
-/.settings
+/bundle/.settings
+/bundle/META-INF
+/bundle/target
+/assembly/target

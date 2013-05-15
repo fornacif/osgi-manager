@@ -1,0 +1,37 @@
+.root {
+    -fx-font-family: "System";
+    -fx-font-size: 13.0px;
+    -fx-base: #E8F2FE;
+    -fx-focus-color: #E8F2FE;
+}
+
+.table-row-cell .table-cell {
+    -fx-border-width: 0px;
+}
+
+.bold {
+	-fx-font-weight: bold;
+}
+
+#menuBar {
+	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
+}
+
+#progressIndicator {
+	-fx-background-color: #7A7F85;
+	-fx-background-radius: 5;
+	-fx-border-color: #7A7F85;
+	-fx-border-radius: 5;
+	-fx-padding: 5;
+}
+
+#notificationBar {
+	-fx-background-color: #F0F0F0;
+}
+
+#notificationHBox {
+	-fx-background-color: linear-gradient(to bottom, derive(-fx-base, 5.0%) 0%, derive(-fx-base, -18.0%) 100%);
+	-fx-background-radius: 5;
+	-fx-border-color: #A0A0A0;
+	-fx-border-radius: 5;
+}

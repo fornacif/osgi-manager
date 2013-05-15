@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.collections.*?> 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.*?>
+<fx:root type="javafx.scene.layout.VBox" 
+	xmlns:fx="http://javafx.com/fxml" fx:id="notification" visible="false" managed="false">
+	<padding>
+		<Insets top="5" right="10" bottom="5" left="10" />
+	</padding>
+	<HBox fx:id="notificationHBox" maxWidth="-Infinity" spacing="5" alignment="CENTER">
+		<padding>
+			<Insets top="5" right="5" bottom="5" left="5" />
+		</padding>
+	   	<ImageView fx:id="image" />
+		<Label fx:id="notificationLabel" />
+	</HBox>
+</fx:root>
