@@ -6,9 +6,16 @@
 		<format>dir</format>
 		<format>zip</format>
 	</formats>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
 	<dependencySets>
 		<dependencySet>
 			<scope>runtime</scope>
+			<useTransitiveDependencies>false</useTransitiveDependencies>
 		</dependencySet>
 	</dependencySets>
 </assembly>
