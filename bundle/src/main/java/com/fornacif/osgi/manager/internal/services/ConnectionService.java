@@ -16,8 +16,6 @@ import javax.management.remote.JMXServiceURL;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.jmx.framework.BundleStateMBean;
-import org.osgi.jmx.framework.FrameworkMBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +35,8 @@ public class ConnectionService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
+	private static final String BUNDLESTATE_BEAN_NAME = "bundestate.mbean.name";
+	private static final String FRAMEWORK_BEAN_NAME = "framework.mbean.name";
 	private static final String INITIAL_JMX_PORT = "intial.jmx.port";
 
 	private ObjectName bundleStateObjectName;
@@ -53,8 +53,8 @@ public class ConnectionService {
 	@Activate
 	private void activate(BundleContext bundleContext, Map<String, ?> properties) throws IOException, MalformedObjectNameException {
 		this.bundleContext = bundleContext;
-		this.bundleStateObjectName = new ObjectName(BundleStateMBean.OBJECTNAME);
-		this.frameworkObjectName = new ObjectName(FrameworkMBean.OBJECTNAME);
+		this.bundleStateObjectName = new ObjectName((String) properties.get(BUNDLESTATE_BEAN_NAME));
+		this.frameworkObjectName = new ObjectName((String) properties.get(FRAMEWORK_BEAN_NAME));
 		this.initialJMXPort = Integer.valueOf((String) properties.get(INITIAL_JMX_PORT));
 	}
 
