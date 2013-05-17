@@ -58,7 +58,10 @@ public class FXMLLoaderDelegator implements EventListenerHook {
 			Platform.runLater(new Runnable() {
 				@Override
 				public void run() {
+					ClassLoader threadContextClassLoader = Thread.currentThread().getContextClassLoader();
 					try {
+						Thread.currentThread().setContextClassLoader(controller.getClass().getClassLoader());
+						
 						FXMLLoader fxmlLoader = new FXMLLoader();
 						fxmlLoader.setClassLoader(controller.getClass().getClassLoader());
 						fxmlLoader.setRoot(controller);
@@ -69,7 +72,9 @@ public class FXMLLoaderDelegator implements EventListenerHook {
 						fxmlLoader.load(controller.getClass().getResourceAsStream(fxml));
 					} catch (Exception e) {
 						LOGGER.error("Error loading FXML for service", e);
-					}		
+					} finally {
+						Thread.currentThread().setContextClassLoader(threadContextClassLoader);
+					}
 				}
 			}); 
 		}	

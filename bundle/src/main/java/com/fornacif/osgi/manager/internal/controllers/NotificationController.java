@@ -79,13 +79,19 @@ public class NotificationController extends VBox implements EventHandler, Initia
 						Platform.runLater(new Runnable() {
 							@Override
 							public void run() {
-								switch (event.getLevel()) {
-								case ERROR:
-									image.setImage(new Image("/icons/error-16x16.png"));
-									break;
-								case INFO:
-									image.setImage(new Image("/icons/info-16x16.png"));
-									break;
+								ClassLoader threadContextClassLoader = Thread.currentThread().getContextClassLoader();
+								try {
+									Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+									switch (event.getLevel()) {
+									case ERROR:
+										image.setImage(new Image("/icons/error-16x16.png"));
+										break;
+									case INFO:
+										image.setImage(new Image("/icons/info-16x16.png"));
+										break;
+									}
+								} finally {
+									Thread.currentThread().setContextClassLoader(threadContextClassLoader);
 								}
 
 								notificationLabel.setText(event.getMessage());
