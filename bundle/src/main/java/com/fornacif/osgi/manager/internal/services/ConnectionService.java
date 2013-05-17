@@ -2,6 +2,7 @@ package com.fornacif.osgi.manager.internal.services;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,6 @@ public class ConnectionService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private static final String INITIAL_JMX_PORT = "intial.jmx.port";
 	private static final String WILDCARD = ",*";
 
 	private JMXConnector jmxConnector;
@@ -47,12 +47,9 @@ public class ConnectionService {
 
 	private ServiceRegistration<JMXService> serviceRegistration;
 
-	private int initialJMXPort;
-
 	@Activate
 	private void activate(BundleContext bundleContext, Map<String, ?> properties) throws IOException, MalformedObjectNameException {
 		this.bundleContext = bundleContext;
-		this.initialJMXPort = Integer.valueOf((String) properties.get(INITIAL_JMX_PORT));
 	}
 
 	public List<ConnectionModel> listLocalConnections() throws Exception {
@@ -103,8 +100,7 @@ public class ConnectionService {
 					Properties systemProperties = virtualMachine.getSystemProperties();
 					String home = systemProperties.getProperty("java.home");
 					String agent = home + File.separator + "lib" + File.separator + "management-agent.jar";
-					virtualMachine.loadAgent(agent, "com.sun.management.jmxremote.port=" + initialJMXPort + ",com.sun.management.jmxremote.authenticate=false,com.sun.management.jmxremote.ssl=false");
-					initialJMXPort++;
+					virtualMachine.loadAgent(agent, "com.sun.management.jmxremote.port=" + findFreePort() + ",com.sun.management.jmxremote.authenticate=false,com.sun.management.jmxremote.ssl=false");
 				}
 
 				agentProperties = virtualMachine.getAgentProperties();
@@ -134,6 +130,13 @@ public class ConnectionService {
 			}
 		}
 		return virtualMachines;
+	}
+	
+	private int findFreePort() throws IOException {
+		ServerSocket server = new ServerSocket(0);
+		int port = server.getLocalPort();
+		server.close();
+		return port;
 	}
 
 }
