@@ -1,7 +1,7 @@
 @echo off
 
 SET DIR=%~dp0
-set JDK_HOME=D:/Program Files/Java/${jdk.version}
+set JDK_HOME=${jdk.home}
 
 SET CLASSPATH="%JDK_HOME%/jre/lib/jfxrt.jar"
 SET CLASSPATH=%CLASSPATH%;"%JDK_HOME%/lib/tools.jar"

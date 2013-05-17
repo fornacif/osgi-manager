@@ -31,13 +31,13 @@
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
-			<systemPath>${javafx.path}</systemPath>
+			<systemPath>${jdk.home}/jre/lib/jfxrt.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>tools</artifactId>
-			<systemPath>${tools.path}</systemPath>
+			<systemPath>${jdk.home}/lib/tools.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
 		<dependency>

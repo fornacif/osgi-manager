@@ -18,9 +18,8 @@
 		<compiler.version>2.5.1</compiler.version>
 		<source.version>1.7</source.version>
 		<target.version>1.7</target.version>
-		<jdk.version>jdk1.7.0_21</jdk.version>
-		<tools.path>D:/Program Files/Java/${jdk.version}/lib/tools.jar</tools.path>
-		<javafx.path>D:/Program Files/Java/${jdk.version}/jre/lib/jfxrt.jar</javafx.path>
+		<jdk.version>jdk1.7.0_09</jdk.version>
+		<jdk.home>C:/Program Files/Java/${jdk.version}</jdk.home>
 		<javafx.version>2.2.3</javafx.version>
 		<guava.version>13.0.1</guava.version>
 		<jackson.version>1.9.11</jackson.version>
