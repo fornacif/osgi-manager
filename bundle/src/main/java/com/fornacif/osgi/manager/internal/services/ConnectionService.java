@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.management.MBeanServerConnection;
 import javax.management.MalformedObjectNameException;
@@ -16,6 +17,8 @@ import javax.management.remote.JMXServiceURL;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.jmx.framework.BundleStateMBean;
+import org.osgi.jmx.framework.FrameworkMBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +38,8 @@ public class ConnectionService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private static final String BUNDLESTATE_BEAN_NAME = "bundestate.mbean.name";
-	private static final String FRAMEWORK_BEAN_NAME = "framework.mbean.name";
 	private static final String INITIAL_JMX_PORT = "intial.jmx.port";
-
-	private ObjectName bundleStateObjectName;
-	private ObjectName frameworkObjectName;
+	private static final String WILDCARD = ",*";
 
 	private JMXConnector jmxConnector;
 
@@ -53,8 +52,6 @@ public class ConnectionService {
 	@Activate
 	private void activate(BundleContext bundleContext, Map<String, ?> properties) throws IOException, MalformedObjectNameException {
 		this.bundleContext = bundleContext;
-		this.bundleStateObjectName = new ObjectName((String) properties.get(BUNDLESTATE_BEAN_NAME));
-		this.frameworkObjectName = new ObjectName((String) properties.get(FRAMEWORK_BEAN_NAME));
 		this.initialJMXPort = Integer.valueOf((String) properties.get(INITIAL_JMX_PORT));
 	}
 
@@ -67,9 +64,14 @@ public class ConnectionService {
 
 		jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(connectionModel.getUrl()));
 		MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-
-		if (mbeanServerConnection.isRegistered(frameworkObjectName)) {
-			JMXService jmxService = new JMXService(mbeanServerConnection, frameworkObjectName, bundleStateObjectName);
+		
+		Set<ObjectName> frameworkObjectNames = mbeanServerConnection.queryNames(new ObjectName(FrameworkMBean.OBJECTNAME + WILDCARD), null);
+		Set<ObjectName> bundleStateObjectNames = mbeanServerConnection.queryNames(new ObjectName(BundleStateMBean.OBJECTNAME + WILDCARD), null);
+		
+		if (frameworkObjectNames.size() == 1 && bundleStateObjectNames.size() == 1) {
+			JMXService jmxService = new JMXService(mbeanServerConnection);
+			jmxService.setFrameworkObjectName(frameworkObjectNames.iterator().next());
+			jmxService.setBundleStateObjectName(bundleStateObjectNames.iterator().next());
 			serviceRegistration = bundleContext.registerService(JMXService.class, jmxService, null);
 		} else {
 			throw new Exception("Connection not open due to missing OSGi MBeans");

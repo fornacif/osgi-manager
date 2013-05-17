@@ -13,10 +13,16 @@ public class JMXService {
 	private ObjectName bundleStateObjectName;
 	private ObjectName frameworkObjectName;
 
-	public JMXService(MBeanServerConnection mbeanServerConnection, ObjectName frameworkObjectName, ObjectName bundleStateObjectName) {
+	public JMXService(MBeanServerConnection mbeanServerConnection) {
 		this.mbeanServerConnection = mbeanServerConnection;
+	}
+	
+	public void setFrameworkObjectName(ObjectName frameworkObjectName) {
 		this.frameworkObjectName = frameworkObjectName;
-		this.bundleStateObjectName = bundleStateObjectName;
+	}
+	
+	public void setBundleStateObjectName(ObjectName bundleStateObjectName) {
+		 this.bundleStateObjectName = bundleStateObjectName;
 	}
 
 	public BundleStateMBean getBundleStateMBean() {
