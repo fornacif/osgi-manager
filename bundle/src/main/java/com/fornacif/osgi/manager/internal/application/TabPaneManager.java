@@ -24,10 +24,6 @@ public class TabPaneManager {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private final String TAB_POSITION_SERVICE_PROPERTY = "tab.position";
-	private final String TAB_SELECT_SERVICE_PROPERTY = "tab.select";
-	private final String TAB_TEXT_SERVICE_PROPERTY = "tab.text";
-
 	private final static String PANE_SERVICE_FILTER = "(&(" + Constants.OBJECTCLASS + "=" + Pane.class.getName() + ")(tab.text=*))";
 
 	private TabPane tabPane;
@@ -44,10 +40,10 @@ public class TabPaneManager {
 			@Override
 			public Tab addingService(ServiceReference<Pane> serviceReference) {
 				Pane controller = bundleContext.getService(serviceReference);
-				String position = (String) serviceReference.getProperty(TAB_POSITION_SERVICE_PROPERTY);
-				String text = (String) serviceReference.getProperty(TAB_TEXT_SERVICE_PROPERTY);
-				String select = (String) serviceReference.getProperty(TAB_SELECT_SERVICE_PROPERTY);
-				Tab tab = addTab(controller, position, select, text);
+				Integer position = Integer.valueOf(String.valueOf(serviceReference.getProperty(OSGiManagerConstants.TAB_POSITION_PROPERTY)));
+				String text = String.valueOf(serviceReference.getProperty(OSGiManagerConstants.TAB_TEXT_PROPERTY));
+				Boolean selected = Boolean.valueOf(String.valueOf(serviceReference.getProperty(OSGiManagerConstants.TAB_SELECTED_PROPERTY)));
+				Tab tab = addTab(controller, position, selected, text);
 				return tab;
 			}
 
@@ -64,7 +60,7 @@ public class TabPaneManager {
 		paneTracker.close();
 	}
 
-	private Tab addTab(final Pane controller, final String position, final String select, final String text) {
+	private Tab addTab(final Pane controller, final Integer position, final Boolean selected, final String text) {
 		final Tab tab = new Tab();
 		tab.setText(text);
 		tab.setContent(controller);
@@ -75,13 +71,13 @@ public class TabPaneManager {
 				ObservableList<Tab> tabs = tabPane.getTabs();
 
 				Integer positionValue = Integer.valueOf(0);
-				if (position != null && tabs.size() >= Integer.valueOf(position)) {
+				if (position != null && tabs.size() >= position) {
 					positionValue = Integer.valueOf(position);
 				}
 
 				tabs.add(Integer.valueOf(positionValue), tab);
 
-				if (select != null && Boolean.valueOf(select)) {
+				if (selected != null && selected) {
 					tabPane.getSelectionModel().select(tab);
 				}
 			}

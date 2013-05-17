@@ -20,9 +20,6 @@ import org.slf4j.LoggerFactory;
 public class FXMLLoaderDelegator implements EventListenerHook {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-
-	private final String FXML_SERVICE_PROPERTY = "fxml";
-	private final String CSS_SERVICE_PROPERTY = "css";
 	
 	public FXMLLoaderDelegator(BundleContext bundleContext) {
 		try {
@@ -50,8 +47,8 @@ public class FXMLLoaderDelegator implements EventListenerHook {
 	}
 
 	private void loadFXML(final ServiceReference<?> serviceReference) {
-		final String fxml = (String) serviceReference.getProperty(FXML_SERVICE_PROPERTY);
-		final String css = (String) serviceReference.getProperty(CSS_SERVICE_PROPERTY);
+		final String fxml = (String) serviceReference.getProperty(OSGiManagerConstants.FXML_PROPERTY);
+		final String css = (String) serviceReference.getProperty(OSGiManagerConstants.CSS_PROPERTY);
 		if (fxml != null) {
 			BundleContext bundleContext = serviceReference.getBundle().getBundleContext();
 			final Pane controller = (Pane) bundleContext.getService(serviceReference);

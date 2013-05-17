@@ -28,9 +28,10 @@ import org.slf4j.LoggerFactory;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 
+import com.fornacif.osgi.manager.internal.configurations.NotificationControllerConfiguration;
 import com.fornacif.osgi.manager.internal.events.NotificationEvent;
 
-@Component(name = "NotificationController", provide = { Pane.class, EventHandler.class }, configurationPolicy = ConfigurationPolicy.require)
+@Component(name = "NotificationController", provide = { Pane.class, EventHandler.class }, configurationPolicy = ConfigurationPolicy.require, designate = NotificationControllerConfiguration.class)
 public class NotificationController extends VBox implements EventHandler, Initializable {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());

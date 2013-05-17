@@ -26,6 +26,7 @@ import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 
+import com.fornacif.osgi.manager.internal.configurations.ConnectionControllerConfiguration;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent.Action;
 import com.fornacif.osgi.manager.internal.events.NotificationEvent;
@@ -37,7 +38,7 @@ import com.fornacif.osgi.manager.internal.services.SystemPreferencesService;
 import com.fornacif.osgi.manager.services.AsynchService;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 
-@Component(name = "ConnectionController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
+@Component(name = "ConnectionController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require, designate = ConnectionControllerConfiguration.class)
 public class ConnectionController extends VBox implements Initializable {
 
 	private ServiceCaller serviceCaller;

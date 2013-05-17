@@ -21,6 +21,7 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
 
+import com.fornacif.osgi.manager.internal.configurations.BundlesControllerConfiguration;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
@@ -30,7 +31,7 @@ import com.fornacif.osgi.manager.services.ServiceCaller;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 
-@Component(name = "BundlesController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require)
+@Component(name = "BundlesController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require, designate = BundlesControllerConfiguration.class)
 public class BundlesController extends VBox implements Initializable {
 
 	@FXML

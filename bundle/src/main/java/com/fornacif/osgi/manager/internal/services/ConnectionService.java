@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
-import aQute.bnd.annotation.component.ConfigurationPolicy;
 
 import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 import com.sun.tools.attach.AgentInitializationException;
@@ -34,7 +33,7 @@ import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;
 import com.sun.tools.attach.VirtualMachineDescriptor;
 
-@Component(name = "ConnectionService", provide = ConnectionService.class, configurationPolicy = ConfigurationPolicy.require)
+@Component(name = "ConnectionService", provide = ConnectionService.class)
 public class ConnectionService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());

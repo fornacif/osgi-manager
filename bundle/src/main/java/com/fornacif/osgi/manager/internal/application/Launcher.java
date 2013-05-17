@@ -12,19 +12,17 @@ import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fornacif.osgi.manager.internal.configurations.LauncherConfiguration;
+
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
 
-@Component(name = "Launcher", configurationPolicy = ConfigurationPolicy.require)
+@Component(name = "Launcher", configurationPolicy = ConfigurationPolicy.require, designate = LauncherConfiguration.class)
 public class Launcher extends Application {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-
-	private final String FXML = "fxml";
-	private final String TITLE = "title";
-	private final String CSS = "css";
 
 	private static String fxml;
 	private static String css;
@@ -37,9 +35,9 @@ public class Launcher extends Application {
 	@Activate
 	private void activate(final BundleContext bundleContext, Map<String, ?> properties) throws Exception {
 		Launcher.bundleContext = bundleContext;
-		fxml = (String) properties.get(FXML);
-		css = (String) properties.get(CSS);
-		title = (String) properties.get(TITLE);	
+		fxml = String.valueOf(properties.get(OSGiManagerConstants.FXML_PROPERTY));
+		css = String.valueOf(properties.get(OSGiManagerConstants.CSS_PROPERTY));
+		title = String.valueOf(properties.get(OSGiManagerConstants.TITLE_PROPERTY));	
 	}
 
 	@Override

@@ -27,11 +27,12 @@ import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.internal.application.FXMLLoaderDelegator;
+import com.fornacif.osgi.manager.internal.configurations.ApplicationControllerConfiguration;
 import com.fornacif.osgi.manager.internal.events.ProgressIndicatorEvent;
 import com.fornacif.osgi.manager.internal.services.JMXService;
 
 @SuppressWarnings("unused")
-@Component(name = "ApplicationController", provide = { Pane.class, EventHandler.class }, configurationPolicy = ConfigurationPolicy.require)
+@Component(name = "ApplicationController", provide = { Pane.class, EventHandler.class }, configurationPolicy = ConfigurationPolicy.require, designate = ApplicationControllerConfiguration.class)
 public class ApplicationController extends VBox implements Initializable, EventHandler {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
