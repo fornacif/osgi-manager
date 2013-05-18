@@ -77,8 +77,12 @@
 					<manifestLocation>META-INF</manifestLocation>
 					<instructions>
 						<Bundle-Activator>com.fornacif.osgi.manager.internal.application.ConfigurationManager</Bundle-Activator>
-						<Import-Package>aQute.bnd.annotation.metatype;resolution:=optional, javax.management.remote.rmi, *</Import-Package>
-						<DynamicImport-Package>javafx.*;version=${javafx.version}</DynamicImport-Package>
+						<Import-Package>
+							aQute.bnd.annotation.metatype;resolution:=optional,
+							javax.management.remote.rmi,
+							javafx.scene.control.cell;version=${javafx.version},
+							*
+						</Import-Package>
 						<Service-Component>com.fornacif.osgi.manager.internal.*</Service-Component>
 					</instructions>
 				</configuration>
