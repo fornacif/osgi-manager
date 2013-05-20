@@ -74,6 +74,8 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@FXML
 	private TextField remoteServiceURLTextField;
+	
+	private Timeline timeline;
 
 	private int refreshPeriod;
 	
@@ -94,6 +96,7 @@ public class ConnectionController extends VBox implements Initializable {
 	@Deactivate
 	private void disconnect() throws IOException {
 		connectionService.disconnect();
+		timeline.stop();
 	}
 
 	private void saveRemoteConnections() {
@@ -149,7 +152,7 @@ public class ConnectionController extends VBox implements Initializable {
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 		listLocalConnections(true);
-		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(refreshPeriod), new EventHandler<ActionEvent>() {
+		timeline = new Timeline(new KeyFrame(Duration.seconds(refreshPeriod), new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
 				listLocalConnections(false);
