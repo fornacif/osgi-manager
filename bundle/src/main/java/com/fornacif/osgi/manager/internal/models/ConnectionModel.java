@@ -13,7 +13,6 @@ public class ConnectionModel {
 	private final StringProperty url = new SimpleStringProperty();
 	private final BooleanProperty connected = new SimpleBooleanProperty(false);
 	
-	@JsonIgnore
 	public String getId() {
 		return id.get();
 	}

@@ -27,12 +27,12 @@
 		</HBox>
 		<TableView fx:id="localConnectionsTableView" prefHeight="150">
 			<columns>
-				<TableColumn text="ID" prefWidth="75">
+				<TableColumn fx:id="id" text="ID" prefWidth="75">
 					<cellValueFactory>
 						<PropertyValueFactory property="id" />
 					</cellValueFactory>
 				</TableColumn>
-				<TableColumn fx:id="name" text="Name" prefWidth="700">
+				<TableColumn text="Name" prefWidth="700">
 					<cellValueFactory>
 						<PropertyValueFactory property="name" />
 					</cellValueFactory>
@@ -47,7 +47,7 @@
 				</TableColumn>
 			</columns>
 			<sortOrder>
-				<fx:reference source="name"/>
+				<fx:reference source="id"/>
 			</sortOrder>   
 		</TableView>
 	</VBox>
@@ -65,15 +65,12 @@
 		</HBox>
 		<TableView fx:id="remoteConnectionsTableView" prefHeight="240">
 			<columns>
-				<TableColumn prefWidth="75">
+				<TableColumn fx:id="id" text="ID" prefWidth="75">
 					<cellValueFactory>
-						<PropertyValueFactory property="model" />
+						<PropertyValueFactory property="id" />
 					</cellValueFactory>
-					<cellFactory>
-	                    <RemoveConnectionCellFactory onAction="#removeConnection" />
-	                </cellFactory>
 				</TableColumn>
-				<TableColumn fx:id="name" text="Name" prefWidth="200">
+				<TableColumn text="Name" prefWidth="200">
 					<cellValueFactory>
 						<PropertyValueFactory property="name" />
 					</cellValueFactory>
@@ -91,9 +88,17 @@
 	                    <ConnectionActionCellFactory onAction="#executeAction" />
 	                </cellFactory>
 				</TableColumn>
+				<TableColumn prefWidth="75">
+					<cellValueFactory>
+						<PropertyValueFactory property="model" />
+					</cellValueFactory>
+					<cellFactory>
+	                    <RemoveConnectionCellFactory onAction="#removeConnection" />
+	                </cellFactory>
+				</TableColumn>
 			</columns>
 			<sortOrder>
-				<fx:reference source="name"/>
+				<fx:reference source="id"/>
 			</sortOrder>   
 		</TableView>
 		<HBox alignment="CENTER_LEFT" spacing="10">

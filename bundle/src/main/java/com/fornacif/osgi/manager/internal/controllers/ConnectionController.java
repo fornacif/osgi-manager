@@ -185,7 +185,7 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@FXML
 	private void removeConnection(final RemoveConnectionEvent removeConnectionEvent) throws IOException {
-		if (activeConnection.equals(removeConnectionEvent.getConnection().equals(activeConnection))) {
+		if (removeConnectionEvent.getConnection().equals(activeConnection)) {
 			serviceCaller.execute(new AsynchService<Void>() {
 				@Override
 				public Void call() throws Exception {
@@ -212,7 +212,7 @@ public class ConnectionController extends VBox implements Initializable {
 		}
 
 		ConnectionModel connectionModel = new ConnectionModel();
-		connectionModel.setId(UUID.randomUUID().toString());
+		connectionModel.setId(String.valueOf(remoteConnections.size()));
 		connectionModel.setName(remoteConnectionName.getText());
 		connectionModel.setUrl(remoteServiceURLTextField.getText());
 		if (!remoteConnections.contains(connectionModel)) {
