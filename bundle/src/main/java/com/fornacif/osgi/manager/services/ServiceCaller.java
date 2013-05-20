@@ -1,5 +1,5 @@
 package com.fornacif.osgi.manager.services;
 
 public interface ServiceCaller {
-	<T> void execute(final AsynchService<T> asynchService, boolean showProgressIndicator);
+	<T> void execute(AsynchService<T> asynchService, boolean showProgressIndicator, boolean blockConcurrentExecutions);
 }

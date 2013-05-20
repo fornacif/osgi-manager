@@ -169,7 +169,7 @@ public class ConnectionController extends VBox implements Initializable {
 					connectionService.connect(connection);
 					return null;
 				}
-			}, true);
+			}, true, true);
 		} else {
 			serviceCaller.execute(new AsynchService<Void>() {
 				@Override
@@ -177,7 +177,7 @@ public class ConnectionController extends VBox implements Initializable {
 					connectionService.disconnect();
 					return null;
 				}
-			}, true);
+			}, true, true);
 		}
 		
 	}
@@ -191,7 +191,7 @@ public class ConnectionController extends VBox implements Initializable {
 					connectionService.disconnect();
 					return null;
 				}
-			}, true);
+			}, true, true);
 		}
 
 		remoteConnections.remove(removeConnectionEvent.getConnection());
@@ -240,7 +240,7 @@ public class ConnectionController extends VBox implements Initializable {
 				localConnections = result;
 				fillConnectionsTableViews();
 			}
-		}, showProgressIndicator);
+		}, showProgressIndicator, false);
 	}
 
 	private void fillConnectionsTableViews() {

@@ -26,10 +26,12 @@ import com.fornacif.osgi.manager.services.ServiceCaller;
 public class ServiceCallerImpl implements ServiceCaller {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+	
+	private static final int MAX_CONCURRENT_SERVICE_EXECUTIONS = 10;
 
 	private EventAdmin eventAdmin;
 
-	private ExecutorService executorService = Executors.newSingleThreadExecutor();
+	private ExecutorService executorService = Executors.newFixedThreadPool(MAX_CONCURRENT_SERVICE_EXECUTIONS);
 
 	private Map<AsynchService<?>, Service<?>> services = Collections.synchronizedMap(new HashMap<AsynchService<?>, Service<?>>());
 	
@@ -44,8 +46,8 @@ public class ServiceCallerImpl implements ServiceCaller {
 	}
 
 	@Override
-	public <T> void execute(final AsynchService<T> asynchService, final boolean showProgressIndicator) {
-		if (services.containsKey(asynchService)) {
+	public <T> void execute(final AsynchService<T> asynchService, final boolean showProgressIndicator, final boolean blockConcurrentExecutions) {
+		if (blockConcurrentExecutions && services.containsKey(asynchService)) {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.INFO, "Waiting for a task to be completed"));
 		} else {
 			Service<T> service = new Service<T>() {
