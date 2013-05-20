@@ -1,23 +1,25 @@
 package com.fornacif.osgi.manager.internal.models;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 public class ConnectionModel {
-	private final StringProperty id = new SimpleStringProperty();
+	private final IntegerProperty id = new SimpleIntegerProperty();
 	private final StringProperty name = new SimpleStringProperty();
 	private final StringProperty url = new SimpleStringProperty();
 	private final BooleanProperty connected = new SimpleBooleanProperty(false);
 	
-	public String getId() {
+	public Integer getId() {
 		return id.get();
 	}
 
-	public void setId(String id) {
+	public void setId(Integer id) {
 		this.id.set(id);
 	}
 	

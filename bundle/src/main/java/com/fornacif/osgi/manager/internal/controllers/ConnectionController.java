@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -212,7 +211,7 @@ public class ConnectionController extends VBox implements Initializable {
 		}
 
 		ConnectionModel connectionModel = new ConnectionModel();
-		connectionModel.setId(String.valueOf(remoteConnections.size()));
+		connectionModel.setId(remoteConnections.size());
 		connectionModel.setName(remoteConnectionName.getText());
 		connectionModel.setUrl(remoteServiceURLTextField.getText());
 		if (!remoteConnections.contains(connectionModel)) {
