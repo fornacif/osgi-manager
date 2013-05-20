@@ -10,17 +10,17 @@ import javafx.beans.property.StringProperty;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 public class ConnectionModel {
-	private final IntegerProperty id = new SimpleIntegerProperty();
+	private final IntegerProperty pid = new SimpleIntegerProperty();
 	private final StringProperty name = new SimpleStringProperty();
 	private final StringProperty url = new SimpleStringProperty();
 	private final BooleanProperty connected = new SimpleBooleanProperty(false);
 	
-	public Integer getId() {
-		return id.get();
+	public Integer getPid() {
+		return pid.get();
 	}
 
-	public void setId(Integer id) {
-		this.id.set(id);
+	public void setPid(Integer id) {
+		this.pid.set(id);
 	}
 	
 	public String getName() {
@@ -61,7 +61,7 @@ public class ConnectionModel {
 		if (!(object instanceof ConnectionModel)) {
 			return false;
 		}
-		return ((ConnectionModel) object).getId().equals(getId());
+		return ((ConnectionModel) object).getPid().equals(getPid());
 	}
 
 }

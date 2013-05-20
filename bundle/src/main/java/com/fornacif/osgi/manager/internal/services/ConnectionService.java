@@ -105,7 +105,7 @@ public class ConnectionService {
 				jmxServiceURL = agentProperties.getProperty("com.sun.management.jmxremote.localConnectorAddress");
 				if (jmxServiceURL != null) {
 					ConnectionModel virtualMachineModel = new ConnectionModel();
-					virtualMachineModel.setId(Integer.valueOf(virtualMachineDescriptor.id()));
+					virtualMachineModel.setPid(Integer.valueOf(virtualMachineDescriptor.id()));
 					virtualMachineModel.setName(virtualMachineDescriptor.displayName());
 					virtualMachineModel.setUrl(jmxServiceURL);
 					virtualMachines.add(virtualMachineModel);

@@ -211,7 +211,7 @@ public class ConnectionController extends VBox implements Initializable {
 		}
 
 		ConnectionModel connectionModel = new ConnectionModel();
-		connectionModel.setId(remoteConnections.size());
+		connectionModel.setPid(remoteConnections.size());
 		connectionModel.setName(remoteConnectionName.getText());
 		connectionModel.setUrl(remoteServiceURLTextField.getText());
 		if (!remoteConnections.contains(connectionModel)) {

@@ -27,9 +27,9 @@
 		</HBox>
 		<TableView fx:id="localConnectionsTableView" prefHeight="150">
 			<columns>
-				<TableColumn fx:id="id" text="ID" prefWidth="75">
+				<TableColumn fx:id="pid" text="PID" prefWidth="75">
 					<cellValueFactory>
-						<PropertyValueFactory property="id" />
+						<PropertyValueFactory property="pid" />
 					</cellValueFactory>
 				</TableColumn>
 				<TableColumn text="Name" prefWidth="700">
@@ -47,7 +47,7 @@
 				</TableColumn>
 			</columns>
 			<sortOrder>
-				<fx:reference source="id"/>
+				<fx:reference source="pid"/>
 			</sortOrder>   
 		</TableView>
 	</VBox>
@@ -65,9 +65,9 @@
 		</HBox>
 		<TableView fx:id="remoteConnectionsTableView" prefHeight="240">
 			<columns>
-				<TableColumn fx:id="id" text="ID" prefWidth="75">
+				<TableColumn fx:id="pid" text="PID" prefWidth="75">
 					<cellValueFactory>
-						<PropertyValueFactory property="id" />
+						<PropertyValueFactory property="pid" />
 					</cellValueFactory>
 				</TableColumn>
 				<TableColumn text="Name" prefWidth="200">
@@ -98,7 +98,7 @@
 				</TableColumn>
 			</columns>
 			<sortOrder>
-				<fx:reference source="id"/>
+				<fx:reference source="pid"/>
 			</sortOrder>   
 		</TableView>
 		<HBox alignment="CENTER_LEFT" spacing="10">
