@@ -7,14 +7,22 @@ import javax.management.ObjectName;
 import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
 
+import com.fornacif.osgi.manager.internal.models.ConnectionModel;
+
 public class JMXService {
 
 	private MBeanServerConnection mbeanServerConnection;
+	private ConnectionModel connectionModel;
 	private ObjectName bundleStateObjectName;
 	private ObjectName frameworkObjectName;
 
-	public JMXService(MBeanServerConnection mbeanServerConnection) {
+	public JMXService(MBeanServerConnection mbeanServerConnection, ConnectionModel connectionModel) {
 		this.mbeanServerConnection = mbeanServerConnection;
+		this.connectionModel = connectionModel;
+	}
+	
+	public ConnectionModel getConnectionModel() {
+		return connectionModel;
 	}
 	
 	public void setFrameworkObjectName(ObjectName frameworkObjectName) {

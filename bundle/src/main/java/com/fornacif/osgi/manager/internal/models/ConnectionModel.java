@@ -60,7 +60,7 @@ public class ConnectionModel {
 		if (!(object instanceof ConnectionModel)) {
 			return false;
 		}
-		return ((ConnectionModel) object).getName().equals(getName());
+		return ((ConnectionModel) object).getId().equals(getId());
 	}
 
 }

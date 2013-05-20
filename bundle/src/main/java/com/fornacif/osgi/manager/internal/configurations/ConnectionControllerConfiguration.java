@@ -11,4 +11,7 @@ public interface ConnectionControllerConfiguration {
 	
 	@Meta.AD(name = OSGiManagerConstants.CSS_PROPERTY)
 	String css();
+	
+	@Meta.AD(name = OSGiManagerConstants.REFRESH_PERIOD_PROPERTY)
+	int refreshPeriod();
 }

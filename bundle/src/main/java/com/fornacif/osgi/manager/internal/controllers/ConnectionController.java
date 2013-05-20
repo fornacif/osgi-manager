@@ -4,11 +4,18 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
@@ -16,6 +23,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import org.codehaus.jackson.type.TypeReference;
 import org.osgi.service.event.EventAdmin;
@@ -26,6 +34,7 @@ import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 
+import com.fornacif.osgi.manager.internal.application.OSGiManagerConstants;
 import com.fornacif.osgi.manager.internal.configurations.ConnectionControllerConfiguration;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent.Action;
@@ -44,15 +53,15 @@ public class ConnectionController extends VBox implements Initializable {
 	private ServiceCaller serviceCaller;
 
 	private ConnectionService connectionService;
+	
+	private ConnectionModel activeConnection;
 
 	private List<ConnectionModel> localConnections;
 
 	private List<ConnectionModel> remoteConnections = new ArrayList<>();
 
-	private ConnectionModel selectedConnection;
-
 	private EventAdmin eventAdmin;
-	
+
 	private SystemPreferencesService systemPreferencesService;
 
 	@FXML
@@ -66,11 +75,15 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@FXML
 	private TextField remoteServiceURLTextField;
+
+	private int refreshPeriod;
 	
 	@Activate
-	private void loadPreferences() {
+	private void loadPreferences(Map<String, ?> properties) {
+		refreshPeriod = Integer.valueOf(String.valueOf(properties.get(OSGiManagerConstants.REFRESH_PERIOD_PROPERTY)));
 		try {
-			remoteConnections = systemPreferencesService.load("remoteConnections", new TypeReference<List<ConnectionModel>>() {});
+			remoteConnections = systemPreferencesService.load("remoteConnections", new TypeReference<List<ConnectionModel>>() {
+			});
 			if (remoteConnections == null) {
 				remoteConnections = new ArrayList<>();
 			}
@@ -78,12 +91,12 @@ public class ConnectionController extends VBox implements Initializable {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Error during loading remote connections"));
 		}
 	}
-	
+
 	@Deactivate
 	private void disconnect() throws IOException {
 		connectionService.disconnect();
 	}
-	
+
 	private void saveRemoteConnections() {
 		try {
 			systemPreferencesService.save("remoteConnections", remoteConnections);
@@ -91,7 +104,7 @@ public class ConnectionController extends VBox implements Initializable {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Error during saving remote connections"));
 		}
 	}
-	
+
 	@Reference
 	private void bindEventAdmin(EventAdmin eventAdmin) {
 		this.eventAdmin = eventAdmin;
@@ -106,18 +119,18 @@ public class ConnectionController extends VBox implements Initializable {
 	private void bindConnectionService(ConnectionService connectionService) {
 		this.connectionService = connectionService;
 	}
-	
+
 	@Reference
 	public void bindSystemPreferencesService(SystemPreferencesService systemPreferencesService) {
 		this.systemPreferencesService = systemPreferencesService;
 	}
 
 	@Reference(optional = true, dynamic = true)
-	public void bindJmxService(JMXService jmxService) {
+	public void bindJmxService(final JMXService jmxService) {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				selectedConnection.setConnected(true);
+				activeConnection = jmxService.getConnectionModel();
 				fillConnectionsTableViews();
 			}
 		});
@@ -128,7 +141,7 @@ public class ConnectionController extends VBox implements Initializable {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				selectedConnection.setConnected(false);
+				activeConnection = null;
 				fillConnectionsTableViews();
 			}
 		});
@@ -136,23 +149,28 @@ public class ConnectionController extends VBox implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		listLocalConnections();
+		listLocalConnections(true);
+		Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(refreshPeriod), new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				listLocalConnections(false);
+			}
+		}));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.playFromStart();
 	}
 
 	@FXML
 	private void executeAction(final ConnectionActionEvent connectionActionEvent) throws IOException {
 		final ConnectionModel connection = connectionActionEvent.getConnection();
 		if (connectionActionEvent.getAction() == Action.CONNECT) {
-			if (selectedConnection != null && connection != selectedConnection) {
-				selectedConnection.setConnected(false);
-			}
 			serviceCaller.execute(new AsynchService<Void>() {
 				@Override
 				public Void call() throws Exception {
 					connectionService.connect(connection);
 					return null;
 				}
-			});
+			}, true);
 		} else {
 			serviceCaller.execute(new AsynchService<Void>() {
 				@Override
@@ -160,23 +178,23 @@ public class ConnectionController extends VBox implements Initializable {
 					connectionService.disconnect();
 					return null;
 				}
-			});
+			}, true);
 		}
-		selectedConnection = connection;
+		
 	}
-	
+
 	@FXML
 	private void removeConnection(final RemoveConnectionEvent removeConnectionEvent) throws IOException {
-		if (selectedConnection != null && selectedConnection.equals(removeConnectionEvent.getConnection())) {
+		if (activeConnection.equals(removeConnectionEvent.getConnection().equals(activeConnection))) {
 			serviceCaller.execute(new AsynchService<Void>() {
 				@Override
 				public Void call() throws Exception {
 					connectionService.disconnect();
 					return null;
 				}
-			});
+			}, true);
 		}
-		
+
 		remoteConnections.remove(removeConnectionEvent.getConnection());
 		saveRemoteConnections();
 		fillConnectionsTableViews();
@@ -192,8 +210,9 @@ public class ConnectionController extends VBox implements Initializable {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.ERROR, "Connection JMX URL cannot be empty"));
 			return;
 		}
-		
+
 		ConnectionModel connectionModel = new ConnectionModel();
+		connectionModel.setId(UUID.randomUUID().toString());
 		connectionModel.setName(remoteConnectionName.getText());
 		connectionModel.setUrl(remoteServiceURLTextField.getText());
 		if (!remoteConnections.contains(connectionModel)) {
@@ -210,7 +229,7 @@ public class ConnectionController extends VBox implements Initializable {
 		remoteConnectionName.setText("");
 	}
 
-	private void listLocalConnections() {
+	private void listLocalConnections(boolean showProgressIndicator) {
 		serviceCaller.execute(new AsynchService<List<ConnectionModel>>() {
 			@Override
 			public List<ConnectionModel> call() throws Exception {
@@ -222,7 +241,7 @@ public class ConnectionController extends VBox implements Initializable {
 				localConnections = result;
 				fillConnectionsTableViews();
 			}
-		});
+		}, showProgressIndicator);
 	}
 
 	private void fillConnectionsTableViews() {
@@ -231,6 +250,14 @@ public class ConnectionController extends VBox implements Initializable {
 	}
 
 	private void fillConnectionsTableView(TableView<ConnectionModel> connectionsTableView, List<ConnectionModel> connections) {
+		for (ConnectionModel connectionModel : connections) {
+			if (connectionModel.equals(activeConnection)) {
+				connectionModel.setConnected(true);
+			} else {
+				connectionModel.setConnected(false);
+			}
+		}
+		
 		connectionsTableView.setItems(null);
 		connectionsTableView.layout();
 		connectionsTableView.setItems(FXCollections.observableArrayList(connections));

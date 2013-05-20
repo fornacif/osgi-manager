@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -47,7 +46,7 @@ public class ConnectionService {
 	private ServiceRegistration<JMXService> serviceRegistration;
 
 	@Activate
-	private void activate(BundleContext bundleContext, Map<String, ?> properties) throws IOException, MalformedObjectNameException {
+	private void activate(BundleContext bundleContext) throws IOException, MalformedObjectNameException {
 		this.bundleContext = bundleContext;
 	}
 
@@ -65,7 +64,7 @@ public class ConnectionService {
 		Set<ObjectName> bundleStateObjectNames = mbeanServerConnection.queryNames(new ObjectName(BundleStateMBean.OBJECTNAME + WILDCARD), null);
 		
 		if (frameworkObjectNames.size() == 1 && bundleStateObjectNames.size() == 1) {
-			JMXService jmxService = new JMXService(mbeanServerConnection);
+			JMXService jmxService = new JMXService(mbeanServerConnection, connectionModel);
 			jmxService.setFrameworkObjectName(frameworkObjectNames.iterator().next());
 			jmxService.setBundleStateObjectName(bundleStateObjectNames.iterator().next());
 			serviceRegistration = bundleContext.registerService(JMXService.class, jmxService, null);

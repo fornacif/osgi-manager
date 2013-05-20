@@ -44,7 +44,7 @@ public class ServiceCallerImpl implements ServiceCaller {
 	}
 
 	@Override
-	public <T> void execute(final AsynchService<T> asynchService) {
+	public <T> void execute(final AsynchService<T> asynchService, final boolean showProgressIndicator) {
 		if (services.containsKey(asynchService)) {
 			eventAdmin.sendEvent(new NotificationEvent(NotificationEvent.Level.INFO, "Waiting for a task to be completed"));
 		} else {
@@ -55,10 +55,14 @@ public class ServiceCallerImpl implements ServiceCaller {
 						@Override
 						protected T call() throws Exception {
 							try {
-								eventAdmin.sendEvent(new ProgressIndicatorEvent(ProgressIndicatorEvent.Type.START));
+								if (showProgressIndicator) {
+									eventAdmin.sendEvent(new ProgressIndicatorEvent(ProgressIndicatorEvent.Type.START));
+								}
 								return asynchService.call();
 							} finally {
-								eventAdmin.sendEvent(new ProgressIndicatorEvent(ProgressIndicatorEvent.Type.STOP));
+								if (showProgressIndicator) {
+									eventAdmin.sendEvent(new ProgressIndicatorEvent(ProgressIndicatorEvent.Type.STOP));
+								}
 							}
 						}
 					};

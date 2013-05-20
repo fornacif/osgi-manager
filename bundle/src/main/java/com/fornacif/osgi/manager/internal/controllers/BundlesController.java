@@ -79,7 +79,7 @@ public class BundlesController extends VBox implements Initializable {
 			public void succeeded(Void result) {
 				listBundles();	
 			}
-		});
+		}, true);
 	}
 
 	private void listBundles() {
@@ -93,7 +93,7 @@ public class BundlesController extends VBox implements Initializable {
 				bundles = result;
 				applyBundleNameFilter();
 			}
-		});
+		}, true);
 	}
 
 	private void applyBundleNameFilter() {

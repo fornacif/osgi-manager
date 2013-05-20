@@ -89,12 +89,12 @@ public class ApplicationController extends VBox implements Initializable, EventH
 	}
 
 	@Reference(optional = true, dynamic = true)
-	private void bindJmxConnectorService(JMXService jmxConnectorService) {
+	private void bindJmxConnectorService(JMXService jmxService) {
 		consoleToggleButton.setDisable(false);
 		consoleToggleButton.selectedProperty().set(true);
 	}
 
-	private void unbindJmxConnectorService(JMXService jmxConnectorService) {
+	private void unbindJmxConnectorService(JMXService jmxService) {
 		consoleToggleButton.setDisable(true);
 		connectionToggleButton.selectedProperty().set(true);
 	}
