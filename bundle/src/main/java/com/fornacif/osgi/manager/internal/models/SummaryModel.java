@@ -1,7 +1,6 @@
 package com.fornacif.osgi.manager.internal.models;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.util.concurrent.TimeUnit;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -46,11 +45,11 @@ public class SummaryModel {
 	}
 	
 	public String getFormattedUpTime() {
-		int days = (int) (upTime.get() / 86400000L);
-		int hours = (int) (upTime.get() / 3600000L);
-		int minutes = (int) (upTime.get() / 60000L);
-		int seconds = (int) (upTime.get() / 1000L);
-		return days + "d " + hours + "h " + minutes + "m " + seconds + "s";
+		long days = TimeUnit.MILLISECONDS.toDays(upTime.get());
+		long hours = TimeUnit.MILLISECONDS.toHours(upTime.get()) - TimeUnit.DAYS.toHours(days);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(upTime.get()) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(upTime.get()) - TimeUnit.DAYS.toSeconds(days) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes);
+		return String.format("%d day %d hour %d min %d sec", days, hours, minutes, seconds);
 	}
 
 	public void setUpTime(Long upTime) {
