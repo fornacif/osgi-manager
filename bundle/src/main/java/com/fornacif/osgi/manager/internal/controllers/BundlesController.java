@@ -11,7 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -33,10 +32,6 @@ import com.google.common.collect.Collections2;
 
 @Component(name = "BundlesController", provide = { Pane.class }, configurationPolicy = ConfigurationPolicy.require, designate = BundlesControllerConfiguration.class)
 public class BundlesController extends VBox implements Initializable {
-
-	@FXML
-	private Label bundlesCountLabel;
-
 	@FXML
 	private TableView<BundleModel> bundlesTableView;
 
@@ -107,7 +102,6 @@ public class BundlesController extends VBox implements Initializable {
 		};
 		ObservableList<BundleModel> filteredBundles = FXCollections.observableArrayList(Collections2.filter(bundles, predicate));
 		bundlesTableView.setItems(filteredBundles);
-		bundlesCountLabel.setText("Bundles: " + String.valueOf(filteredBundles.size()));
 		updateSort();
 	}
 

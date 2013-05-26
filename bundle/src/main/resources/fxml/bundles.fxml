@@ -13,7 +13,6 @@
 	<padding>
 		<Insets top="10" right="10" bottom="10" left="10" />
     </padding>
-	<Label fx:id="bundlesCountLabel" />
 	<TableView fx:id="bundlesTableView" VBox.vgrow="ALWAYS">
 		<columns>
 			<TableColumn fx:id="id" text="ID" prefWidth="35">

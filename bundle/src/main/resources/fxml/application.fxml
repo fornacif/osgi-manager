@@ -19,7 +19,7 @@
 		<ToggleButton fx:id="connectionToggleButton" styleClass="bold" text="Connections" toggleGroup="$toggleGroup" selected="true" prefHeight="30" prefWidth="200" />
 	</HBox>
 	<StackPane VBox.vgrow="ALWAYS">
-		<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" tabMinWidth="150" tabMinHeight="25" side="TOP" visible="${consoleToggleButton.selected}" managed="${consoleToggleButton.selected}" />
+		<TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" tabMinWidth="150" tabMinHeight="25" visible="${consoleToggleButton.selected}" managed="${consoleToggleButton.selected}" />
 		<StackPane fx:id="connection" visible="${connectionToggleButton.selected}" managed="${connectionToggleButton.selected}" />
 		<Group>
 			<ProgressIndicator fx:id="progressIndicator" managed="false" visible="false" />

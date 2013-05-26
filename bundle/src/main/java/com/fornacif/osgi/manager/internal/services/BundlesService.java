@@ -33,8 +33,8 @@ public class BundlesService {
 
 	public List<BundleModel> listBundles() throws IOException {
 		BundleStateMBean bundleStateMBean = jmxService.getBundleStateMBean();
-		TabularData bundles = bundleStateMBean.listBundles();
-		return listBundles(bundles);
+		TabularData bundleData = bundleStateMBean.listBundles();
+		return listBundles(bundleData);
 	}
 
 	public void executeAction(final Action action, final Long bundleId) throws IOException {

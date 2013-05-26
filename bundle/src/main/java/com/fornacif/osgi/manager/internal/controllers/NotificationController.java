@@ -62,7 +62,7 @@ public class NotificationController extends VBox implements EventHandler, Initia
 
 		sequence.setOnFinished(new javafx.event.EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent arg0) {
+			public void handle(ActionEvent actionEvent) {
 				setManaged(false);
 				setVisible(false);
 				semaphore.release();

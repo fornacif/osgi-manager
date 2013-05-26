@@ -19,6 +19,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
+import org.osgi.jmx.framework.ServiceStateMBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,11 +63,13 @@ public class ConnectionService {
 		
 		Set<ObjectName> frameworkObjectNames = mbeanServerConnection.queryNames(new ObjectName(FrameworkMBean.OBJECTNAME + WILDCARD), null);
 		Set<ObjectName> bundleStateObjectNames = mbeanServerConnection.queryNames(new ObjectName(BundleStateMBean.OBJECTNAME + WILDCARD), null);
+		Set<ObjectName> serviceStateObjectNames = mbeanServerConnection.queryNames(new ObjectName(ServiceStateMBean.OBJECTNAME + WILDCARD), null);
 		
-		if (frameworkObjectNames.size() == 1 && bundleStateObjectNames.size() == 1) {
+		if (frameworkObjectNames.size() == 1 && bundleStateObjectNames.size() == 1 && serviceStateObjectNames.size() == 1) {
 			JMXService jmxService = new JMXService(mbeanServerConnection, connectionModel);
 			jmxService.setFrameworkObjectName(frameworkObjectNames.iterator().next());
 			jmxService.setBundleStateObjectName(bundleStateObjectNames.iterator().next());
+			jmxService.setServiceStateObjectName(serviceStateObjectNames.iterator().next());
 			serviceRegistration = bundleContext.registerService(JMXService.class, jmxService, null);
 		} else {
 			throw new Exception("Connection not open due to missing OSGi MBeans");

@@ -24,7 +24,7 @@ public class TabPaneManager {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	private final static String PANE_SERVICE_FILTER = "(&(" + Constants.OBJECTCLASS + "=" + Pane.class.getName() + ")(tab.text=*))";
+	private final static String PANE_SERVICE_FILTER = "(&(" + Constants.OBJECTCLASS + "=" + Pane.class.getName() + ")(" + OSGiManagerConstants.TAB_TEXT_PROPERTY + "=*))";
 
 	private TabPane tabPane;
 	private ServiceTracker<Pane, Tab> paneTracker;
@@ -42,8 +42,7 @@ public class TabPaneManager {
 				Pane controller = bundleContext.getService(serviceReference);
 				Integer position = Integer.valueOf(String.valueOf(serviceReference.getProperty(OSGiManagerConstants.TAB_POSITION_PROPERTY)));
 				String text = String.valueOf(serviceReference.getProperty(OSGiManagerConstants.TAB_TEXT_PROPERTY));
-				Boolean selected = Boolean.valueOf(String.valueOf(serviceReference.getProperty(OSGiManagerConstants.TAB_SELECTED_PROPERTY)));
-				Tab tab = addTab(controller, position, selected, text);
+				Tab tab = addTab(controller, position, text);
 				return tab;
 			}
 
@@ -60,7 +59,7 @@ public class TabPaneManager {
 		paneTracker.close();
 	}
 
-	private Tab addTab(final Pane controller, final Integer position, final Boolean selected, final String text) {
+	private Tab addTab(final Pane controller, final Integer position, final String text) {
 		final Tab tab = new Tab();
 		tab.setText(text);
 		tab.setContent(controller);
@@ -77,7 +76,7 @@ public class TabPaneManager {
 
 				tabs.add(Integer.valueOf(positionValue), tab);
 
-				if (selected != null && selected) {
+				if (positionValue == 0) {
 					tabPane.getSelectionModel().select(tab);
 				}
 			}

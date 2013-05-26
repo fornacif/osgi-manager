@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.collections.*?> 
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.stage.*?>
+<?import javafx.stage.*?>
+<fx:root type="javafx.scene.layout.VBox"
+	xmlns:fx="http://javafx.com/fxml" spacing="10">
+	<padding>
+		<Insets top="10" right="10" bottom="10" left="10" />
+    </padding>
+    <VBox styleClass="summary-box" spacing="10">
+    	<padding>
+			<Insets top="10" right="10" bottom="10" left="10" />
+	    </padding>
+	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
+			<Label text="Bundles" />
+		</HBox>
+	    <HBox>
+	    	<Label text="Count: " />
+			<Label text="${controller.summaryModel.bundlesCount}" styleClass="bold" />
+	    </HBox>
+	</VBox>
+	<VBox styleClass="summary-box" spacing="10">
+    	<padding>
+			<Insets top="10" right="10" bottom="10" left="10" />
+	    </padding>
+	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
+			<Label text="Services" />
+		</HBox>
+		<HBox>
+	    	<Label text="All: " />
+			<Label text="${controller.summaryModel.servicesCount}" styleClass="bold" />
+		</HBox>
+		<HBox>
+			<Label text="In use: " />
+			<Label text="${controller.summaryModel.inUseServicesCount}" />
+	    </HBox>
+		<HBox>
+			<Label text="Standard: " />
+			<Label text="${controller.summaryModel.standardServicesCount}" />
+	    </HBox>
+	</VBox>
+	<VBox styleClass="summary-box" spacing="10">
+    	<padding>
+			<Insets top="10" right="10" bottom="10" left="10" />
+	    </padding>
+	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
+			<Label text="Runtime" />
+		</HBox>
+		<HBox>
+			<Label text="Uptime: " />
+			<Label text="${controller.summaryModel.formattedUpTime}" />
+	    </HBox>
+	</VBox>
+	<VBox styleClass="summary-box" spacing="10">
+    	<padding>
+			<Insets top="10" right="10" bottom="10" left="10" />
+	    </padding>
+	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
+			<Label text="Operating System" />
+		</HBox>
+		<HBox>
+			<Label text="Name: " />
+			<Label text="${controller.summaryModel.name}" />
+	    </HBox>
+		<HBox>
+			<Label text="Arch: " />
+			<Label text="${controller.summaryModel.arch}" />
+	    </HBox>
+	    <HBox>
+			<Label text="Available processors: " />
+			<Label text="${controller.summaryModel.availableProcessors}" />
+	    </HBox>
+	</VBox>
+</fx:root>
