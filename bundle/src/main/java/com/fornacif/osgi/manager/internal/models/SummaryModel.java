@@ -16,6 +16,9 @@ public class SummaryModel {
 	private final IntegerProperty availableProcessors = new SimpleIntegerProperty();
 	private final LongProperty upTime = new SimpleLongProperty();
 	private final IntegerProperty bundlesCount = new SimpleIntegerProperty();
+	private final IntegerProperty installedBundlesCount = new SimpleIntegerProperty();
+	private final IntegerProperty resolvedBundlesCount = new SimpleIntegerProperty();
+	private final IntegerProperty activeBundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty servicesCount = new SimpleIntegerProperty();
 	private final IntegerProperty standardServicesCount = new SimpleIntegerProperty();
 	private final IntegerProperty inUseServicesCount = new SimpleIntegerProperty();
@@ -45,11 +48,10 @@ public class SummaryModel {
 	}
 	
 	public String getFormattedUpTime() {
-		long days = TimeUnit.MILLISECONDS.toDays(upTime.get());
-		long hours = TimeUnit.MILLISECONDS.toHours(upTime.get()) - TimeUnit.DAYS.toHours(days);
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(upTime.get()) - TimeUnit.DAYS.toMinutes(days) - TimeUnit.HOURS.toMinutes(hours);
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(upTime.get()) - TimeUnit.DAYS.toSeconds(days) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes);
-		return String.format("%d day %d hour %d min %d sec", days, hours, minutes, seconds);
+		long hours = TimeUnit.MILLISECONDS.toHours(upTime.get());
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(upTime.get()) - TimeUnit.HOURS.toMinutes(hours);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(upTime.get()) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes);
+		return String.format("%d hours %d minutes %d seconds", hours, minutes, seconds);
 	}
 
 	public void setUpTime(Long upTime) {
@@ -66,6 +68,30 @@ public class SummaryModel {
 
 	public void setBundlesCount(Integer bundlesCount) {
 		this.bundlesCount.set(bundlesCount);
+	}
+	
+	public Integer getInstalledBundlesCount() {
+		return installedBundlesCount.get();
+	}
+
+	public void setInstalledBundlesCount(Integer installedBundlesCount) {
+		this.installedBundlesCount.set(installedBundlesCount);
+	}
+	
+	public Integer getResolvedBundlesCount() {
+		return resolvedBundlesCount.get();
+	}
+
+	public void setResolvedBundlesCount(Integer resolvedBundlesCount) {
+		this.resolvedBundlesCount.set(resolvedBundlesCount);
+	}
+	
+	public Integer getActiveBundlesCount() {
+		return activeBundlesCount.get();
+	}
+
+	public void setActiveBundlesCount(Integer activeBundlesCount) {
+		this.activeBundlesCount.set(activeBundlesCount);
 	}
 
 	public Integer getServicesCount() {

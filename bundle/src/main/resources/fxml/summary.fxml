@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
 <?import javafx.collections.*?> 
 <?import javafx.geometry.*?>
 <?import javafx.scene.*?>
@@ -10,71 +11,84 @@
 <?import javafx.stage.*?>
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml" spacing="10">
+	<fx:define>
+		<Double fx:id="columnWidth" fx:value="150" />
+	</fx:define>
 	<padding>
 		<Insets top="10" right="10" bottom="10" left="10" />
     </padding>
-    <VBox styleClass="summary-box" spacing="10">
+    <GridPane hgap="10" >
+    	<columnConstraints>
+            <ColumnConstraints percentWidth="50" />
+            <ColumnConstraints percentWidth="50" />
+        </columnConstraints>
+    	<children>
+		    <VBox styleClass="summary-box" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+		    	<padding>
+					<Insets top="5" right="10" bottom="5" left="10" />
+			    </padding>
+			    <HBox styleClass="bold" alignment="CENTER_LEFT">
+					<Label text="Bundles" />
+				</HBox>
+				<Separator />
+				<GridPane>
+					<Label text="Total" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}" />
+					<Label text="${controller.summaryModel.bundlesCount}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+					<Label text="- Installed" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+					<Label text="${controller.summaryModel.installedBundlesCount}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+					<Label text="- Resolved" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+					<Label text="${controller.summaryModel.resolvedBundlesCount}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+					<Label text="- Active" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+					<Label text="${controller.summaryModel.activeBundlesCount}" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+				</GridPane>
+			</VBox>
+			<VBox styleClass="summary-box" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
+		    	<padding>
+					<Insets top="5" right="10" bottom="5" left="10" />
+			    </padding>
+			    <HBox styleClass="bold" alignment="CENTER_LEFT">
+					<Label text="Services" />
+				</HBox>
+				<Separator />
+				<GridPane>
+			    	<Label text="All" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}" />
+					<Label text="${controller.summaryModel.servicesCount}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+					<Label text="- In use" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+					<Label text="${controller.summaryModel.inUseServicesCount}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+					<Label text="- Standard" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+					<Label text="${controller.summaryModel.standardServicesCount}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+			    </GridPane>
+			</VBox>
+		</children>
+	</GridPane>
+	<VBox styleClass="summary-box" spacing="5">
     	<padding>
-			<Insets top="10" right="10" bottom="10" left="10" />
+			<Insets top="5" right="10" bottom="5" left="10" />
 	    </padding>
-	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
-			<Label text="Bundles" />
-		</HBox>
-	    <HBox>
-	    	<Label text="Count: " />
-			<Label text="${controller.summaryModel.bundlesCount}" styleClass="bold" />
-	    </HBox>
-	</VBox>
-	<VBox styleClass="summary-box" spacing="10">
-    	<padding>
-			<Insets top="10" right="10" bottom="10" left="10" />
-	    </padding>
-	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
-			<Label text="Services" />
-		</HBox>
-		<HBox>
-	    	<Label text="All: " />
-			<Label text="${controller.summaryModel.servicesCount}" styleClass="bold" />
-		</HBox>
-		<HBox>
-			<Label text="In use: " />
-			<Label text="${controller.summaryModel.inUseServicesCount}" />
-	    </HBox>
-		<HBox>
-			<Label text="Standard: " />
-			<Label text="${controller.summaryModel.standardServicesCount}" />
-	    </HBox>
-	</VBox>
-	<VBox styleClass="summary-box" spacing="10">
-    	<padding>
-			<Insets top="10" right="10" bottom="10" left="10" />
-	    </padding>
-	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
+	    <HBox styleClass="bold" alignment="CENTER_LEFT">
 			<Label text="Runtime" />
 		</HBox>
-		<HBox>
-			<Label text="Uptime: " />
-			<Label text="${controller.summaryModel.formattedUpTime}" />
-	    </HBox>
+		<Separator />
+		<GridPane>
+			<Label text="Uptime" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}"  />
+			<Label text="${controller.summaryModel.formattedUpTime}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+	    </GridPane>
 	</VBox>
-	<VBox styleClass="summary-box" spacing="10">
+	<VBox styleClass="summary-box" spacing="5">
     	<padding>
-			<Insets top="10" right="10" bottom="10" left="10" />
+			<Insets top="5" right="10" bottom="5" left="10" />
 	    </padding>
-	    <HBox styleClass="bold" alignment="CENTER_LEFT" spacing="10">
+	    <HBox styleClass="bold" alignment="CENTER_LEFT">
 			<Label text="Operating System" />
 		</HBox>
-		<HBox>
-			<Label text="Name: " />
-			<Label text="${controller.summaryModel.name}" />
-	    </HBox>
-		<HBox>
-			<Label text="Arch: " />
-			<Label text="${controller.summaryModel.arch}" />
-	    </HBox>
-	    <HBox>
-			<Label text="Available processors: " />
-			<Label text="${controller.summaryModel.availableProcessors}" />
-	    </HBox>
+		<Separator />
+		<GridPane>
+			<Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}" />
+			<Label text="${controller.summaryModel.name}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+			<Label text="Architecture" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+			<Label text="${controller.summaryModel.arch}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+			<Label text="Available processors" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+			<Label text="${controller.summaryModel.availableProcessors}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+	    </GridPane>
 	</VBox>
 </fx:root>
