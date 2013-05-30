@@ -24,31 +24,16 @@ public class SummaryService {
 
 	private JMXService jmxService;
 
-	private BundlesService bundlesService;
-	private ServicesService servicesService;
-
 	@Reference
 	private void bindJmxService(JMXService jmxService) {
 		this.jmxService = jmxService;
 	}
 
-	@Reference
-	private void bindBundlesService(BundlesService bundlesService) {
-		this.bundlesService = bundlesService;
-	}
-
-	@Reference
-	private void bindServicesService(ServicesService servicesService) {
-		this.servicesService = servicesService;
-	}
-
-	public SummaryModel getSummary() throws Exception {
+	public SummaryModel getSummary(List<BundleModel> bundles, List<ServiceModel> services) throws Exception {
 		String arch = jmxService.getOperatingSystemMXBean().getArch();
 		String name = jmxService.getOperatingSystemMXBean().getName();
 		int availableProcessors = jmxService.getOperatingSystemMXBean().getAvailableProcessors();
 		long upTime = jmxService.getRuntimeMXBean().getUptime();
-		List<BundleModel> bundles = bundlesService.listBundles();
-		List<ServiceModel> services = servicesService.listServices();
 
 		Map<BundleCategory, Integer> aggregatedBundles = aggregateBundles(bundles);
 		Map<ServiceCategory, Integer> aggregatedServices = aggregateServices(services);

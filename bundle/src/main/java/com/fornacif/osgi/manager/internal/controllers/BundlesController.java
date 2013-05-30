@@ -1,8 +1,6 @@
 package com.fornacif.osgi.manager.internal.controllers;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
@@ -24,7 +22,9 @@ import com.fornacif.osgi.manager.internal.configurations.BundlesControllerConfig
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
+import com.fornacif.osgi.manager.internal.models.Models;
 import com.fornacif.osgi.manager.internal.services.BundlesService;
+import com.fornacif.osgi.manager.internal.services.ModelsService;
 import com.fornacif.osgi.manager.services.AsynchService;
 import com.fornacif.osgi.manager.services.ServiceCaller;
 import com.google.common.base.Predicate;
@@ -40,24 +40,37 @@ public class BundlesController extends VBox implements Initializable {
 
 	private BundlesService bundlesService;
 
-	private List<BundleModel> bundles = new ArrayList<>();
-
 	private ServiceCaller serviceCaller;
+
+	private ModelsService modelsService;
+
+	public ModelsService getModelsService() {
+		return modelsService;
+	}
 
 	@Reference
 	private void bindServiceCaller(ServiceCaller serviceCaller) {
 		this.serviceCaller = serviceCaller;
 	}
-
+	
 	@Reference
 	private void bindBundlesService(BundlesService bundlesService) {
 		this.bundlesService = bundlesService;
 	}
+	
+	@Reference
+	private void bindModelsService (ModelsService modelsService) {
+		this.modelsService = modelsService;
+	}
 
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
-		handleBundleNameFilter();
-		listBundles();
+		modelsService.modelsProperty().addListener(new ChangeListener<Models>(){
+			@Override
+			public void changed(ObservableValue<? extends Models> observable, Models oldValue, Models newValue) {
+				bundlesTableView.setItems(newValue.getBundles());
+				handleBundleNameFilter();
+			}});
 	}
 
 	@FXML
@@ -70,23 +83,24 @@ public class BundlesController extends VBox implements Initializable {
 				bundlesService.executeAction(action, bundleId);
 				return null;
 			}
+
 			@Override
 			public void succeeded(Void result) {
-				listBundles();	
+				listBundles();
 			}
 		}, true, true);
 	}
 
 	private void listBundles() {
-		serviceCaller.execute(new AsynchService<List<BundleModel>>() {
+		serviceCaller.execute(new AsynchService<Models>() {
 			@Override
-			public List<BundleModel> call() throws Exception {
-				return bundlesService.listBundles();
+			public Models call() throws Exception {
+				return modelsService.loadModels();
 			}
+
 			@Override
-			public void succeeded(List<BundleModel> result) {
-				bundles = result;
-				applyBundleNameFilter();
+			public void succeeded(Models result) {
+				modelsService.setModels(result);
 			}
 		}, true, true);
 	}
@@ -100,7 +114,7 @@ public class BundlesController extends VBox implements Initializable {
 				return true;
 			}
 		};
-		ObservableList<BundleModel> filteredBundles = FXCollections.observableArrayList(Collections2.filter(bundles, predicate));
+		ObservableList<BundleModel> filteredBundles = FXCollections.observableArrayList(Collections2.filter(modelsService.getModels().getBundles(), predicate));
 		bundlesTableView.setItems(filteredBundles);
 		updateSort();
 	}
