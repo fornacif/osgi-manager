@@ -101,6 +101,7 @@ public class BundlesController extends VBox implements Initializable {
 			@Override
 			public void succeeded(Models result) {
 				modelsService.setModels(result);
+				applyBundleNameFilter();
 			}
 		}, true, true);
 	}
