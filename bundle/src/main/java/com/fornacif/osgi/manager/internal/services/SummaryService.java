@@ -33,7 +33,7 @@ public class SummaryService {
 		String arch = jmxService.getOperatingSystemMXBean().getArch();
 		String name = jmxService.getOperatingSystemMXBean().getName();
 		int availableProcessors = jmxService.getOperatingSystemMXBean().getAvailableProcessors();
-		long upTime = jmxService.getRuntimeMXBean().getUptime();
+		long uptime = jmxService.getRuntimeMXBean().getUptime();
 
 		Map<BundleCategory, Integer> aggregatedBundles = aggregateBundles(bundles);
 		Map<ServiceCategory, Integer> aggregatedServices = aggregateServices(services);
@@ -49,7 +49,7 @@ public class SummaryService {
 		summaryModel.setName(name);
 		summaryModel.setArch(arch);
 		summaryModel.setAvailableProcessors(availableProcessors);
-		summaryModel.setUpTime(upTime);
+		summaryModel.setUptime(uptime);
 
 		return summaryModel;
 	}

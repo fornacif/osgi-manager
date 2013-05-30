@@ -71,7 +71,7 @@
 		<Separator />
 		<GridPane>
 			<Label text="Uptime" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}"  />
-			<Label text="${controller.modelsService.models.summaryModel.formattedUpTime}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+			<Label text="${controller.modelsService.models.summaryModel.formattedUptime}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 	    </GridPane>
 	</VBox>
 	<VBox styleClass="summary-box" spacing="5">

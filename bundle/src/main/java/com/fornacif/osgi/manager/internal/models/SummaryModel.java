@@ -14,7 +14,8 @@ public class SummaryModel {
 	private final StringProperty name = new SimpleStringProperty();
 	private final StringProperty arch = new SimpleStringProperty();
 	private final IntegerProperty availableProcessors = new SimpleIntegerProperty();
-	private final LongProperty upTime = new SimpleLongProperty();
+	private final LongProperty uptime = new SimpleLongProperty();
+	private final StringProperty formattedUptime = new SimpleStringProperty();
 	private final IntegerProperty bundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty installedBundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty resolvedBundlesCount = new SimpleIntegerProperty();
@@ -23,6 +24,10 @@ public class SummaryModel {
 	private final IntegerProperty standardServicesCount = new SimpleIntegerProperty();
 	private final IntegerProperty inUseServicesCount = new SimpleIntegerProperty();
 
+	public String getName() {
+		return name.get();
+	}
+	
 	public void setName(String name) {
 		this.name.set(name);
 	}
@@ -43,25 +48,31 @@ public class SummaryModel {
 		this.availableProcessors.set(availableProcessors);
 	}
 	
-	public Long getUpTime() {
-		return upTime.get();
-	}
-	
-	public String getFormattedUpTime() {
-		long hours = TimeUnit.MILLISECONDS.toHours(upTime.get());
-		long minutes = TimeUnit.MILLISECONDS.toMinutes(upTime.get()) - TimeUnit.HOURS.toMinutes(hours);
-		long seconds = TimeUnit.MILLISECONDS.toSeconds(upTime.get()) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes);
-		return String.format("%d hours %d minutes %d seconds", hours, minutes, seconds);
+	public long getUptime() {
+		return uptime.get();
 	}
 
-	public void setUpTime(Long upTime) {
-		this.upTime.set(upTime);
+	public void setUptime(Long upTime) {
+		this.uptime.set(upTime);
+		
+		long hours = TimeUnit.MILLISECONDS.toHours(upTime);
+		long minutes = TimeUnit.MILLISECONDS.toMinutes(upTime) - TimeUnit.HOURS.toMinutes(hours);
+		long seconds = TimeUnit.MILLISECONDS.toSeconds(upTime) - TimeUnit.HOURS.toSeconds(hours) - TimeUnit.MINUTES.toSeconds(minutes);
+		setFormattedUptime(String.format("%d hours %d minutes %d seconds", hours, minutes, seconds));
 	}
 	
-	public String getName() {
-		return name.get();
+	public String getFormattedUptime() {
+		return formattedUptime.get();
 	}
-
+	
+	public void setFormattedUptime(String formattedUptime) {
+		this.formattedUptime.set(formattedUptime);
+	}
+	
+	public StringProperty formattedUptimeProperty() {
+		return formattedUptime;
+	}
+	
 	public Integer getBundlesCount() {
 		return bundlesCount.get();
 	}
