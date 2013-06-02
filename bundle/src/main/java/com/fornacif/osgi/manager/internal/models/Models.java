@@ -1,6 +1,5 @@
 package com.fornacif.osgi.manager.internal.models;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.ObjectProperty;
@@ -13,6 +12,8 @@ public class Models {
 	private final ObservableList<BundleModel> bundles = FXCollections.observableArrayList();
 	
 	private final ObservableList<ServiceModel> services = FXCollections.observableArrayList();
+	
+	private final ObservableList<PackageModel> packages = FXCollections.observableArrayList();
 	
 	private final ObjectProperty<SummaryModel> summaryModel = new SimpleObjectProperty<>();
 	
@@ -33,6 +34,15 @@ public class Models {
 		this.services.clear();
 		this.services.addAll(services);
 	}
+	
+	public ObservableList<PackageModel> getPackages() {
+		return packages;
+	}
+	
+	public void setPackages(List<PackageModel> packages) {
+		this.packages.clear();
+		this.packages.addAll(packages);
+	}
 
 	public SummaryModel getSummaryModel() {
 		return summaryModel.get();
@@ -41,5 +51,7 @@ public class Models {
 	public void setSummaryModel(SummaryModel summaryModel) {
 		this.summaryModel.set(summaryModel);
 	}
+
+	
 
 }

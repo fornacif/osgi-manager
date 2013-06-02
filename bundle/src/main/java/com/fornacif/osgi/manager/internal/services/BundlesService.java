@@ -19,7 +19,7 @@ import aQute.bnd.annotation.component.Reference;
 import com.fornacif.osgi.manager.internal.events.BundleActionEvent.Action;
 import com.fornacif.osgi.manager.internal.models.BundleModel;
 
-@Component(name="BundlesService", provide=BundlesService.class)
+@Component(name = "BundlesService", provide = BundlesService.class)
 public class BundlesService {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
@@ -53,7 +53,7 @@ public class BundlesService {
 		case UNINSTALL:
 			mbeanProxy.uninstallBundle(bundleId);
 			break;
-		}		
+		}
 	}
 
 	@SuppressWarnings("unchecked")
@@ -68,6 +68,7 @@ public class BundlesService {
 			String version = (String) bundleCompositeData.get(BundleStateMBean.VERSION);
 			String state = (String) bundleCompositeData.get(BundleStateMBean.STATE);
 			Integer startLevel = (Integer) bundleCompositeData.get(BundleStateMBean.START_LEVEL);
+			boolean isRemovalPending = (boolean) bundleCompositeData.get(BundleStateMBean.REMOVAL_PENDING);
 			TabularData headers = (TabularData) bundleCompositeData.get(BundleStateMBean.HEADERS);
 
 			bundleModel.setId(id);
@@ -75,6 +76,7 @@ public class BundlesService {
 			bundleModel.setVersion(version);
 			bundleModel.setState(state);
 			bundleModel.setStartLevel(startLevel);
+			bundleModel.setRemovalPending(isRemovalPending);
 
 			Collection<CompositeData> headersCompositeData = (Collection<CompositeData>) headers.values();
 			for (CompositeData headerCompositeData : headersCompositeData) {

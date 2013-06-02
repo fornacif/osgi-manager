@@ -95,7 +95,7 @@ public class BundlesController extends VBox implements Initializable {
 		serviceCaller.execute(new AsynchService<Models>() {
 			@Override
 			public Models call() throws Exception {
-				return modelsService.loadModels();
+				return modelsService.buildModels();
 			}
 
 			@Override

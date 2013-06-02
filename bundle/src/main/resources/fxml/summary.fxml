@@ -8,7 +8,6 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.stage.*?>
-<?import javafx.stage.*?>
 <fx:root type="javafx.scene.layout.VBox"
 	xmlns:fx="http://javafx.com/fxml" spacing="10">
 	<fx:define>
@@ -40,6 +39,8 @@
 					<Label text="${controller.modelsService.models.summaryModel.resolvedBundlesCount}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 					<Label text="- Active" GridPane.columnIndex="0" GridPane.rowIndex="3" />
 					<Label text="${controller.modelsService.models.summaryModel.activeBundlesCount}" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+					<Label text="- Removal pending" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+					<Label text="${controller.modelsService.models.summaryModel.removalPendingBundlesCount}" GridPane.columnIndex="1" GridPane.rowIndex="4" />
 				</GridPane>
 			</VBox>
 			<VBox styleClass="summary-box" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
@@ -61,6 +62,23 @@
 			</VBox>
 		</children>
 	</GridPane>
+		<VBox styleClass="summary-box" spacing="5">
+    	<padding>
+			<Insets top="5" right="10" bottom="5" left="10" />
+	    </padding>
+	    <HBox styleClass="bold" alignment="CENTER_LEFT">
+			<Label text="Packages" />
+		</HBox>
+		<Separator />
+		<GridPane>
+			<Label text="All" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}" />
+			<Label text="${controller.modelsService.models.summaryModel.packagesCount}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+			<Label text="- In use" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+			<Label text="${controller.modelsService.models.summaryModel.inUsePackagesCount}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+			<Label text="- Removal pending" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+			<Label text="${controller.modelsService.models.summaryModel.removalPendingPackagesCount}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+	    </GridPane>
+	</VBox>
 	<VBox styleClass="summary-box" spacing="5">
     	<padding>
 			<Insets top="5" right="10" bottom="5" left="10" />
@@ -72,23 +90,6 @@
 		<GridPane>
 			<Label text="Uptime" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}"  />
 			<Label text="${controller.modelsService.models.summaryModel.formattedUptime}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-	    </GridPane>
-	</VBox>
-	<VBox styleClass="summary-box" spacing="5">
-    	<padding>
-			<Insets top="5" right="10" bottom="5" left="10" />
-	    </padding>
-	    <HBox styleClass="bold" alignment="CENTER_LEFT">
-			<Label text="Operating System" />
-		</HBox>
-		<Separator />
-		<GridPane>
-			<Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}" />
-			<Label text="${controller.modelsService.models.summaryModel.name}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-			<Label text="Architecture" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-			<Label text="${controller.modelsService.models.summaryModel.arch}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-			<Label text="Available processors" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-			<Label text="${controller.modelsService.models.summaryModel.availableProcessors}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 	    </GridPane>
 	</VBox>
 </fx:root>

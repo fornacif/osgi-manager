@@ -55,7 +55,7 @@ public class SummaryController extends VBox implements Initializable {
 		serviceCaller.execute(new AsynchService<Models>() {
 			@Override
 			public Models call() throws Exception {
-				return modelsService.loadModels();
+				return modelsService.buildModels();
 			}
 			
 			@Override
@@ -81,7 +81,9 @@ public class SummaryController extends VBox implements Initializable {
 	
 	@Deactivate
 	private void stopUptimeRefresh() {
-		timeline.stop();
+		if (timeline != null) {
+			timeline.stop();
+		}
 	}
 
 }

@@ -1,37 +1,43 @@
 package com.fornacif.osgi.manager.internal.models;
 
-public class ServiceModel {
-	
-	public enum ServiceType {
-		STANDARD, USER
-	};
+import java.util.List;
 
-	private long id;
-	private String[] objectClass;
-	private boolean isInUse;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.collections.FXCollections;
+
+public class ServiceModel {
+
+	private final LongProperty id = new SimpleLongProperty();
+	private final ListProperty<String> objectClass = new SimpleListProperty<>();
+	private final BooleanProperty isInUse = new SimpleBooleanProperty();
 
 	public long getId() {
-		return id;
+		return id.get();
 	}
 
 	public void setId(long id) {
-		this.id = id;
+		this.id.set(id);
 	}
 
-	public String[] getObjectClass() {
-		return objectClass;
+	public List<String> getObjectClass() {
+		return objectClass.get();
 	}
 
-	public void setObjectClass(String[] objectClass) {
-		this.objectClass = objectClass;
+	public void setObjectClass(List<String> objectClass) {
+		this.objectClass.set(FXCollections.observableArrayList(objectClass));
 	}
 
 	public boolean isInUse() {
-		return isInUse;
+		return isInUse.get();
 	}
 
 	public void setInUse(boolean isInUse) {
-		this.isInUse = isInUse;
+		this.isInUse.set(isInUse);
 	}
 
 }

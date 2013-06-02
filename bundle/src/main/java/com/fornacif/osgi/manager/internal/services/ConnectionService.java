@@ -19,6 +19,7 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.jmx.framework.BundleStateMBean;
 import org.osgi.jmx.framework.FrameworkMBean;
+import org.osgi.jmx.framework.PackageStateMBean;
 import org.osgi.jmx.framework.ServiceStateMBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,16 +61,20 @@ public class ConnectionService {
 
 		jmxConnector = JMXConnectorFactory.connect(new JMXServiceURL(connectionModel.getUrl()));
 		MBeanServerConnection mbeanServerConnection = jmxConnector.getMBeanServerConnection();
-		
+
 		Set<ObjectName> frameworkObjectNames = mbeanServerConnection.queryNames(new ObjectName(FrameworkMBean.OBJECTNAME + WILDCARD), null);
 		Set<ObjectName> bundleStateObjectNames = mbeanServerConnection.queryNames(new ObjectName(BundleStateMBean.OBJECTNAME + WILDCARD), null);
 		Set<ObjectName> serviceStateObjectNames = mbeanServerConnection.queryNames(new ObjectName(ServiceStateMBean.OBJECTNAME + WILDCARD), null);
-		
-		if (frameworkObjectNames.size() == 1 && bundleStateObjectNames.size() == 1 && serviceStateObjectNames.size() == 1) {
-			JMXService jmxService = new JMXService(mbeanServerConnection, connectionModel);
-			jmxService.setFrameworkObjectName(frameworkObjectNames.iterator().next());
-			jmxService.setBundleStateObjectName(bundleStateObjectNames.iterator().next());
-			jmxService.setServiceStateObjectName(serviceStateObjectNames.iterator().next());
+		Set<ObjectName> packageStateObjectNames = mbeanServerConnection.queryNames(new ObjectName(PackageStateMBean.OBJECTNAME + WILDCARD), null);
+
+		if (frameworkObjectNames.size() == 1 && bundleStateObjectNames.size() == 1 && serviceStateObjectNames.size() == 1 && packageStateObjectNames.size() == 1) {
+			JMXService jmxService = new JMXService(
+					mbeanServerConnection, 
+					connectionModel, 
+					frameworkObjectNames.iterator().next(), 
+					bundleStateObjectNames.iterator().next(), 
+					serviceStateObjectNames.iterator().next(),
+					packageStateObjectNames.iterator().next());
 			serviceRegistration = bundleContext.registerService(JMXService.class, jmxService, null);
 		} else {
 			throw new Exception("Connection not open due to missing OSGi MBeans");
@@ -132,7 +137,7 @@ public class ConnectionService {
 		}
 		return virtualMachines;
 	}
-	
+
 	private int findFreePort() throws IOException {
 		ServerSocket server = new ServerSocket(0);
 		int port = server.getLocalPort();

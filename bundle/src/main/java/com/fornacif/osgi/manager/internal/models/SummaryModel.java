@@ -10,43 +10,23 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class SummaryModel {
-	
-	private final StringProperty name = new SimpleStringProperty();
-	private final StringProperty arch = new SimpleStringProperty();
-	private final IntegerProperty availableProcessors = new SimpleIntegerProperty();
+
 	private final LongProperty uptime = new SimpleLongProperty();
 	private final StringProperty formattedUptime = new SimpleStringProperty();
+	
 	private final IntegerProperty bundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty installedBundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty resolvedBundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty activeBundlesCount = new SimpleIntegerProperty();
+	private final IntegerProperty removalPendingBundlesCount = new SimpleIntegerProperty();
+	
 	private final IntegerProperty servicesCount = new SimpleIntegerProperty();
 	private final IntegerProperty standardServicesCount = new SimpleIntegerProperty();
 	private final IntegerProperty inUseServicesCount = new SimpleIntegerProperty();
-
-	public String getName() {
-		return name.get();
-	}
 	
-	public void setName(String name) {
-		this.name.set(name);
-	}
-	
-	public String getArch() {
-		return arch.get();
-	}
-
-	public void setArch(String arch) {
-		this.arch.set(arch);
-	}
-	
-	public Integer getAvailableProcessors() {
-		return availableProcessors.get();
-	}
-
-	public void setAvailableProcessors(Integer availableProcessors) {
-		this.availableProcessors.set(availableProcessors);
-	}
+	private final IntegerProperty packagesCount = new SimpleIntegerProperty();
+	private final IntegerProperty inUsePackagesCount = new SimpleIntegerProperty();
+	private final IntegerProperty removalPendingPackagesCount = new SimpleIntegerProperty();
 	
 	public long getUptime() {
 		return uptime.get();
@@ -104,6 +84,14 @@ public class SummaryModel {
 	public void setActiveBundlesCount(Integer activeBundlesCount) {
 		this.activeBundlesCount.set(activeBundlesCount);
 	}
+	
+	public Integer getRemovalPendingBundlesCount() {
+		return removalPendingBundlesCount.get();
+	}
+	
+	public void setRemovalPendingBundlesCount(Integer removalPendingBundlesCount) {
+		this.removalPendingBundlesCount.set(removalPendingBundlesCount);
+	}
 
 	public Integer getServicesCount() {
 		return servicesCount.get();
@@ -127,6 +115,30 @@ public class SummaryModel {
 
 	public void setInUseServicesCount(Integer inUseServicesCount) {
 		this.inUseServicesCount.set(inUseServicesCount);
+	}
+
+	public Integer getPackagesCount() {
+		return packagesCount.get();
+	}
+	
+	public void setPackagesCount(Integer packagesCount) {
+		this.packagesCount.set(packagesCount);
+	}
+
+	public Integer getInUsePackagesCount() {
+		return inUsePackagesCount.get();
+	}
+	
+	public void setInUsePackagesCount(Integer inUsePackagesCount) {
+		this.inUsePackagesCount.set(inUsePackagesCount);
+	}
+
+	public Integer getRemovalPendingPackagesCount() {
+		return removalPendingPackagesCount.get();
+	}
+	
+	public void setRemovalPendingPackagesCount(Integer removalPendingPackagesCount) {
+		this.removalPendingPackagesCount.set(removalPendingPackagesCount);
 	}
 
 }

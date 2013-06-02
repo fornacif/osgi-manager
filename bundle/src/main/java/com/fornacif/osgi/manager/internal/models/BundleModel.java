@@ -1,7 +1,9 @@
 package com.fornacif.osgi.manager.internal.models;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -15,6 +17,7 @@ public class BundleModel {
 	private final StringProperty symbolicName = new SimpleStringProperty();
 	private final StringProperty version = new SimpleStringProperty();
 	private final IntegerProperty startLevel = new SimpleIntegerProperty();
+	private final BooleanProperty isRemovalPending = new SimpleBooleanProperty();
 
 	public Long getId() {
 		return id.get();
@@ -62,6 +65,14 @@ public class BundleModel {
 
 	public void setStartLevel(Integer startLevel) {
 		this.startLevel.set(startLevel);
+	}
+	
+	public Boolean isRemovalPending() {
+		return isRemovalPending.get();
+	}
+	
+	public void setRemovalPending(boolean isRemovalPending) {
+		this.isRemovalPending.set(isRemovalPending);
 	}
 	
 	public BundleModel getModel() {

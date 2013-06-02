@@ -9,15 +9,18 @@ import aQute.bnd.annotation.component.Reference;
 
 import com.fornacif.osgi.manager.internal.models.BundleModel;
 import com.fornacif.osgi.manager.internal.models.Models;
+import com.fornacif.osgi.manager.internal.models.PackageModel;
 import com.fornacif.osgi.manager.internal.models.ServiceModel;
 import com.fornacif.osgi.manager.internal.models.SummaryModel;
 
 @Component(name = "ModelsService", provide = { ModelsService.class })
 public class ModelsService {
 	
-private BundlesService bundlesService;
+	private BundlesService bundlesService;
 	
 	private ServicesService servicesService;
+	
+	private PackagesService packagesService;
 	
 	private SummaryService summaryService;
 	
@@ -31,6 +34,11 @@ private BundlesService bundlesService;
 	@Reference
 	private void bindServicesService(ServicesService servicesService) {
 		this.servicesService = servicesService;
+	}
+	
+	@Reference
+	private void bindPackagesService(PackagesService packagesService) {
+		this.packagesService = packagesService;
 	}
 	
 	@Reference
@@ -50,14 +58,16 @@ private BundlesService bundlesService;
 		return models;
 	}
 	
-	public Models loadModels() throws Exception {	
+	public Models buildModels() throws Exception {	
 		List<BundleModel> bundles = bundlesService.listBundles();
 		List<ServiceModel> services = servicesService.listServices();
-		SummaryModel summaryModel = summaryService.getSummary(bundles, services);
+		List<PackageModel> packages = packagesService.listPackages();
+		SummaryModel summaryModel = summaryService.getSummary(bundles, services, packages);
 		
 		Models models = new Models();
 		models.setBundles(bundles);
 		models.setServices(services);
+		models.setPackages(packages);
 		models.setSummaryModel(summaryModel);
 		
 		return models;
