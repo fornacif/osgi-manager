@@ -37,6 +37,7 @@ public class SummaryService {
 	public SummaryModel getSummary(List<BundleModel> bundles, List<ServiceModel> services, List<PackageModel> packages) throws Exception {
 		long uptime = jmxService.getRuntimeMXBean().getUptime();
 		int removalPendingBundlesCount = jmxService.getFrameworkMBean().getRemovalPendingBundles().length;
+		boolean isRemovalPendingBundlesEmpty = removalPendingBundlesCount == 0;
 
 		Map<BundleCategory, Integer> aggregatedBundles = aggregateBundles(bundles);
 		Map<ServiceCategory, Integer> aggregatedServices = aggregateServices(services);
@@ -51,6 +52,7 @@ public class SummaryService {
 		summaryModel.setResolvedBundlesCount(aggregatedBundles.get(BundleCategory.RESOLVED));
 		summaryModel.setActiveBundlesCount(aggregatedBundles.get(BundleCategory.ACTIVE));
 		summaryModel.setRemovalPendingBundlesCount(removalPendingBundlesCount);
+		summaryModel.setRemovalPendingBundlesEmpty(isRemovalPendingBundlesEmpty);
 		
 		summaryModel.setServicesCount(services.size());
 		summaryModel.setStandardServicesCount(aggregatedServices.get(ServiceCategory.STANDARD));

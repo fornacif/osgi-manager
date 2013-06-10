@@ -2,8 +2,10 @@ package com.fornacif.osgi.manager.internal.models;
 
 import java.util.concurrent.TimeUnit;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -19,6 +21,7 @@ public class SummaryModel {
 	private final IntegerProperty resolvedBundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty activeBundlesCount = new SimpleIntegerProperty();
 	private final IntegerProperty removalPendingBundlesCount = new SimpleIntegerProperty();
+	private final BooleanProperty isRemovalPendingBundlesEmpty = new SimpleBooleanProperty();
 	
 	private final IntegerProperty servicesCount = new SimpleIntegerProperty();
 	private final IntegerProperty standardServicesCount = new SimpleIntegerProperty();
@@ -91,6 +94,14 @@ public class SummaryModel {
 	
 	public void setRemovalPendingBundlesCount(Integer removalPendingBundlesCount) {
 		this.removalPendingBundlesCount.set(removalPendingBundlesCount);
+	}
+	
+	public Boolean getRemovalPendingBundlesEmpty() {
+		return isRemovalPendingBundlesEmpty.get();
+	}
+	
+	public void setRemovalPendingBundlesEmpty(Boolean isRemovalPendingBundlesEmpty) {
+		this.isRemovalPendingBundlesEmpty.set(isRemovalPendingBundlesEmpty);
 	}
 
 	public Integer getServicesCount() {

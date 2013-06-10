@@ -15,18 +15,18 @@
 	</fx:define>
 	<padding>
 		<Insets top="10" right="10" bottom="10" left="10" />
-    </padding>
-    <GridPane hgap="10" >
-    	<columnConstraints>
-            <ColumnConstraints percentWidth="50" />
-            <ColumnConstraints percentWidth="50" />
-        </columnConstraints>
-    	<children>
-		    <VBox styleClass="summary-box" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
-		    	<padding>
+	</padding>
+	<GridPane hgap="10" >
+		<columnConstraints>
+			<ColumnConstraints percentWidth="50" />
+			<ColumnConstraints percentWidth="50" />
+		</columnConstraints>
+		<children>
+			<VBox styleClass="summary-box" spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0">
+				<padding>
 					<Insets top="5" right="10" bottom="5" left="10" />
-			    </padding>
-			    <HBox styleClass="bold" alignment="CENTER_LEFT">
+				</padding>
+				<HBox styleClass="bold" alignment="CENTER_LEFT">
 					<Label text="Bundles" />
 				</HBox>
 				<Separator />
@@ -44,29 +44,29 @@
 				</GridPane>
 			</VBox>
 			<VBox styleClass="summary-box" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0">
-		    	<padding>
+				<padding>
 					<Insets top="5" right="10" bottom="5" left="10" />
-			    </padding>
-			    <HBox styleClass="bold" alignment="CENTER_LEFT">
+				</padding>
+				<HBox styleClass="bold" alignment="CENTER_LEFT">
 					<Label text="Services" />
 				</HBox>
 				<Separator />
 				<GridPane>
-			    	<Label text="All" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}" />
+					<Label text="All" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}" />
 					<Label text="${controller.modelsService.models.summaryModel.servicesCount}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 					<Label text="- In use" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 					<Label text="${controller.modelsService.models.summaryModel.inUseServicesCount}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 					<Label text="- Standard" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 					<Label text="${controller.modelsService.models.summaryModel.standardServicesCount}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-			    </GridPane>
+				</GridPane>
 			</VBox>
 		</children>
 	</GridPane>
-		<VBox styleClass="summary-box" spacing="5">
-    	<padding>
+	<VBox styleClass="summary-box" spacing="5">
+		<padding>
 			<Insets top="5" right="10" bottom="5" left="10" />
-	    </padding>
-	    <HBox styleClass="bold" alignment="CENTER_LEFT">
+		</padding>
+		<HBox styleClass="bold" alignment="CENTER_LEFT">
 			<Label text="Packages" />
 		</HBox>
 		<Separator />
@@ -77,19 +77,31 @@
 			<Label text="${controller.modelsService.models.summaryModel.inUsePackagesCount}" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 			<Label text="- Removal pending" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 			<Label text="${controller.modelsService.models.summaryModel.removalPendingPackagesCount}" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-	    </GridPane>
+		</GridPane>
 	</VBox>
 	<VBox styleClass="summary-box" spacing="5">
-    	<padding>
+		<padding>
 			<Insets top="5" right="10" bottom="5" left="10" />
-	    </padding>
-	    <HBox styleClass="bold" alignment="CENTER_LEFT">
+		</padding>
+		<HBox styleClass="bold" alignment="CENTER_LEFT">
+			<Label text="Framework" />
+		</HBox>
+		<Separator />
+		<GridPane>
+			<Button text="Refresh bundles" onAction="#refreshBundles" disable="${controller.modelsService.models.summaryModel.removalPendingBundlesEmpty}" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+		</GridPane>
+	</VBox>
+	<VBox styleClass="summary-box" spacing="5">
+		<padding>
+			<Insets top="5" right="10" bottom="5" left="10" />
+		</padding>
+		<HBox styleClass="bold" alignment="CENTER_LEFT">
 			<Label text="Runtime" />
 		</HBox>
 		<Separator />
 		<GridPane>
 			<Label text="Uptime" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="${columnWidth}"  />
 			<Label text="${controller.modelsService.models.summaryModel.formattedUptime}" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-	    </GridPane>
+		</GridPane>
 	</VBox>
 </fx:root>
