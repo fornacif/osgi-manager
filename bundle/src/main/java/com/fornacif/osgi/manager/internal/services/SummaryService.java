@@ -16,7 +16,7 @@ import com.fornacif.osgi.manager.internal.models.SummaryModel;
 public class SummaryService {
 
 	public enum BundleCategory {
-		INSTALLED, RESOLVED, ACTIVE, REMOVAL_PENDING;
+		INSTALLED, RESOLVED, ACTIVE;
 	};
 
 	public enum ServiceCategory {
@@ -36,6 +36,7 @@ public class SummaryService {
 
 	public SummaryModel getSummary(List<BundleModel> bundles, List<ServiceModel> services, List<PackageModel> packages) throws Exception {
 		long uptime = jmxService.getRuntimeMXBean().getUptime();
+		int removalPendingBundlesCount = jmxService.getFrameworkMBean().getRemovalPendingBundles().length;
 
 		Map<BundleCategory, Integer> aggregatedBundles = aggregateBundles(bundles);
 		Map<ServiceCategory, Integer> aggregatedServices = aggregateServices(services);
@@ -49,7 +50,7 @@ public class SummaryService {
 		summaryModel.setInstalledBundlesCount(aggregatedBundles.get(BundleCategory.INSTALLED));
 		summaryModel.setResolvedBundlesCount(aggregatedBundles.get(BundleCategory.RESOLVED));
 		summaryModel.setActiveBundlesCount(aggregatedBundles.get(BundleCategory.ACTIVE));
-		summaryModel.setRemovalPendingBundlesCount(aggregatedBundles.get(BundleCategory.REMOVAL_PENDING));
+		summaryModel.setRemovalPendingBundlesCount(removalPendingBundlesCount);
 		
 		summaryModel.setServicesCount(services.size());
 		summaryModel.setStandardServicesCount(aggregatedServices.get(ServiceCategory.STANDARD));
@@ -68,7 +69,6 @@ public class SummaryService {
 		aggregatedBundles.put(BundleCategory.INSTALLED, 0);
 		aggregatedBundles.put(BundleCategory.RESOLVED, 0);
 		aggregatedBundles.put(BundleCategory.ACTIVE, 0);
-		aggregatedBundles.put(BundleCategory.REMOVAL_PENDING, 0);
 
 		for (BundleModel bundleModel : bundles) {
 			switch (BundleCategory.valueOf(bundleModel.getState())) {
@@ -81,10 +81,6 @@ public class SummaryService {
 			case ACTIVE:
 				aggregatedBundles.put(BundleCategory.ACTIVE, aggregatedBundles.get(BundleCategory.ACTIVE) + 1);
 				break;
-			}
-			
-			if (bundleModel.isRemovalPending()) {
-				aggregatedBundles.put(BundleCategory.REMOVAL_PENDING, aggregatedBundles.get(BundleCategory.REMOVAL_PENDING) + 1);
 			}
 		}
 
