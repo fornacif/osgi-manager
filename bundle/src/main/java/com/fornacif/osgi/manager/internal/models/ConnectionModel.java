@@ -7,7 +7,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 public class ConnectionModel {
 	private final IntegerProperty pid = new SimpleIntegerProperty();

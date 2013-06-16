@@ -12,7 +12,7 @@
 		<osgi.core.version>5.0.0</osgi.core.version>
 		<osgi.compendium.version>4.3.1</osgi.compendium.version>
 		<osgi.enterprise.version>5.0.0</osgi.enterprise.version>
-		<maven-bundle-plugin.version>2.3.7</maven-bundle-plugin.version>
+		<maven-bundle-plugin.version>2.4.0</maven-bundle-plugin.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
 		<compiler.version>2.5.1</compiler.version>
@@ -22,7 +22,7 @@
 		<jdk.home>C:/Program Files/Java/${jdk.version}</jdk.home>
 		<javafx.version>2.2.3</javafx.version>
 		<guava.version>13.0.1</guava.version>
-		<jackson.version>1.9.11</jackson.version>
+		<jackson.version>2.2.2</jackson.version>
 		<commons-fileupload.version>1.3</commons-fileupload.version>
 		<commons-io.version>2.4</commons-io.version>
 		<configadmin.version>1.6.0</configadmin.version>
@@ -122,13 +122,18 @@
 				<version>${guava.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-core-asl</artifactId>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>org.codehaus.jackson</groupId>
-				<artifactId>jackson-mapper-asl</artifactId>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
 				<version>${jackson.version}</version>
 			</dependency>
 			<dependency>

@@ -3,14 +3,14 @@ package com.fornacif.osgi.manager.internal.services;
 import java.io.IOException;
 import java.util.List;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
 import org.osgi.service.prefs.PreferencesService;
-
-import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 
 import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.Reference;
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fornacif.osgi.manager.internal.models.ConnectionModel;
 
 @Component(name="PreferencesService", provide = { SystemPreferencesService.class })
 public class SystemPreferencesService {

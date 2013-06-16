@@ -24,7 +24,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
-import org.codehaus.jackson.type.TypeReference;
 import org.osgi.service.event.EventAdmin;
 
 import aQute.bnd.annotation.component.Activate;
@@ -33,6 +32,7 @@ import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Deactivate;
 import aQute.bnd.annotation.component.Reference;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fornacif.osgi.manager.internal.application.OSGiManagerConstants;
 import com.fornacif.osgi.manager.internal.configurations.ConnectionControllerConfiguration;
 import com.fornacif.osgi.manager.internal.events.ConnectionActionEvent;
