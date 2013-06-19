@@ -19,10 +19,9 @@ import org.junit.runner.RunWith;
 import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
+import org.ops4j.pax.exam.util.Filter;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
-
-import com.fornacif.osgi.manager.services.Service;
 
 
 @RunWith(PaxExam.class)
@@ -31,8 +30,8 @@ public class OSGiManagerTest {
 	@Inject
 	private BundleContext bundleContext;
 	
-	@Inject
-	private Service service;
+	@Inject @Filter("(component.name=BundlesController)")
+	private Object bundlesController;
 	
 	private final File equinoxFile = new File("target/dependency/osgi.manager.assembly-0.1.0-SNAPSHOT/");
 
