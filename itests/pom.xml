@@ -17,16 +17,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.osgi</groupId>
-			<artifactId>org.osgi.compendium</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
@@ -38,7 +28,7 @@
 		<!-- Pax Exam Dependencies -->
 		<dependency>
 			<groupId>org.ops4j.pax.exam</groupId>
-			<artifactId>pax-exam-container-forked</artifactId>
+			<artifactId>pax-exam-container-native</artifactId>
 			<version>${exam.version}</version>
 			<scope>test</scope>
 		</dependency>
@@ -97,6 +87,12 @@
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.fornacif</groupId>
+			<artifactId>osgi.manager.bundle</artifactId>
 			<scope>test</scope>
 		</dependency>
 

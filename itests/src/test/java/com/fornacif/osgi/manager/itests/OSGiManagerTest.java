@@ -1,8 +1,9 @@
 package com.fornacif.osgi.manager.itests;
 
+import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
+import static org.ops4j.pax.exam.CoreOptions.systemPackage;
 import static org.ops4j.pax.exam.CoreOptions.vmOption;
-import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,12 +20,21 @@ import org.ops4j.pax.exam.Configuration;
 import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.PaxExam;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+
+import com.fornacif.osgi.manager.services.Service;
+
 
 @RunWith(PaxExam.class)
 public class OSGiManagerTest {
 
 	@Inject
 	private BundleContext bundleContext;
+	
+	@Inject
+	private Service service;
+	
+	private final File equinoxFile = new File("target/dependency/osgi.manager.assembly-0.1.0-SNAPSHOT/");
 
 	@Configuration
 	public Option[] configuration() throws Exception {
@@ -37,7 +47,7 @@ public class OSGiManagerTest {
 	}
 
 	public List<Option> properties() throws Exception {
-		File configFile = new File("target/dependency/osgi.manager.assembly-0.1.0-SNAPSHOT/configuration/config.ini");
+		File configFile = new File(equinoxFile, "/configuration/config.ini");
 		Assert.assertTrue(configFile.exists());
 		
 		Properties properties = new Properties();
@@ -45,13 +55,35 @@ public class OSGiManagerTest {
 		Assert.assertTrue(properties.size() > 0);
 		
 		List<Option> options = new ArrayList<>();
-		for (Object key : properties.keySet()) {
-			options.add(systemProperty((String) key).value(properties.getProperty((String) key)));
-		}
-		
-		System.out.println(options);
+		options.addAll(addPackages((String) properties.get(Constants.FRAMEWORK_SYSTEMPACKAGES_EXTRA)));
+		options.addAll(addBundles((String) properties.get("osgi.bundles")));
 		
 		return options;
+	}
+	
+	private List<Option> addPackages(String packagesProperty) {
+		List<Option> packages = new ArrayList<>();
+		
+		String[] packagesDeclaration = packagesProperty.split(",");
+		for (String packageDeclaration : packagesDeclaration) {
+			packages.add(systemPackage(packageDeclaration));	
+		}
+		return packages;
+	}
+	
+	private List<Option> addBundles(String bundlesProperty) {
+		List<Option> bundles = new ArrayList<>();
+		
+		String[] bundlesDeclaration = bundlesProperty.split(",");
+		for (String bundleDeclaration : bundlesDeclaration) {
+			String bundleFilename = bundleDeclaration.replace("@start", ".jar");
+			File bundleFile = new File(equinoxFile, bundleFilename);
+			if (bundleFile.exists()) {
+				bundles.add(bundle("file:" + bundleFile.getAbsolutePath()));
+			}
+			
+		}
+		return bundles;
 	}
 
 	/**
