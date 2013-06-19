@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import javafx.scene.layout.Pane;
+
 import javax.inject.Inject;
 
 import org.junit.Assert;
@@ -31,7 +33,7 @@ public class OSGiManagerTest {
 	private BundleContext bundleContext;
 	
 	@Inject @Filter("(component.name=BundlesController)")
-	private Object bundlesController;
+	private Pane bundlesController;
 	
 	private final File equinoxFile = new File("target/dependency/osgi.manager.assembly-0.1.0-SNAPSHOT/");
 
