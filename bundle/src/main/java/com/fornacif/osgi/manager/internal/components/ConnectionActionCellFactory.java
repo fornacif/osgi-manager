@@ -34,6 +34,7 @@ public class ConnectionActionCellFactory implements Callback<TableColumn<Connect
 				connectionHBox.setAlignment(Pos.BASELINE_CENTER);
 
 				Button connectionButton = new Button();
+				connectionButton.setId("connectionButton");
 				connectionButton.setCursor(Cursor.HAND);
 				if (connectionModel.isConnected()) {
 					connectionButton.setText("Disconnect");
