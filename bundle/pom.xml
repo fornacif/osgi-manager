@@ -31,7 +31,8 @@
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
-			<systemPath>${jdk.home}/jre/lib/jfxrt.jar</systemPath>
+			<systemPath>${jdk.home}/jre/lib/ext/jfxrt.jar</systemPath>
+			<version>${javafx.version}</version>
 			<scope>system</scope>
 		</dependency>
 		<dependency>

@@ -10,17 +10,17 @@
 
 	<properties>
 		<osgi.core.version>5.0.0</osgi.core.version>
-		<osgi.compendium.version>4.3.1</osgi.compendium.version>
+		<osgi.compendium.version>5.0.0</osgi.compendium.version>
 		<osgi.enterprise.version>5.0.0</osgi.enterprise.version>
 		<maven-bundle-plugin.version>2.4.0</maven-bundle-plugin.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.13</logback.version>
 		<compiler.version>2.5.1</compiler.version>
-		<source.version>1.7</source.version>
-		<target.version>1.7</target.version>
-		<jdk.version>jdk1.7.0_09</jdk.version>
+		<source.version>1.8</source.version>
+		<target.version>1.8</target.version>
+		<jdk.version>jdk1.8.0_05</jdk.version>
 		<jdk.home>C:/Program Files/Java/${jdk.version}</jdk.home>
-		<javafx.version>2.2.3</javafx.version>
+		<javafx.version>8.0.5</javafx.version>
 		<guava.version>13.0.1</guava.version>
 		<jackson.version>2.2.2</jackson.version>
 		<commons-fileupload.version>1.3</commons-fileupload.version>
@@ -87,11 +87,6 @@
 				<groupId>com.oracle</groupId>
 				<artifactId>tools</artifactId>
 				<version>${jdk.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.oracle</groupId>
-				<artifactId>javafx</artifactId>
-				<version>${javafx.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.felix</groupId>
